@@ -1,0 +1,43 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
+import { ThemeProvider } from './contexts/ThemeContext'
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
+import DashboardLayout from './layouts/DashboardLayout/DashboardLayout'
+
+import Landing from './pages/Landing/Landing'
+import Login from './pages/Login/Login'
+import Cadastro from './pages/Cadastro/Cadastro'
+import DashboardHome from './pages/Dashboard/Home/DashboardHome'
+import Redes from './pages/Dashboard/Redes/Redes'
+import Configuracoes from './pages/Dashboard/Configuracoes/Configuracoes'
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/entrar" element={<Login />} />
+            <Route path="/cadastro" element={<Cadastro />} />
+
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<DashboardHome />} />
+              <Route path="redes" element={<Redes />} />
+              <Route path="configuracoes" element={<Configuracoes />} />
+            </Route>
+
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
+  )
+}

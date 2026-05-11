@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   LuInstagram, LuTwitter, LuYoutube, LuShieldCheck,
-  LuCheckCircle2, LuAlertCircle, LuWifiOff, LuPlus,
+  LuCircleCheck, LuCircleAlert, LuWifiOff, LuPlus,
   LuCheck,
 } from 'react-icons/lu'
 import { FaTiktok, FaFacebook, FaPinterest } from 'react-icons/fa'
@@ -18,8 +18,8 @@ const NETWORKS = [
 ]
 
 const STATUS_CONFIG = {
-  connected:    { label: 'Conectado',    color: 'success', icon: LuCheckCircle2, btnLabel: 'Postar',     btnVariant: 'primary' },
-  expired:      { label: 'Expirado',     color: 'warning', icon: LuAlertCircle,  btnLabel: 'Reconectar', btnVariant: 'outline' },
+  connected:    { label: 'Conectado',    color: 'success', icon: LuCircleCheck, btnLabel: 'Postar',     btnVariant: 'primary' },
+  expired:      { label: 'Expirado',     color: 'warning', icon: LuCircleAlert,  btnLabel: 'Reconectar', btnVariant: 'outline' },
   disconnected: { label: 'Desconectado', color: 'error',   icon: LuWifiOff,      btnLabel: 'Conectar',   btnVariant: 'outline' },
 }
 

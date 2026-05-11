@@ -7,7 +7,7 @@ import {
 import {
   LuEye, LuUsers, LuHeart, LuUserPlus,
   LuTrendingUp, LuDownload, LuCalendar, LuSparkles,
-  LuMoreVertical, LuCheckCircle2, LuFileEdit,
+  LuEllipsisVertical, LuCircleCheck, LuFileText,
 } from 'react-icons/lu'
 import { useAuth } from '../../../contexts/AuthContext'
 import {
@@ -409,7 +409,7 @@ export default function DashboardHome() {
               {recentPosts.map(({ id, title, date, time, status }) => (
                 <div key={id} className="recent-post">
                   <div className={`recent-post__status recent-post__status--${status}`}>
-                    {status === 'published' ? <LuCheckCircle2 size={14} /> : <LuFileEdit size={14} />}
+                    {status === 'published' ? <LuCircleCheck size={14} /> : <LuFileText size={14} />}
                   </div>
                   <div className="recent-post__info">
                     <p>{title}</p>
@@ -418,7 +418,7 @@ export default function DashboardHome() {
                   <span className={`recent-post__badge recent-post__badge--${status}`}>
                     {status === 'published' ? 'Publicado' : 'Rascunho'}
                   </span>
-                  <button className="recent-post__more"><LuMoreVertical size={16} /></button>
+                  <button className="recent-post__more"><LuEllipsisVertical size={16} /></button>
                 </div>
               ))}
             </div>

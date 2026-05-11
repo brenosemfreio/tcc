@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
-  LuTrendingUp, LuCalendarClock, LuBarChart3,
+  LuTrendingUp, LuCalendarClock, LuChartBar,
   LuShieldCheck, LuZap, LuHeart,
 } from 'react-icons/lu'
 import {
@@ -44,7 +44,7 @@ const FEATURES = [
     desc: 'Crie, edite e publique conteúdos de forma rápida e intuitiva. Centralize suas redes sociais em um único lugar, agende postagens com poucos cliques e mantenha sua consistência sem complicações.',
   },
   {
-    icon: LuBarChart3,
+    icon: LuChartBar,
     title: 'Visualização Perfeita',
     desc: 'Nossa tecnologia avançada garante que seu conteúdo seja exibido com máxima precisão em todas as plataformas e dispositivos, proporcionando uma experiência consistente e profissional.',
     wide: true,
@@ -54,7 +54,7 @@ const FEATURES = [
 const MISSION = [
   { icon: LuTrendingUp, text: 'Impulsionar o crescimento nas redes sociais' },
   { icon: LuCalendarClock, text: 'Economizar tempo na gestão de conteúdo' },
-  { icon: LuBarChart3, text: 'Facilitar o monitoramento e análise' },
+  { icon: LuChartBar, text: 'Facilitar o monitoramento e análise' },
 ]
 
 const VALUES = [

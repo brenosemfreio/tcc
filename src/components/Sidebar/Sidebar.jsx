@@ -1,8 +1,8 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  LuLayoutDashboard, LuShare2, LuPenSquare,
-  LuSettings, LuHelpCircle, LuSun, LuMoon,
+  LuLayoutDashboard, LuShare2, LuSquarePen,
+  LuSettings, LuCircleHelp, LuSun, LuMoon,
   LuLogOut, LuChevronLeft, LuChevronRight,
 } from 'react-icons/lu'
 import { useAuth } from '../../contexts/AuthContext'
@@ -16,7 +16,7 @@ const NAV_ITEMS = [
 
 const BOTTOM_ITEMS = [
   { to: '/dashboard/configuracoes', icon: LuSettings,     label: 'Configurações' },
-  { to: '#suporte',                 icon: LuHelpCircle,   label: 'Suporte' },
+  { to: '#suporte',                 icon: LuCircleHelp,   label: 'Suporte' },
 ]
 
 export default function Sidebar({ isCollapsed, onToggle, onNewPost }) {
@@ -103,7 +103,7 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost }) {
           className="sidebar__item sidebar__item--post"
           onClick={onNewPost}
         >
-          <LuPenSquare size={20} className="sidebar__item-icon" />
+          <LuSquarePen size={20} className="sidebar__item-icon" />
           <AnimatePresence>
             {!isCollapsed && (
               <motion.span

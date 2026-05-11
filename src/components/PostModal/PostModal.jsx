@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Modal from '../Modal/Modal'
 import Button from '../Button/Button'
-import { LuInstagram, LuTwitter, LuYoutube, LuUploadCloud, LuSparkles, LuCheck } from 'react-icons/lu'
+import { LuInstagram, LuTwitter, LuYoutube, LuCloudUpload, LuSparkles, LuCheck } from 'react-icons/lu'
 import { schedulePost } from '../../services/posts'
 import './PostModal.css'
 
@@ -90,7 +90,7 @@ export default function PostModal({ isOpen, onClose }) {
                 <span className="post-modal__char-count">{form.text.length}/2200</span>
               </div>
               <div className="post-modal__upload">
-                <LuUploadCloud size={28} />
+                <LuCloudUpload size={28} />
                 <span>Carregar imagem ou vídeo</span>
                 <small>PNG, JPG, MP4 — máx. 100MB</small>
               </div>

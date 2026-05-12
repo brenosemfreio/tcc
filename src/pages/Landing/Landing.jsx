@@ -289,40 +289,6 @@ export default function Landing() {
         </motion.div>
       </section>
 
-      {/* ── Marquee ──────────────────────────────────── */}
-      <div className="l-marquee">
-        <div className="l-marquee__fade l-marquee__fade--left" />
-        <div className="l-marquee__fade l-marquee__fade--right" />
-
-        <div className="l-marquee__track">
-          {[...PLATFORMS, ...PLATFORMS, ...PLATFORMS].map((p, i) => {
-            const Icon = p.icon
-            return (
-              <div key={i} className="l-marquee__item" style={{ '--c': p.color }}>
-                <span className="l-marquee__icon-wrap">
-                  <Icon />
-                </span>
-                <span className="l-marquee__name">{p.name}</span>
-              </div>
-            )
-          })}
-        </div>
-
-        <div className="l-marquee__track l-marquee__track--rev">
-          {[...PLATFORMS, ...PLATFORMS, ...PLATFORMS].map((p, i) => {
-            const Icon = p.icon
-            return (
-              <div key={i} className="l-marquee__item" style={{ '--c': p.color }}>
-                <span className="l-marquee__icon-wrap">
-                  <Icon />
-                </span>
-                <span className="l-marquee__name">{p.name}</span>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-
       {/* ── Features ─────────────────────────────────── */}
       <section className="l-features" id="funcionalidades">
         <div className="container">
@@ -417,6 +383,36 @@ export default function Landing() {
           </div>
         </div>
       </section>
+
+      {/* ── Marquee ──────────────────────────────────── */}
+      <div className="l-marquee">
+        <div className="l-marquee__fade l-marquee__fade--left" />
+        <div className="l-marquee__fade l-marquee__fade--right" />
+
+        <div className="l-marquee__track">
+          {[...PLATFORMS, ...PLATFORMS, ...PLATFORMS].map((p, i) => {
+            const Icon = p.icon
+            return (
+              <div key={i} className="l-marquee__item" style={{ '--c': p.color }}>
+                <span className="l-marquee__icon-wrap"><Icon /></span>
+                <span className="l-marquee__name">{p.name}</span>
+              </div>
+            )
+          })}
+        </div>
+
+        <div className="l-marquee__track l-marquee__track--rev">
+          {[...PLATFORMS, ...PLATFORMS, ...PLATFORMS].map((p, i) => {
+            const Icon = p.icon
+            return (
+              <div key={i} className="l-marquee__item" style={{ '--c': p.color }}>
+                <span className="l-marquee__icon-wrap"><Icon /></span>
+                <span className="l-marquee__name">{p.name}</span>
+              </div>
+            )
+          })}
+        </div>
+      </div>
 
       {/* ── Pricing ──────────────────────────────────── */}
       <section className="l-pricing" id="precos">

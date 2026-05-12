@@ -156,10 +156,6 @@ export default function Landing() {
             animate="visible"
             variants={{ visible: { transition: { staggerChildren: 0.09 } } }}
           >
-            <motion.span variants={fadeUp} className="l-badge l-badge--glass">
-              <LuSparkles /> Powered by IA · Novo jeito de criar
-            </motion.span>
-
             <motion.h1 variants={fadeUp} className="l-hero__title">
               Seu estúdio criativo<br />
               para <span className="l-gradient-text">redes sociais</span>

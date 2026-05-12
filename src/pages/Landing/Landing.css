@@ -4,6 +4,12 @@
 
 .landing { overflow-x: hidden; }
 
+/* ── Containers das seções: mais largos que o container global ── */
+.l-landing section .container {
+  max-width: 1400px;
+  padding-inline: 40px;
+}
+
 /* ── Navbar override: transparente sobre o hero escuro ──── */
 .l-landing .navbar {
   transition: background 350ms ease, border-color 350ms ease, box-shadow 350ms ease;

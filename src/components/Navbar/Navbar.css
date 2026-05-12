@@ -22,12 +22,10 @@
   -webkit-backdrop-filter: blur(16px);
 }
 
-/* Layout: logo | centro (absoluto) | ações */
+/* Layout: logo (flex:1) | nav (auto) | ações (flex:1) */
 .navbar__inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  position: relative;
   height: 72px;
   padding-inline: 56px;
   max-width: 1440px;
@@ -38,8 +36,7 @@
 .navbar__logo {
   display: flex;
   align-items: center;
-  flex-shrink: 0;
-  width: fit-content;
+  flex: 1;
   transition: opacity 200ms;
 }
 .navbar__logo:hover { opacity: 0.75; }
@@ -51,15 +48,13 @@
   mix-blend-mode: multiply;
 }
 
-/* ── Nav links (centralizado absolutamente) ─────────────── */
+/* ── Nav links (centro natural entre duas colunas iguais) ── */
 .navbar__nav {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 4px;
+  flex-shrink: 0;
 }
 
 .navbar__link {
@@ -86,7 +81,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  justify-self: end;
+  flex: 1;
+  justify-content: flex-end;
 }
 
 /* ── CTA mobile (dentro do drawer) ─────────────────────── */

@@ -22,6 +22,11 @@ export default function Navbar() {
     return () => window.removeEventListener('resize', onResize)
   }, [])
 
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
+
   const close = () => setMenuOpen(false)
 
   const handleLogoClick = () => {

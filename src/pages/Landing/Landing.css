@@ -179,8 +179,8 @@
 /* Inner grid */
 .l-hero__inner {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 120px;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 150px;
   align-items: center;
   min-height: 100vh;
   padding-top: 96px;

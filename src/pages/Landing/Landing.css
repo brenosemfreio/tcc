@@ -449,36 +449,22 @@
 .l-marquee {
   overflow: hidden;
   position: relative;
-  background: linear-gradient(180deg, #07031A 0%, #0C0620 50%, #07031A 100%);
-  padding: 40px 0;
+  background: linear-gradient(135deg, #DDD6FE 0%, #EDE9FE 45%, #E9E3FF 100%);
+  padding: 44px 0;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
 }
 
-.l-marquee::before {
-  content: '';
+/* Noise texture igual ao stats */
+.l-marquee__noise {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 70% 100% at 50% 50%, rgba(79, 53, 232, 0.1) 0%, transparent 70%);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
   pointer-events: none;
-}
-
-/* Fade lateral */
-.l-marquee__fade {
-  position: absolute;
-  top: 0; bottom: 0;
-  width: 180px;
-  z-index: 2;
-  pointer-events: none;
-}
-.l-marquee__fade--left {
-  left: 0;
-  background: linear-gradient(to right, #07031A 0%, transparent 100%);
-}
-.l-marquee__fade--right {
-  right: 0;
-  background: linear-gradient(to left, #07031A 0%, transparent 100%);
 }
 
 /* Tracks */
@@ -486,23 +472,27 @@
   display: flex;
   width: max-content;
   animation: marqueeRoll 34s linear infinite;
+  position: relative;
+  z-index: 1;
 }
 .l-marquee__track--rev {
   animation: marqueeRollRev 28s linear infinite;
 }
 .l-marquee__track:hover { animation-play-state: paused; }
 
-/* Item — pill glassmorphism */
+/* Pill — branco flutuante */
 .l-marquee__item {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 24px;
+  padding: 10px 22px;
   margin: 0 6px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.95);
   border-radius: 100px;
-  color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 2px 14px rgba(79, 53, 232, 0.1), 0 1px 0 rgba(255,255,255,0.9) inset;
+  backdrop-filter: blur(8px);
+  color: #4F35E8;
   font-size: 0.875rem;
   font-weight: 600;
   white-space: nowrap;
@@ -510,17 +500,15 @@
   cursor: default;
   transition:
     background 280ms,
-    border-color 280ms,
+    box-shadow 280ms,
     color 280ms,
-    transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 280ms;
+    transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .l-marquee__item:hover {
-  background: rgba(79, 53, 232, 0.16);
-  border-color: rgba(79, 53, 232, 0.45);
-  color: #fff;
-  transform: translateY(-4px) scale(1.03);
-  box-shadow: 0 10px 30px rgba(79, 53, 232, 0.28);
+  background: #fff;
+  box-shadow: 0 10px 32px rgba(79, 53, 232, 0.2), 0 1px 0 #fff inset;
+  transform: translateY(-4px) scale(1.04);
+  color: #3D28C8;
 }
 
 /* Ícone com glow da cor da plataforma */
@@ -534,7 +522,7 @@
 }
 .l-marquee__item:hover .l-marquee__icon-wrap {
   transform: scale(1.25) rotate(-8deg);
-  filter: drop-shadow(0 0 8px var(--c));
+  filter: drop-shadow(0 0 7px var(--c));
 }
 
 .l-marquee__name {

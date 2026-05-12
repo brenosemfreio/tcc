@@ -386,8 +386,7 @@ export default function Landing() {
 
       {/* ── Marquee ──────────────────────────────────── */}
       <div className="l-marquee">
-        <div className="l-marquee__fade l-marquee__fade--left" />
-        <div className="l-marquee__fade l-marquee__fade--right" />
+        <div className="l-marquee__noise" />
 
         <div className="l-marquee__track">
           {[...PLATFORMS, ...PLATFORMS, ...PLATFORMS].map((p, i) => {

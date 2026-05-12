@@ -375,35 +375,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── Marquee ──────────────────────────────────── */}
-      <div className="l-marquee">
-        <div className="l-marquee__noise" />
-
-        <div className="l-marquee__track">
-          {[...PLATFORMS, ...PLATFORMS, ...PLATFORMS].map((p, i) => {
-            const Icon = p.icon
-            return (
-              <div key={i} className="l-marquee__item" style={{ '--c': p.color }}>
-                <span className="l-marquee__icon-wrap"><Icon /></span>
-                <span className="l-marquee__name">{p.name}</span>
-              </div>
-            )
-          })}
-        </div>
-
-        <div className="l-marquee__track l-marquee__track--rev">
-          {[...PLATFORMS, ...PLATFORMS, ...PLATFORMS].map((p, i) => {
-            const Icon = p.icon
-            return (
-              <div key={i} className="l-marquee__item" style={{ '--c': p.color }}>
-                <span className="l-marquee__icon-wrap"><Icon /></span>
-                <span className="l-marquee__name">{p.name}</span>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-
       {/* ── Pricing ──────────────────────────────────── */}
       <section className="l-pricing" id="precos">
         <div className="container">

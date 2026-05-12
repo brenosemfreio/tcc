@@ -1,48 +1,97 @@
 import { Link } from 'react-router-dom'
+import logoHub from '../../assets/images/logo-hub.png'
 import './Footer.css'
+
+const LINKS = [
+  {
+    title: 'Produto',
+    items: [
+      { label: 'Funcionalidades', href: '#funcionalidades' },
+      { label: 'Planos e preços', href: '#precos'          },
+      { label: 'Começar grátis', to: '/cadastro'           },
+      { label: 'Changelog',      href: '#'                 },
+    ],
+  },
+  {
+    title: 'Empresa',
+    items: [
+      { label: 'Sobre nós',   href: '#sobre' },
+      { label: 'Blog',        href: '#'      },
+      { label: 'Carreiras',   href: '#'      },
+      { label: 'Imprensa',    href: '#'      },
+    ],
+  },
+  {
+    title: 'Suporte',
+    items: [
+      { label: 'Central de ajuda',    href: '#'                          },
+      { label: 'Contato',             href: 'mailto:hubstudio@gmail.com' },
+      { label: 'Privacidade',         href: '#'                          },
+      { label: 'Termos de uso',       href: '#'                          },
+    ],
+  },
+]
 
 export default function Footer() {
   return (
     <footer className="footer">
-      <div className="footer__wave">
-        <svg viewBox="0 0 1440 60" preserveAspectRatio="none">
-          <path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" fill="var(--color-primary-light)" />
-        </svg>
-      </div>
+      {/* Gradient separator — topo do footer */}
+      <div className="footer__gradient-line" />
 
-      <div className="footer__content container">
+      {/* Top glow decoration */}
+      <div className="footer__top-glow" />
+
+      {/* Espaçador garantido após a linha */}
+      <div className="footer__spacer" />
+
+      {/* Main body */}
+      <div className="container footer__body">
+
+        {/* Brand column */}
         <div className="footer__brand">
-          <div className="footer__logo">
-            <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
-              <path d="M14 3L7 10H11V17H17V10H21L14 3Z" fill="currentColor"/>
-              <path d="M6 13L3 16V14.5H10V18H3V19.5H6L3 22.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-              <path d="M22 13L25 16V14.5H18V18H25V19.5H22L25 22.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-            </svg>
-            <span className="footer__logo-text">
-              <b>hub</b><br />studio
-            </span>
+          <Link
+            to="/"
+            className="footer__logo"
+            aria-label="HubStudio"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
+            <img src={logoHub} alt="HubStudio" className="footer__logo-img" />
+          </Link>
+
+          <p className="footer__tagline">
+            A plataforma completa para criadores de conteúdo que querem crescer sem complicação.
+          </p>
+
+        </div>
+
+        {/* Link columns */}
+        {LINKS.map(col => (
+          <div key={col.title} className="footer__col">
+            <h4 className="footer__col-title">{col.title}</h4>
+            <ul>
+              {col.items.map(item => (
+                <li key={item.label}>
+                  {item.to
+                    ? <Link to={item.to}>{item.label}</Link>
+                    : <a href={item.href}>{item.label}</a>
+                  }
+                </li>
+              ))}
+            </ul>
           </div>
-          <p className="footer__tagline">Método de organização do<br />pensamento criativo.</p>
-        </div>
-
-        <div className="footer__links">
-          <h4>Links</h4>
-          <ul>
-            <li><a href="#sobre">Sobre</a></li>
-            <li><a href="#funcionalidades">Funcionalidades</a></li>
-            <li><a href="#">Termos</a></li>
-          </ul>
-        </div>
-
-        <div className="footer__contact">
-          <h4>Contato</h4>
-          <p>hubstudio@gmail.com</p>
-          <p>(11) 98765-4321</p>
-        </div>
+        ))}
       </div>
 
-      <div className="footer__bottom container">
-        <p>© 2026 HubStudio. Todos os direitos reservados.</p>
+      {/* Bottom bar */}
+      <div className="footer__bottom">
+        <div className="container footer__bottom-inner">
+          <p>© 2026 HubStudio. Todos os direitos reservados.</p>
+          <div className="footer__bottom-links">
+            <a href="#">Privacidade</a>
+            <a href="#">Termos</a>
+            <a href="#">Cookies</a>
+          </div>
+        </div>
       </div>
     </footer>
   )

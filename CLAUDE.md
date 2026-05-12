@@ -76,3 +76,9 @@ As imagens têm fundo branco — usar `mix-blend-mode: multiply` no CSS quando n
 - Cada componente/página tem seu próprio `.css` na mesma pasta.
 - Dark mode via `[data-theme='dark']` nas variáveis CSS.
 - Cor primária: `--color-primary: #4F35E8`.
+
+## Auto-sync
+
+Um hook Stop (`settings.local.json`) faz `git add -A && git commit && git push origin main` automaticamente ao fim de cada resposta que tiver mudanças.
+
+**Instrução para Claude:** ao criar ou remover componentes, rotas, serviços ou contextos, atualizar as seções de Architecture acima para refletir o estado atual do projeto.

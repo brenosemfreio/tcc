@@ -1,7 +1,23 @@
 {
   "permissions": {
     "allow": [
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(git *)"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$s = git status --porcelain; if ($s) { git add -A; $msg = 'chore: auto sync [Claude]'; git commit -m $msg; git push origin main }",
+            "shell": "powershell",
+            "timeout": 60,
+            "statusMessage": "Sincronizando com GitHub..."
+          }
+        ]
+      }
     ]
   }
 }

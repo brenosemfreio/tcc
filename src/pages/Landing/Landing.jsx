@@ -157,8 +157,8 @@ export default function Landing() {
             variants={{ visible: { transition: { staggerChildren: 0.09 } } }}
           >
             <motion.h1 variants={fadeUp} className="l-hero__title">
-              Seu estúdio criativo<br />
-              para <span className="l-gradient-text">redes sociais</span>
+              Suas redes sociais<br />
+              <span style={{ color: '#4F35E8' }}>simplificadas.</span>
             </motion.h1>
 
             <motion.p variants={fadeUp} className="l-hero__sub">

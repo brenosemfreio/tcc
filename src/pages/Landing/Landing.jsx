@@ -528,7 +528,7 @@ export default function Landing() {
             viewport={{ once: true }}
             transition={{ delay: 0.1, duration: 0.6 }}
           >
-            Transforme sua presença<br />digital com o HubStudio
+            Transforme sua presença<br />digital com o <span className="l-gradient-text">HubStudio</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}

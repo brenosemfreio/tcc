@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(node -e ' *)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(python3 \"C:/Users/gabinete16/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"social media SaaS scheduling analytics creator tool\" --design-system -p \"HubStudio\")"
     ]
   },
   "hooks": {

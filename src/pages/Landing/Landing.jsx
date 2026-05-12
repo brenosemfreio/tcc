@@ -305,6 +305,7 @@ export default function Landing() {
             viewport={{ once: true, margin: '-80px' }}
             variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
           >
+            <motion.span variants={fadeUp} className="l-badge l-badge--primary">Funcionalidades</motion.span>
             <motion.h2 variants={fadeUp}>
               Tudo que você precisa,<br /><span className="l-gradient-text">num só lugar</span>
             </motion.h2>
@@ -359,6 +360,7 @@ export default function Landing() {
             viewport={{ once: true, margin: '-80px' }}
             variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
           >
+            <motion.span variants={fadeUp} className="l-badge l-badge--primary">Como funciona</motion.span>
             <motion.h2 variants={fadeUp}>
               Três passos para<br /><span className="l-gradient-text">transformar suas redes</span>
             </motion.h2>
@@ -398,6 +400,7 @@ export default function Landing() {
             viewport={{ once: true, margin: '-80px' }}
             variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
           >
+            <motion.span variants={fadeUp} className="l-badge l-badge--primary">Planos</motion.span>
             <motion.h2 variants={fadeUp}>
               Projetado para<br /><span className="l-gradient-text">cada etapa</span>
             </motion.h2>

@@ -52,7 +52,7 @@ export default function Navbar() {
         <div className="navbar__actions">
           <Button variant="outline" size="sm" onClick={() => navigate('/entrar')}>Entrar</Button>
           <Button variant="primary" size="sm" iconRight={<LuArrowRight />} onClick={() => navigate('/cadastro')}>
-            Começar grátis
+            Cadastrar-se
           </Button>
         </div>
 

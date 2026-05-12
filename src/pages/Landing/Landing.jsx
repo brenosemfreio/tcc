@@ -158,7 +158,7 @@ export default function Landing() {
           >
             <motion.h1 variants={fadeUp} className="l-hero__title">
               Suas redes sociais<br />
-              <span style={{ color: '#4F35E8' }}>simplificadas.</span>
+              <span className="l-hero__highlight">simplificadas.</span>
             </motion.h1>
 
             <motion.p variants={fadeUp} className="l-hero__sub">

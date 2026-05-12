@@ -48,6 +48,13 @@
 }
 
 /* ── Utilitários ─────────────────────────────────────────── */
+.l-hero__highlight {
+  background: linear-gradient(135deg, #7C5FE8 0%, #4F35E8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .l-gradient-text {
   background: linear-gradient(135deg, #7C5FE8 0%, #E84FA5 100%);
   -webkit-background-clip: text;

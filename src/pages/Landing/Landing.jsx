@@ -291,13 +291,32 @@ export default function Landing() {
 
       {/* ── Marquee ──────────────────────────────────── */}
       <div className="l-marquee">
+        <div className="l-marquee__fade l-marquee__fade--left" />
+        <div className="l-marquee__fade l-marquee__fade--right" />
+
         <div className="l-marquee__track">
           {[...PLATFORMS, ...PLATFORMS, ...PLATFORMS].map((p, i) => {
             const Icon = p.icon
             return (
-              <div key={i} className="l-marquee__item">
-                <Icon style={{ color: p.color }} />
-                <span>{p.name}</span>
+              <div key={i} className="l-marquee__item" style={{ '--c': p.color }}>
+                <span className="l-marquee__icon-wrap">
+                  <Icon />
+                </span>
+                <span className="l-marquee__name">{p.name}</span>
+              </div>
+            )
+          })}
+        </div>
+
+        <div className="l-marquee__track l-marquee__track--rev">
+          {[...PLATFORMS, ...PLATFORMS, ...PLATFORMS].map((p, i) => {
+            const Icon = p.icon
+            return (
+              <div key={i} className="l-marquee__item" style={{ '--c': p.color }}>
+                <span className="l-marquee__icon-wrap">
+                  <Icon />
+                </span>
+                <span className="l-marquee__name">{p.name}</span>
               </div>
             )
           })}

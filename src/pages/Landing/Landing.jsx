@@ -418,7 +418,7 @@ export default function Landing() {
       </section>
 
       {/* ── FAQ ──────────────────────────────────────── */}
-      <section className="l-faq">
+      <section className="l-faq" id="faq">
         <div className="l-faq__bg" aria-hidden="true" />
         <div className="container">
           <motion.div

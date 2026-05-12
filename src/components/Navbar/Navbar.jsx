@@ -40,6 +40,7 @@ export default function Navbar() {
         <nav className={`navbar__nav${menuOpen ? ' navbar__nav--open' : ''}`} aria-hidden={!menuOpen && window.innerWidth < 900}>
           <a href="#funcionalidades" className="navbar__link" onClick={close}>Funcionalidades</a>
           <a href="#sobre"           className="navbar__link" onClick={close}>Sobre</a>
+          <a href="#faq"             className="navbar__link" onClick={close}>FAQ</a>
           <a href="#precos"          className="navbar__link" onClick={close}>Planos</a>
 
           <div className="navbar__mobile-cta">

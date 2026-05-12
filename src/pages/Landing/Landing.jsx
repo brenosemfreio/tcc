@@ -278,15 +278,6 @@ export default function Landing() {
           </motion.div>
         </div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          className="l-scroll"
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-        >
-          <div className="l-scroll__line" />
-          <span>Role para baixo</span>
-        </motion.div>
       </section>
 
       {/* ── Features ─────────────────────────────────── */}

@@ -38,6 +38,7 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  width: fit-content;
   transition: opacity 200ms;
 }
 .navbar__logo:hover { opacity: 0.75; }

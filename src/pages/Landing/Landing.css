@@ -180,7 +180,7 @@
 .l-hero__inner {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 64px;
+  gap: 120px;
   align-items: center;
   min-height: 100vh;
   padding-top: 96px;

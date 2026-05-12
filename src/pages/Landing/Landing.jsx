@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   LuArrowRight, LuCheck, LuSparkles, LuTrendingUp, LuBell,
   LuCalendarClock, LuChartBar, LuZap, LuShare2, LuStar,
-  LuBrain, LuChevronRight,
+  LuBrain, LuChevronRight, LuPlus,
 } from 'react-icons/lu'
 import {
   FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin, FaPinterest,
@@ -13,6 +13,35 @@ import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import Button from '../../components/Button/Button'
 import './Landing.css'
+
+// ── FAQ accordion item
+function FaqItem({ question, answer }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className={`l-faq__item${open ? ' l-faq__item--open' : ''}`}>
+      <button className="l-faq__q" onClick={() => setOpen(o => !o)}>
+        <span>{question}</span>
+        <motion.span className="l-faq__icon" animate={{ rotate: open ? 45 : 0 }} transition={{ duration: 0.2 }}>
+          <LuPlus />
+        </motion.span>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            className="l-faq__a"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
+            style={{ overflow: 'hidden' }}
+          >
+            <p>{answer}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
 
 // ── Animated counter
 function Counter({ end, suffix = '', label, delay = 0 }) {
@@ -122,6 +151,20 @@ const PLANS = [
   },
 ]
 
+const TESTIMONIALS = [
+  { name: 'Ana Lima', role: 'Criadora de conteúdo', initials: 'AL', color: '#E84FA5', quote: 'Desde que comecei a usar o HubStudio, meu engajamento subiu 127%. A IA sugere os melhores horários e nunca deixo de postar.' },
+  { name: 'Carlos Mendes', role: 'Fotógrafo & Influencer', initials: 'CM', color: '#4F35E8', quote: 'Gerenciar 5 plataformas ao mesmo tempo parecia impossível. Agora faço tudo em minutos e ainda tenho tempo pra criar mais.' },
+  { name: 'Priya Santos', role: 'Social Media Manager', initials: 'PS', color: '#7C5FE8', quote: 'O analytics do HubStudio é incrível. Consigo mostrar resultados reais para os meus clientes com dados atualizados em tempo real.' },
+]
+
+const FAQS = [
+  { q: 'Posso cancelar quando quiser?', a: 'Sim! Não há fidelidade. Você pode cancelar sua assinatura a qualquer momento, sem burocracia ou taxas adicionais.' },
+  { q: 'Funciona com conta pessoal do Instagram?', a: 'O agendamento de posts requer uma conta Profissional (Criador ou Empresa). A conversão é gratuita e leva menos de 1 minuto nas configurações do Instagram.' },
+  { q: 'Tem período de teste gratuito?', a: 'Sim, oferecemos 14 dias gratuitos em qualquer plano, sem precisar cadastrar cartão de crédito.' },
+  { q: 'Quantas plataformas posso conectar?', a: 'Depende do seu plano: Lite suporta até 3 perfis, Pro até 10 e Elite é ilimitado. Integramos com Instagram, TikTok, YouTube, Facebook, LinkedIn e Pinterest.' },
+  { q: 'A IA gera conteúdo automaticamente?', a: 'A IA sugere horários ideais, hashtags relevantes e tendências de conteúdo. A criação final é sempre sua — autenticidade vem de você.' },
+]
+
 const MOCKUP_BARS = [40, 65, 50, 80, 60, 90, 70]
 
 const fadeUp = {
@@ -158,13 +201,25 @@ export default function Landing() {
           >
             <motion.h1 variants={fadeUp} className="l-hero__title">
               Suas redes sociais<br />
-              <span className="l-hero__highlight">simplificadas.</span>
+              <span className="l-hero__highlight">simplificadas.</span><span className="l-hero__cursor" aria-hidden="true" />
             </motion.h1>
 
             <motion.p variants={fadeUp} className="l-hero__sub">
               Agende posts, analise métricas e receba insights de IA —
               tudo em uma plataforma feita para quem leva o conteúdo a sério.
             </motion.p>
+
+            <motion.div variants={fadeUp} className="l-hero__trust">
+              <span className="l-hero__trust-label">Integra com</span>
+              {PLATFORMS.map(p => {
+                const Icon = p.icon
+                return (
+                  <span key={p.name} className="l-hero__trust-icon" style={{ color: p.color }} title={p.name}>
+                    <Icon />
+                  </span>
+                )
+              })}
+            </motion.div>
 
             <motion.div variants={fadeUp} className="l-hero__ctas">
               <Button
@@ -278,15 +333,6 @@ export default function Landing() {
           </motion.div>
         </div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          className="l-scroll"
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-        >
-          <div className="l-scroll__line" />
-          <span>Role para baixo</span>
-        </motion.div>
       </section>
 
       {/* ── Features ─────────────────────────────────── */}
@@ -413,6 +459,46 @@ export default function Landing() {
         </div>
       </div>
 
+      {/* ── Testimonials ─────────────────────────────── */}
+      <section className="l-testimonials">
+        <div className="container">
+          <motion.div
+            className="l-section-head"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-80px' }}
+            variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+          >
+            <motion.span variants={fadeUp} className="l-badge l-badge--primary">Depoimentos</motion.span>
+            <motion.h2 variants={fadeUp}>
+              Quem usa,<br /><span className="l-gradient-text">recomenda</span>
+            </motion.h2>
+          </motion.div>
+          <div className="l-testimonials__grid">
+            {TESTIMONIALS.map((t, i) => (
+              <motion.div
+                key={t.name}
+                className="l-testimonial"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.12, duration: 0.55 }}
+                whileHover={{ y: -5 }}
+              >
+                <p className="l-testimonial__quote">"{t.quote}"</p>
+                <div className="l-testimonial__author">
+                  <span className="l-testimonial__avatar" style={{ background: t.color }}>{t.initials}</span>
+                  <div>
+                    <strong>{t.name}</strong>
+                    <span>{t.role}</span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── Pricing ──────────────────────────────────── */}
       <section className="l-pricing" id="precos">
         <div className="container">
@@ -503,6 +589,37 @@ export default function Landing() {
                 >
                   Começar agora
                 </Button>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ──────────────────────────────────────── */}
+      <section className="l-faq">
+        <div className="container">
+          <motion.div
+            className="l-section-head"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-80px' }}
+            variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+          >
+            <motion.span variants={fadeUp} className="l-badge l-badge--primary">Dúvidas</motion.span>
+            <motion.h2 variants={fadeUp}>
+              Perguntas<br /><span className="l-gradient-text">frequentes</span>
+            </motion.h2>
+          </motion.div>
+          <div className="l-faq__list">
+            {FAQS.map((f, i) => (
+              <motion.div
+                key={f.q}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.07, duration: 0.45 }}
+              >
+                <FaqItem question={f.q} answer={f.a} />
               </motion.div>
             ))}
           </div>

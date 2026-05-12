@@ -980,6 +980,104 @@
 }
 
 /* ══════════════════════════════════════════════════════════
+   FAQ
+   ══════════════════════════════════════════════════════════ */
+.l-faq {
+  padding: 120px 0;
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Fundo decorativo sutil */
+.l-faq__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 10% 50%, rgba(79, 53, 232, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse at 90% 20%, rgba(232, 79, 165, 0.04) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.l-faq__list {
+  max-width: 780px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+}
+
+.l-faq__item {
+  background: #FDFCFF;
+  border: 1px solid #EDE8FF;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: border-color 280ms, box-shadow 280ms;
+}
+
+.l-faq__item:hover {
+  border-color: rgba(79, 53, 232, 0.28);
+  box-shadow: 0 4px 24px rgba(79, 53, 232, 0.07);
+}
+
+.l-faq__item--open {
+  border-color: rgba(79, 53, 232, 0.35);
+  box-shadow: 0 8px 36px rgba(79, 53, 232, 0.1);
+}
+
+.l-faq__q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  font-family: var(--font-family);
+  transition: color 200ms;
+}
+
+.l-faq__q:hover { color: #4F35E8; }
+.l-faq__item--open .l-faq__q { color: #4F35E8; }
+
+.l-faq__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(79, 53, 232, 0.08);
+  color: #4F35E8;
+  font-size: 1rem;
+  transition: background 200ms;
+}
+
+.l-faq__item--open .l-faq__icon {
+  background: rgba(79, 53, 232, 0.15);
+}
+
+.l-faq__a {
+  padding: 0 28px 24px;
+}
+
+.l-faq__a p {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+  border-top: 1px solid #EDE8FF;
+  padding-top: 18px;
+}
+
+/* ══════════════════════════════════════════════════════════
    RESPONSIVO
    ══════════════════════════════════════════════════════════ */
 @media (max-width: 1024px) {
@@ -1019,6 +1117,7 @@
 
   .l-features,
   .l-steps,
+  .l-faq,
   .l-pricing { padding: 80px 0; }
 
   .l-cta { padding: 100px 0; }

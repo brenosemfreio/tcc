@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   LuArrowRight, LuCheck, LuSparkles, LuTrendingUp, LuBell,
   LuCalendarClock, LuChartBar, LuZap, LuShare2, LuStar,
-  LuBrain, LuChevronRight,
+  LuBrain, LuChevronRight, LuPlus,
 } from 'react-icons/lu'
 import {
   FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin, FaPinterest,
@@ -13,6 +13,39 @@ import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import Button from '../../components/Button/Button'
 import './Landing.css'
+
+// ── FAQ item
+function FaqItem({ question, answer }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className={`l-faq__item${open ? ' l-faq__item--open' : ''}`}>
+      <button className="l-faq__q" onClick={() => setOpen(o => !o)}>
+        <span>{question}</span>
+        <motion.span
+          className="l-faq__icon"
+          animate={{ rotate: open ? 45 : 0 }}
+          transition={{ duration: 0.22 }}
+        >
+          <LuPlus />
+        </motion.span>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            className="l-faq__a"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            style={{ overflow: 'hidden' }}
+          >
+            <p>{answer}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
 
 // ── Animated counter
 function Counter({ end, suffix = '', label, delay = 0 }) {
@@ -120,6 +153,15 @@ const PLANS = [
     features: ['Perfis ilimitados', 'Posts ilimitados', 'Analytics premium', 'IA completa', 'Multi-usuário', 'Suporte 24/7'],
     highlight: false,
   },
+]
+
+const FAQS = [
+  { q: 'Posso cancelar quando quiser?',            a: 'Sim! Não há fidelidade. Cancele a qualquer momento, sem burocracia ou taxas adicionais.' },
+  { q: 'Funciona com conta pessoal do Instagram?', a: 'O agendamento requer conta Profissional (Criador ou Empresa). A conversão é gratuita e leva menos de 1 minuto nas configurações do Instagram.' },
+  { q: 'Tem período de teste gratuito?',           a: 'Sim, 14 dias gratuitos em qualquer plano, sem precisar cadastrar cartão de crédito.' },
+  { q: 'Quantas plataformas posso conectar?',      a: 'Lite: até 3 perfis. Pro: até 10. Elite: ilimitado. Suportamos Instagram, TikTok, YouTube, Facebook, LinkedIn e Pinterest.' },
+  { q: 'A IA gera conteúdo automaticamente?',     a: 'A IA sugere horários ideais, hashtags relevantes e tendências. A criação final é sempre sua — autenticidade vem de você.' },
+  { q: 'Como funciona o suporte?',                 a: 'Lite: e-mail. Pro: suporte prioritário com resposta em até 4h. Elite: 24/7 com gerente de conta dedicado.' },
 ]
 
 const MOCKUP_BARS = [40, 65, 50, 80, 60, 90, 70]
@@ -371,6 +413,42 @@ export default function Landing() {
                 </motion.div>
               )
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ──────────────────────────────────────── */}
+      <section className="l-faq">
+        <div className="l-faq__bg" aria-hidden="true" />
+        <div className="container">
+          <motion.div
+            className="l-section-head"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-80px' }}
+            variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+          >
+            <motion.span variants={fadeUp} className="l-badge l-badge--primary">Dúvidas</motion.span>
+            <motion.h2 variants={fadeUp}>
+              Perguntas<br /><span className="l-gradient-text">frequentes</span>
+            </motion.h2>
+            <motion.p variants={fadeUp}>
+              Tudo que você precisa saber antes de começar.
+            </motion.p>
+          </motion.div>
+
+          <div className="l-faq__list">
+            {FAQS.map((f, i) => (
+              <motion.div
+                key={f.q}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.07, duration: 0.45 }}
+              >
+                <FaqItem question={f.q} answer={f.a} />
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>

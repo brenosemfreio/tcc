@@ -156,9 +156,13 @@ export default function Landing() {
             animate="visible"
             variants={{ visible: { transition: { staggerChildren: 0.09 } } }}
           >
+            <motion.span variants={fadeUp} className="l-badge l-badge--glass">
+              <LuSparkles /> Powered by IA · Novo jeito de criar
+            </motion.span>
+
             <motion.h1 variants={fadeUp} className="l-hero__title">
               Seu estúdio criativo<br />
-              para <span className="l-accent-text">redes sociais</span>
+              para <span className="l-gradient-text">redes sociais</span>
             </motion.h1>
 
             <motion.p variants={fadeUp} className="l-hero__sub">
@@ -178,6 +182,15 @@ export default function Landing() {
               <Link to="/entrar" className="l-hero__link">
                 Já tenho conta <LuChevronRight />
               </Link>
+            </motion.div>
+
+            <motion.div variants={fadeUp} className="l-hero__proof">
+              <div className="l-avatars">
+                {['#7C5FE8', '#E84FA5', '#4F35E8', '#B44FE8'].map((c, i) => (
+                  <span key={i} className="l-avatar" style={{ background: c, marginLeft: i ? -10 : 0 }} />
+                ))}
+              </div>
+              <span>+1.200 criadores já usam o HubStudio</span>
             </motion.div>
           </motion.div>
 

@@ -48,10 +48,6 @@
 }
 
 /* ── Utilitários ─────────────────────────────────────────── */
-.l-accent-text {
-  color: #7C5FE8;
-}
-
 .l-gradient-text {
   background: linear-gradient(135deg, #7C5FE8 0%, #E84FA5 100%);
   -webkit-background-clip: text;

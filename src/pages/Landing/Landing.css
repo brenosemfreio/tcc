@@ -786,6 +786,74 @@
 
 
 /* ══════════════════════════════════════════════════════════
+   MARQUEE STRIP — plataformas
+   ══════════════════════════════════════════════════════════ */
+.l-marquee-strip {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  background: #fff;
+  height: 56px;
+  overflow: hidden;
+}
+
+.l-marquee-strip__label {
+  flex-shrink: 0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  padding: 0 32px;
+  white-space: nowrap;
+  border-right: 1px solid var(--color-border);
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.l-marquee-strip__track-wrap {
+  flex: 1;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.l-marquee-strip__track {
+  display: flex;
+  align-items: center;
+  animation: marquee-scroll 22s linear infinite;
+  width: max-content;
+}
+
+.l-marquee-strip__track:hover {
+  animation-play-state: paused;
+}
+
+.l-marquee-strip__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 28px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  border-right: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.l-marquee-strip__item svg {
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ══════════════════════════════════════════════════════════
    PRICING
    ══════════════════════════════════════════════════════════ */
 .l-pricing {

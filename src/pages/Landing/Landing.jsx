@@ -84,12 +84,13 @@ function Counter({ end, suffix = '', label, delay = 0 }) {
 
 // ── Data
 const PLATFORMS = [
+  { icon: FaPinterest, name: 'Pinterest',  color: '#E60023' },
+  { icon: FaXTwitter,  name: 'X',          color: '#000'    },
   { icon: FaInstagram, name: 'Instagram',  color: '#E1306C' },
-  { icon: FaTiktok,    name: 'TikTok',     color: '#69C9D0' },
+  { icon: FaTiktok,    name: 'TikTok',     color: '#010101' },
   { icon: FaYoutube,   name: 'YouTube',    color: '#FF0000' },
   { icon: FaFacebook,  name: 'Facebook',   color: '#1877F2' },
   { icon: FaLinkedin,  name: 'LinkedIn',   color: '#0A66C2' },
-  { icon: FaPinterest, name: 'Pinterest',  color: '#E60023' },
 ]
 
 const FEATURES = [
@@ -127,16 +128,6 @@ const STEPS = [
   { icon: LuShare2,        num: '01', title: 'Conecte suas redes',   desc: 'Vincule todas as suas contas sociais em segundos. Instagram, TikTok, YouTube e mais — tudo em um só lugar.' },
   { icon: LuCalendarClock, num: '02', title: 'Crie e agende',        desc: 'Crie conteúdo incrível com ajuda da IA, agende para o melhor horário e deixe a plataforma trabalhar por você.' },
   { icon: LuTrendingUp,    num: '03', title: 'Analise e cresça',     desc: 'Acompanhe métricas em tempo real, entenda o que funciona e tome decisões baseadas em dados reais.' },
-]
-
-const PLATFORMS = [
-  { icon: FaPinterest, name: 'Pinterest', color: '#E60023' },
-  { icon: FaXTwitter,  name: 'X',         color: '#000'    },
-  { icon: FaInstagram, name: 'Instagram', color: '#E1306C' },
-  { icon: FaTiktok,    name: 'TikTok',    color: '#010101' },
-  { icon: FaYoutube,   name: 'YouTube',   color: '#FF0000' },
-  { icon: FaFacebook,  name: 'Facebook',  color: '#1877F2' },
-  { icon: FaLinkedin,  name: 'LinkedIn',  color: '#0A66C2' },
 ]
 
 const PLANS = [

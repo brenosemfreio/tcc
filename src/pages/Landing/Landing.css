@@ -682,8 +682,15 @@
    STEPS — how it works
    ══════════════════════════════════════════════════════════ */
 .l-steps {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
   padding: 120px 0;
   background: #F9F8FF;
+}
+
+.l-steps > .container {
+  width: 100%;
 }
 
 .l-steps__grid {

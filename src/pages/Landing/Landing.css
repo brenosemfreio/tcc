@@ -691,6 +691,14 @@
 
 .l-steps > .container {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: calc(100vh - 240px);
+}
+
+.l-steps .l-section-head {
+  margin-bottom: 0;
 }
 
 .l-steps__grid {

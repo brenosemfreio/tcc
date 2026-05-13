@@ -684,7 +684,7 @@
 .l-steps {
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 120px 0;
   background: #F9F8FF;
 }
@@ -763,17 +763,6 @@
   z-index: 0;
 }
 
-.l-step__connector::after {
-  content: '';
-  position: absolute;
-  right: -1px;
-  top: -3px;
-  width: 8px;
-  height: 8px;
-  border-top: 2px solid rgba(79, 53, 232, 0.4);
-  border-right: 2px solid rgba(79, 53, 232, 0.4);
-  transform: rotate(45deg);
-}
 
 /* ══════════════════════════════════════════════════════════
    PRICING

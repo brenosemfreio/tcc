@@ -123,9 +123,9 @@ const FEATURES = [
 ]
 
 const STEPS = [
-  { icon: LuShare2,       num: '01', title: 'Conecte suas redes',      desc: 'Vincule suas contas em segundos. Sem configurações complexas.' },
-  { icon: LuCalendarClock,num: '02', title: 'Crie e agende conteúdo',  desc: 'Editor intuitivo com sugestões de IA e calendário visual.' },
-  { icon: LuTrendingUp,   num: '03', title: 'Acompanhe os resultados', desc: 'Métricas em tempo real para você evoluir a cada post.' },
+  { icon: LuShare2,        num: '01', title: 'Conecte suas redes',   desc: 'Vincule todas as suas contas sociais em segundos. Instagram, TikTok, YouTube e mais — tudo em um só lugar.' },
+  { icon: LuCalendarClock, num: '02', title: 'Crie e agende',        desc: 'Crie conteúdo incrível com ajuda da IA, agende para o melhor horário e deixe a plataforma trabalhar por você.' },
+  { icon: LuTrendingUp,    num: '03', title: 'Analise e cresça',     desc: 'Acompanhe métricas em tempo real, entenda o que funciona e tome decisões baseadas em dados reais.' },
 ]
 
 const PLANS = [
@@ -387,9 +387,11 @@ export default function Landing() {
             viewport={{ once: true, margin: '-80px' }}
             variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
           >
-            <motion.span variants={fadeUp} className="l-badge l-badge--primary">Como funciona</motion.span>
+            <motion.span variants={fadeUp} className="l-badge l-badge--primary">
+              <LuZap size={12} style={{ marginRight: 6 }} />Como funciona
+            </motion.span>
             <motion.h2 variants={fadeUp}>
-              Três passos para<br /><span className="l-gradient-text">transformar suas redes</span>
+              Em <span className="l-gradient-text">3 passos simples</span><br />você já está no ar
             </motion.h2>
           </motion.div>
 
@@ -407,9 +409,9 @@ export default function Landing() {
                 >
                   <div className="l-step__num">{s.num}</div>
                   <div className="l-step__icon"><Icon /></div>
+                  {i < STEPS.length - 1 && <div className="l-step__connector" />}
                   <h3>{s.title}</h3>
                   <p>{s.desc}</p>
-                  {i < STEPS.length - 1 && <div className="l-step__connector" />}
                 </motion.div>
               )
             })}

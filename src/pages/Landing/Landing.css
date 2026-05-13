@@ -701,6 +701,27 @@
   margin-bottom: 0;
 }
 
+.l-steps__perks {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.l-steps__perk {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 20px;
+  background: rgba(79, 53, 232, 0.07);
+  border: 1px solid rgba(79, 53, 232, 0.18);
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4F35E8;
+}
+
 .l-steps__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

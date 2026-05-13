@@ -395,6 +395,21 @@ export default function Landing() {
             </motion.h2>
           </motion.div>
 
+          <motion.div
+            className="l-steps__perks"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            {['Grátis para começar', 'Sem cartão de crédito', 'Cancele quando quiser'].map(text => (
+              <span key={text} className="l-steps__perk">
+                <LuCheck size={14} />
+                {text}
+              </span>
+            ))}
+          </motion.div>
+
           <div className="l-steps__grid">
             {STEPS.map((s, i) => {
               const Icon = s.icon

@@ -789,8 +789,6 @@
    MARQUEE STRIP — plataformas
    ══════════════════════════════════════════════════════════ */
 .l-marquee-strip {
-  display: flex;
-  align-items: center;
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
   background: #fff;
@@ -798,13 +796,21 @@
   overflow: hidden;
 }
 
+.l-marquee-strip__inner {
+  display: flex;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+  height: 100%;
+}
+
 .l-marquee-strip__label {
   flex-shrink: 0;
-  font-size: 0.6875rem;
+  font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   color: var(--color-text-muted);
-  padding: 0 32px;
+  padding: 0 28px;
   white-space: nowrap;
   border-right: 1px solid var(--color-border);
   height: 100%;
@@ -818,17 +824,19 @@
   height: 100%;
   display: flex;
   align-items: center;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
 }
 
 .l-marquee-strip__track {
   display: flex;
   align-items: center;
-  animation: marquee-scroll 22s linear infinite;
+  animation: marquee-scroll 40s linear infinite;
   width: max-content;
 }
 
-.l-marquee-strip__track:hover {
-  animation-play-state: paused;
+.l-marquee-strip:hover .l-marquee-strip__track {
+  animation-duration: 160s;
 }
 
 .l-marquee-strip__item {

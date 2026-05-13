@@ -473,15 +473,17 @@ export default function Landing() {
 
       {/* ── Marquee plataformas ──────────────────────── */}
       <div className="l-marquee-strip">
-        <span className="l-marquee-strip__label">INTEGRA COM AS MAIORES PLATAFORMAS</span>
-        <div className="l-marquee-strip__track-wrap">
-          <div className="l-marquee-strip__track">
-            {[...PLATFORMS, ...PLATFORMS].map((p, i) => (
-              <span key={i} className="l-marquee-strip__item">
-                <p.icon style={{ color: p.color }} />
-                {p.name}
-              </span>
-            ))}
+        <div className="l-marquee-strip__inner">
+          <span className="l-marquee-strip__label">INTEGRA COM AS MAIORES PLATAFORMAS</span>
+          <div className="l-marquee-strip__track-wrap">
+            <div className="l-marquee-strip__track">
+              {[...PLATFORMS, ...PLATFORMS].map((p, i) => (
+                <span key={i} className="l-marquee-strip__item">
+                  <p.icon style={{ color: p.color }} />
+                  {p.name}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>

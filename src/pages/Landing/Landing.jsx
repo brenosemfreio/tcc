@@ -424,7 +424,6 @@ export default function Landing() {
                 >
                   <div className="l-step__num">{s.num}</div>
                   <div className="l-step__icon"><Icon /></div>
-                  {i < STEPS.length - 1 && <div className="l-step__connector" />}
                   <h3>{s.title}</h3>
                   <p>{s.desc}</p>
                 </motion.div>

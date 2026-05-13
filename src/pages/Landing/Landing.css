@@ -831,12 +831,8 @@
 .l-marquee-strip__track {
   display: flex;
   align-items: center;
-  animation: marquee-scroll 40s linear infinite;
   width: max-content;
-}
-
-.l-marquee-strip:hover .l-marquee-strip__track {
-  animation-duration: 160s;
+  will-change: transform;
 }
 
 .l-marquee-strip__item {
@@ -856,10 +852,6 @@
   flex-shrink: 0;
 }
 
-@keyframes marquee-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
 
 /* ══════════════════════════════════════════════════════════
    PRICING

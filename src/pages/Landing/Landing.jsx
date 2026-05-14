@@ -6,6 +6,7 @@ import {
   LuCalendarClock, LuChartBar, LuZap, LuShare2, LuStar,
   LuBrain, LuChevronRight, LuPlus,
   LuRotateCcw, LuUser, LuGift, LuMessageCircle,
+  LuShieldCheck, LuCreditCard,
 } from 'react-icons/lu'
 import {
   FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin, FaPinterest,
@@ -267,25 +268,36 @@ const STEPS = [
 const PLANS = [
   {
     name: 'Lite',
+    tagline: 'INDIVIDUAL',
     monthly: 29,
     annual: 23,
     desc: 'Ferramentas essenciais para criadores emergentes.',
+    cta: 'Começar grátis',
+    ctaAction: 'signup',
     features: ['Até 3 perfis sociais', '30 posts/mês', 'Analytics básico', 'Suporte por e-mail'],
     highlight: false,
   },
   {
     name: 'Pro',
+    tagline: 'CRIADOR PRO',
     monthly: 79,
     annual: 63,
     desc: 'Para criadores prontos para dominar o algoritmo.',
+    cta: 'Escolher Pro',
+    ctaAction: 'signup',
+    inheritsFrom: 'Lite',
     features: ['Até 10 perfis sociais', 'Posts ilimitados', 'Analytics avançado', 'Agendamento com IA', 'Suporte prioritário'],
     highlight: true,
   },
   {
     name: 'Elite',
+    tagline: 'AGÊNCIAS & TIMES',
     monthly: 199,
     annual: 159,
     desc: 'Acesso ilimitado para agências e times.',
+    cta: 'Falar com vendas',
+    ctaAction: 'sales',
+    inheritsFrom: 'Pro',
     features: ['Perfis ilimitados', 'Posts ilimitados', 'Analytics premium', 'IA completa', 'Multi-usuário', 'Suporte 24/7'],
     highlight: false,
   },
@@ -709,7 +721,10 @@ export default function Landing() {
                     <LuStar /> Mais popular
                   </div>
                 )}
-                <h3 className="l-plan__name">{plan.name}</h3>
+                <div className="l-plan__head">
+                  <span className="l-plan__tagline">{plan.tagline}</span>
+                  <h3 className="l-plan__name">{plan.name}</h3>
+                </div>
                 <div className="l-plan__price">
                   <span className="l-plan__currency">R$</span>
                   <motion.span
@@ -723,7 +738,27 @@ export default function Landing() {
                   </motion.span>
                   <span className="l-plan__period">/mês</span>
                 </div>
+                <AnimatePresence mode="wait">
+                  {annual && (
+                    <motion.span
+                      key="savings"
+                      className="l-plan__savings"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.25 }}
+                    >
+                      Economiza R$ {(plan.monthly - plan.annual) * 12}/ano
+                    </motion.span>
+                  )}
+                </AnimatePresence>
                 <p className="l-plan__desc">{plan.desc}</p>
+                {plan.inheritsFrom && (
+                  <div className="l-plan__inherits">
+                    <LuCheck />
+                    Tudo do {plan.inheritsFrom}, mais:
+                  </div>
+                )}
                 <ul className="l-plan__features">
                   {plan.features.map(f => (
                     <li key={f}>
@@ -735,13 +770,32 @@ export default function Landing() {
                 <Button
                   variant={plan.highlight ? 'primary' : 'outline'}
                   fullWidth
-                  onClick={() => navigate('/cadastro')}
+                  iconRight={plan.highlight ? <LuArrowRight /> : null}
+                  onClick={() => {
+                    if (plan.ctaAction === 'sales') {
+                      window.location.href = 'mailto:vendas@hubstudio.com'
+                      return
+                    }
+                    navigate('/cadastro')
+                  }}
                 >
-                  Começar agora
+                  {plan.cta}
                 </Button>
               </motion.div>
             ))}
           </div>
+
+          <motion.div
+            className="l-pricing__trust"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <span><LuShieldCheck /> 14 dias grátis</span>
+            <span><LuCreditCard /> Sem cartão de crédito</span>
+            <span><LuRotateCcw /> Cancele quando quiser</span>
+          </motion.div>
         </div>
       </section>
 

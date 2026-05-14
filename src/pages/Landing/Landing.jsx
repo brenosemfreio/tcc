@@ -153,31 +153,17 @@ function FaqItem({ icon: Icon, question, answer }) {
           )}
           <span className="l-faq__q-text">{question}</span>
         </span>
-        <motion.span
-          className="l-faq__icon"
-          animate={{ rotate: open ? 45 : 0 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 22 }}
-        >
+        <span className="l-faq__icon">
           <LuPlus />
-        </motion.span>
+        </span>
       </button>
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            className="l-faq__a"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{
-              height: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
-              opacity: { duration: 0.25, ease: 'easeOut' },
-            }}
-            style={{ overflow: 'hidden' }}
-          >
+      <div className="l-faq__a-wrap">
+        <div className="l-faq__a-inner">
+          <div className="l-faq__a">
             <p>{answer}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

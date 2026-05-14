@@ -55,6 +55,88 @@ function Marquee({ items }) {
   )
 }
 
+// ── Feature previews
+function FeatureCalendarPreview() {
+  const days = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D']
+  const posts = new Set([1, 4, 8, 11])
+  return (
+    <div className="l-bento__preview l-bento__preview--calendar">
+      <div className="l-fp-cal__head">
+        {days.map((d, i) => <span key={i}>{d}</span>)}
+      </div>
+      <div className="l-fp-cal__grid">
+        {Array.from({ length: 14 }).map((_, i) => (
+          <div key={i} className={`l-fp-cal__cell${posts.has(i) ? ' l-fp-cal__cell--post' : ''}`}>
+            <span>{i + 14}</span>
+            {posts.has(i) && <span className="l-fp-cal__dot" />}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function FeatureChartPreview() {
+  const bars = [42, 60, 48, 75, 55, 88, 70]
+  return (
+    <div className="l-bento__preview l-bento__preview--chart">
+      <div className="l-fp-chart__head">
+        <span className="l-fp-chart__metric">
+          <LuTrendingUp />
+          +127%
+        </span>
+        <span className="l-fp-chart__live">
+          <span className="l-fp-chart__pulse" />
+          Ao vivo
+        </span>
+      </div>
+      <div className="l-fp-chart__bars">
+        {bars.map((h, i) => (
+          <div key={i} className="l-fp-chart__bar" style={{ '--h': `${h}%`, '--i': i }} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function FeatureHashtagsPreview() {
+  return (
+    <div className="l-bento__preview l-bento__preview--hashtags">
+      <span className="l-fp-tag-label">
+        <LuSparkles size={12} />
+        IA sugeriu
+      </span>
+      <div className="l-fp-tag-list">
+        {['#marketing', '#growth', '#socialmedia', '#contentcreator'].map((tag, i) => (
+          <span key={tag} className="l-fp-tag" style={{ '--i': i }}>{tag}</span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function FeaturePlatformsPreview() {
+  const platforms = [
+    { Icon: FaInstagram, color: '#E1306C' },
+    { Icon: FaTiktok,    color: '#010101' },
+    { Icon: FaYoutube,   color: '#FF0000' },
+    { Icon: FaFacebook,  color: '#1877F2' },
+    { Icon: FaLinkedin,  color: '#0A66C2' },
+  ]
+  return (
+    <div className="l-bento__preview l-bento__preview--platforms">
+      <div className="l-fp-platform-stack">
+        {platforms.map(({ Icon, color }, i) => (
+          <span key={i} className="l-fp-platform" style={{ '--i': i, background: color }}>
+            <Icon />
+          </span>
+        ))}
+      </div>
+      <span className="l-fp-platform-count">+5 redes</span>
+    </div>
+  )
+}
+
 // ── FAQ item
 function FaqItem({ question, answer }) {
   const [open, setOpen] = useState(false)
@@ -138,6 +220,7 @@ const FEATURES = [
     slot: 'wide',
     icon: LuCalendarClock,
     color: '#7C5FE8',
+    preview: 'calendar',
     title: 'Agendamento Inteligente',
     desc: 'Planeje e publique em todas as redes num calendário visual. A IA sugere os horários de maior engajamento automaticamente.',
   },
@@ -145,6 +228,7 @@ const FEATURES = [
     slot: 'tall',
     icon: LuChartBar,
     color: '#E84FA5',
+    preview: 'chart',
     title: 'Analytics em Tempo Real',
     desc: 'Dashboards lindos com alcance, engajamento, crescimento de seguidores e muito mais — atualizados ao vivo.',
   },
@@ -152,6 +236,7 @@ const FEATURES = [
     slot: 'sm',
     icon: LuBrain,
     color: '#4F35E8',
+    preview: 'hashtags',
     title: 'IA Insights',
     desc: 'Sugestões de conteúdo, hashtags e tendências geradas por inteligência artificial.',
   },
@@ -159,6 +244,7 @@ const FEATURES = [
     slot: 'sm',
     icon: LuShare2,
     color: '#B44FE8',
+    preview: 'platforms',
     title: 'Multi-plataforma',
     desc: 'Instagram, TikTok, LinkedIn, YouTube e mais em uma única tela.',
   },
@@ -397,9 +483,15 @@ export default function Landing() {
                   transition={{ delay: i * 0.1, duration: 0.55 }}
                   whileHover={{ y: -5 }}
                 >
-                  <div className="l-bento__icon"><Icon /></div>
-                  <h3>{f.title}</h3>
-                  <p>{f.desc}</p>
+                  <div className="l-bento__head">
+                    <div className="l-bento__icon"><Icon /></div>
+                    <h3>{f.title}</h3>
+                    <p>{f.desc}</p>
+                  </div>
+                  {f.preview === 'calendar'  && <FeatureCalendarPreview />}
+                  {f.preview === 'chart'     && <FeatureChartPreview />}
+                  {f.preview === 'hashtags'  && <FeatureHashtagsPreview />}
+                  {f.preview === 'platforms' && <FeaturePlatformsPreview />}
                   <div className="l-bento__glow" />
                 </motion.div>
               )

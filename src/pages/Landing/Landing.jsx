@@ -156,7 +156,7 @@ function FaqItem({ icon: Icon, question, answer }) {
         <motion.span
           className="l-faq__icon"
           animate={{ rotate: open ? 45 : 0 }}
-          transition={{ duration: 0.22 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 22 }}
         >
           <LuPlus />
         </motion.span>
@@ -168,7 +168,10 @@ function FaqItem({ icon: Icon, question, answer }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            transition={{
+              height: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
+              opacity: { duration: 0.25, ease: 'easeOut' },
+            }}
             style={{ overflow: 'hidden' }}
           >
             <p>{answer}</p>

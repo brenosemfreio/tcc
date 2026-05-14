@@ -5,6 +5,7 @@ import {
   LuArrowRight, LuCheck, LuSparkles, LuTrendingUp, LuBell,
   LuCalendarClock, LuChartBar, LuZap, LuShare2, LuStar,
   LuBrain, LuChevronRight, LuPlus,
+  LuRotateCcw, LuUser, LuGift, LuMessageCircle,
 } from 'react-icons/lu'
 import {
   FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin, FaPinterest,
@@ -138,12 +139,19 @@ function FeaturePlatformsPreview() {
 }
 
 // ── FAQ item
-function FaqItem({ question, answer }) {
+function FaqItem({ icon: Icon, question, answer }) {
   const [open, setOpen] = useState(false)
   return (
     <div className={`l-faq__item${open ? ' l-faq__item--open' : ''}`}>
       <button className="l-faq__q" onClick={() => setOpen(o => !o)}>
-        <span>{question}</span>
+        <span className="l-faq__q-wrap">
+          {Icon && (
+            <span className="l-faq__q-icon">
+              <Icon />
+            </span>
+          )}
+          <span className="l-faq__q-text">{question}</span>
+        </span>
         <motion.span
           className="l-faq__icon"
           animate={{ rotate: open ? 45 : 0 }}
@@ -284,12 +292,12 @@ const PLANS = [
 ]
 
 const FAQS = [
-  { q: 'Posso cancelar quando quiser?',            a: 'Sim! Não há fidelidade. Cancele a qualquer momento, sem burocracia ou taxas adicionais.' },
-  { q: 'Funciona com conta pessoal do Instagram?', a: 'O agendamento requer conta Profissional (Criador ou Empresa). A conversão é gratuita e leva menos de 1 minuto nas configurações do Instagram.' },
-  { q: 'Tem período de teste gratuito?',           a: 'Sim, 14 dias gratuitos em qualquer plano, sem precisar cadastrar cartão de crédito.' },
-  { q: 'Quantas plataformas posso conectar?',      a: 'Lite: até 3 perfis. Pro: até 10. Elite: ilimitado. Suportamos Instagram, TikTok, YouTube, Facebook, LinkedIn e Pinterest.' },
-  { q: 'A IA gera conteúdo automaticamente?',     a: 'A IA sugere horários ideais, hashtags relevantes e tendências. A criação final é sempre sua — autenticidade vem de você.' },
-  { q: 'Como funciona o suporte?',                 a: 'Lite: e-mail. Pro: suporte prioritário com resposta em até 4h. Elite: 24/7 com gerente de conta dedicado.' },
+  { icon: LuRotateCcw,     q: 'Posso cancelar quando quiser?',            a: 'Sim! Não há fidelidade. Cancele a qualquer momento, sem burocracia ou taxas adicionais.' },
+  { icon: LuUser,          q: 'Funciona com conta pessoal do Instagram?', a: 'O agendamento requer conta Profissional (Criador ou Empresa). A conversão é gratuita e leva menos de 1 minuto nas configurações do Instagram.' },
+  { icon: LuGift,          q: 'Tem período de teste gratuito?',           a: 'Sim, 14 dias gratuitos em qualquer plano, sem precisar cadastrar cartão de crédito.' },
+  { icon: LuShare2,        q: 'Quantas plataformas posso conectar?',      a: 'Lite: até 3 perfis. Pro: até 10. Elite: ilimitado. Suportamos Instagram, TikTok, YouTube, Facebook, LinkedIn e Pinterest.' },
+  { icon: LuBrain,         q: 'A IA gera conteúdo automaticamente?',     a: 'A IA sugere horários ideais, hashtags relevantes e tendências. A criação final é sempre sua — autenticidade vem de você.' },
+  { icon: LuMessageCircle, q: 'Como funciona o suporte?',                 a: 'Lite: e-mail. Pro: suporte prioritário com resposta em até 4h. Elite: 24/7 com gerente de conta dedicado.' },
 ]
 
 const MOCKUP_BARS = [40, 65, 50, 80, 60, 90, 70]
@@ -571,34 +579,64 @@ export default function Landing() {
       <section className="l-faq" id="faq">
         <div className="l-faq__bg" aria-hidden="true" />
         <div className="container">
-          <motion.div
-            className="l-section-head"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
-            variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-          >
-            <motion.span variants={fadeUp} className="l-badge l-badge--primary">Dúvidas</motion.span>
-            <motion.h2 variants={fadeUp}>
-              Perguntas<br /><span className="l-gradient-text">frequentes</span>
-            </motion.h2>
-            <motion.p variants={fadeUp}>
-              Tudo que você precisa saber antes de começar.
-            </motion.p>
-          </motion.div>
+          <div className="l-faq__layout">
+            <motion.div
+              className="l-faq__head-col"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-80px' }}
+              variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+            >
+              <div className="l-section-head l-section-head--left">
+                <motion.span variants={fadeUp} className="l-badge l-badge--primary">Dúvidas</motion.span>
+                <motion.h2 variants={fadeUp}>
+                  Perguntas<br /><span className="l-gradient-text">frequentes</span>
+                </motion.h2>
+                <motion.p variants={fadeUp}>
+                  Tudo que você precisa saber antes de começar.
+                </motion.p>
+              </div>
+            </motion.div>
 
-          <div className="l-faq__list">
-            {FAQS.map((f, i) => (
+            <div className="l-faq__list-col">
+              <div className="l-faq__list">
+                {FAQS.map((f, i) => (
+                  <motion.div
+                    key={f.q}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.07, duration: 0.45 }}
+                  >
+                    <FaqItem icon={f.icon} question={f.q} answer={f.a} />
+                  </motion.div>
+                ))}
+              </div>
+
               <motion.div
-                key={f.q}
+                className="l-faq__cta"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.07, duration: 0.45 }}
+                transition={{ duration: 0.5, delay: 0.15 }}
               >
-                <FaqItem question={f.q} answer={f.a} />
+                <div className="l-faq__cta-icon">
+                  <LuMessageCircle />
+                </div>
+                <div className="l-faq__cta-text">
+                  <h3>Ainda tem dúvidas?</h3>
+                  <p>Nosso time responde em minutos.</p>
+                </div>
+                <Button
+                  variant="primary"
+                  size="md"
+                  iconRight={<LuArrowRight />}
+                  onClick={() => { window.location.href = 'mailto:contato@hubstudio.com' }}
+                >
+                  Falar com a gente
+                </Button>
               </motion.div>
-            ))}
+            </div>
           </div>
         </div>
       </section>

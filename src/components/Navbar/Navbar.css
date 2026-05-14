@@ -174,4 +174,7 @@
 
 @media (max-width: 480px) {
   .navbar__inner { height: 64px; padding-inline: 16px; }
+  .navbar__nav { top: 64px; }
+  .navbar__overlay { top: 64px; }
+  .navbar__logo-img { height: 36px; }
 }

@@ -1715,21 +1715,38 @@
 /* ══════════════════════════════════════════════════════════
    RESPONSIVO
    ══════════════════════════════════════════════════════════ */
+
+/* ── ≤1280px: narrow desktop ───────────────────────────── */
+@media (max-width: 1280px) {
+  .l-hero__inner {
+    gap: 120px;
+    grid-template-columns: 1fr 1fr;
+  }
+  .l-mockup { max-width: 460px; }
+}
+
+/* ── ≤1024px: tablet ───────────────────────────────────── */
 @media (max-width: 1024px) {
+  /* Container interno das sections menos largo */
+  .l-landing section .container {
+    padding-inline: 32px;
+  }
+
+  /* Hero stack vertical */
   .l-hero__inner {
     grid-template-columns: 1fr;
+    gap: 56px;
     min-height: auto;
     padding-top: 120px;
     text-align: center;
   }
-
   .l-hero__content { align-items: center; }
   .l-hero__sub { max-width: 100%; }
+  .l-hero__title { white-space: normal; }
   .l-hero__visual { display: none; }
 
-  .l-bento {
-    grid-template-columns: 1fr 1fr;
-  }
+  /* Bento: 2 cols com wide spanning */
+  .l-bento { grid-template-columns: 1fr 1fr; }
   .l-bento__card--wide {
     grid-column: 1 / 3;
     grid-template-columns: 1fr;
@@ -1737,16 +1754,35 @@
   }
   .l-bento__card--tall { grid-column: span 1; grid-row: auto; }
 
+  /* Stats 2 cols */
   .l-stats__inner { grid-template-columns: repeat(2, 1fr); gap: 32px; }
-  .l-steps__grid  { grid-template-columns: 1fr; gap: 20px; }
-  .l-plans        { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; }
 
+  /* Steps: desliga min-height: 100vh e space-between */
+  .l-steps {
+    min-height: auto;
+    align-items: stretch;
+  }
+  .l-steps > .container {
+    min-height: 0;
+    display: block;
+  }
+  .l-steps .l-section-head { margin-bottom: 56px; }
+  .l-steps__perks { margin-bottom: 56px; }
+  .l-steps__grid { grid-template-columns: 1fr; gap: 32px; }
+
+  /* Plans single column centered */
+  .l-plans {
+    grid-template-columns: 1fr;
+    max-width: 440px;
+    margin: 0 auto;
+  }
   .l-pricing__trust {
     flex-direction: column;
     gap: 14px;
     margin-top: 40px;
   }
 
+  /* FAQ stack header em cima, lista embaixo */
   .l-faq__layout {
     grid-template-columns: 1fr;
     gap: 48px;
@@ -1761,29 +1797,161 @@
   .l-section-head--left p { max-width: 500px; margin: 0 auto; }
 }
 
-@media (max-width: 768px) {
-  .l-hero { min-height: auto; padding-bottom: 80px; }
-  .l-hero__inner { padding-top: 100px; gap: 40px; }
-  .l-hero__title { font-size: 2.2rem; }
+/* ── ≤900px: navbar hamburger triggers (já tratado em Navbar.css) ── */
 
-  .l-bento { grid-template-columns: 1fr; }
+/* ── ≤768px: mobile (large phones / small tablets) ────── */
+@media (max-width: 768px) {
+  /* Container ainda menor */
+  .l-landing section .container {
+    padding-inline: 20px;
+  }
+
+  /* Hero */
+  .l-hero { min-height: auto; padding-bottom: 56px; }
+  .l-hero__inner { padding-top: 100px; gap: 36px; }
+  .l-hero__title { font-size: clamp(1.875rem, 7vw, 2.4rem); }
+  .l-hero__sub { font-size: 0.9375rem; }
+  .l-hero__ctas { gap: 14px; }
+  .l-hero__proof { font-size: 0.8125rem; }
+
+  /* Bento — 1 col */
+  .l-bento { grid-template-columns: 1fr; gap: 16px; }
   .l-bento__card--wide,
   .l-bento__card--tall {
     grid-column: 1;
     grid-row: auto;
   }
-  .l-bento__card--wide { grid-template-columns: 1fr; }
+  .l-bento__card--wide { grid-template-columns: 1fr; gap: 20px; }
+  .l-bento__card { padding: 24px; border-radius: 20px; }
+  .l-bento__icon { width: 46px; height: 46px; font-size: 1.25rem; }
+  .l-bento__card h3 { font-size: 1.125rem; }
+  .l-bento__card p { font-size: 0.875rem; }
 
+  /* Stats */
   .l-stats { padding: 60px 0; }
   .l-stats__inner { grid-template-columns: repeat(2, 1fr); gap: 24px; }
 
+  /* Section paddings reduzidos */
   .l-features,
   .l-steps,
   .l-faq,
-  .l-pricing { padding: 80px 0; }
+  .l-pricing { padding: 72px 0; }
+  .l-cta     { padding: 80px 0; }
 
-  .l-cta { padding: 100px 0; }
+  /* Steps perks */
+  .l-steps__perks { gap: 8px; }
+  .l-steps__perk { padding: 8px 14px; font-size: 0.8125rem; }
 
+  /* Marquee strip — label compacto */
+  .l-marquee-strip { height: 48px; }
+  .l-marquee-strip__label {
+    font-size: 0.5rem;
+    padding: 0 14px;
+    letter-spacing: 0.06em;
+  }
+  .l-marquee-strip__item {
+    padding: 0 18px;
+    font-size: 0.8125rem;
+  }
+  .l-marquee-strip__item svg { font-size: 0.9375rem; }
+
+  /* FAQ items mais compactos */
+  .l-faq__q { padding: 18px 20px; font-size: 0.9375rem; gap: 14px; }
+  .l-faq__a { padding: 0 20px 20px; }
+  .l-faq__q-wrap { gap: 12px; }
+  .l-faq__q-icon { width: 34px; height: 34px; font-size: 0.9375rem; }
+  .l-faq__icon { width: 28px; height: 28px; }
+  .l-faq__cta {
+    padding: 24px;
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  .l-faq__cta-text { min-width: 0; }
+
+  /* Plans */
+  .l-plan { padding: 28px 22px; gap: 14px; border-radius: 22px; }
+  .l-plan__amount { font-size: 2.5rem; }
+  .l-plan--highlight { transform: none; }
+
+  /* Pricing trust */
+  .l-pricing__trust > span { font-size: 0.875rem; }
+
+  /* CTA final */
+  .l-cta h2 { font-size: clamp(1.75rem, 6vw, 2.25rem); }
+  .l-cta p { font-size: 0.9375rem; }
+
+  /* Hide hero decorações */
   .l-float { display: none; }
   .l-scroll { display: none; }
+
+  /* Section header text */
+  .l-section-head h2 { font-size: clamp(1.75rem, 6vw, 2.25rem); }
+  .l-section-head p { font-size: 0.9375rem; }
+}
+
+/* ── ≤480px: small phones ─────────────────────────────── */
+@media (max-width: 480px) {
+  .l-landing section .container {
+    padding-inline: 16px;
+  }
+
+  /* Hero ainda menor */
+  .l-hero { padding-bottom: 40px; }
+  .l-hero__inner { padding-top: 88px; gap: 28px; }
+  .l-hero__title { font-size: clamp(1.625rem, 9vw, 2rem); }
+  .l-hero__sub { font-size: 0.875rem; }
+  .l-hero__ctas {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .l-hero__ctas > .btn { width: 100%; }
+
+  /* Sections paddings */
+  .l-features,
+  .l-steps,
+  .l-faq,
+  .l-pricing,
+  .l-stats { padding: 56px 0; }
+  .l-cta { padding: 64px 0; }
+
+  /* Stats — 1 col em telas muito pequenas */
+  .l-stats__inner { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .l-stat strong { font-size: 1.875rem; }
+  .l-stat span { font-size: 0.8125rem; }
+
+  /* Section header */
+  .l-section-head { gap: 12px; margin-bottom: 40px; }
+  .l-section-head h2 { font-size: clamp(1.5rem, 7vw, 1.875rem); }
+
+  /* Steps */
+  .l-steps .l-section-head { margin-bottom: 40px; }
+  .l-steps__perks { margin-bottom: 40px; }
+  .l-steps__grid { gap: 24px; }
+  .l-step__num { font-size: 3.5rem; }
+
+  /* Bento */
+  .l-bento__card { padding: 20px; border-radius: 18px; }
+  .l-bento__icon { width: 42px; height: 42px; border-radius: 11px; font-size: 1.125rem; }
+  .l-bento__preview--calendar { padding: 10px; }
+  .l-fp-chart__bars { height: 80px; }
+
+  /* FAQ */
+  .l-faq__q { padding: 14px 16px; }
+  .l-faq__a { padding: 0 16px 18px; }
+  .l-faq__cta { padding: 20px 18px; }
+  .l-faq__cta-icon { width: 44px; height: 44px; font-size: 1.0625rem; }
+
+  /* Plans */
+  .l-plan { padding: 24px 20px; border-radius: 20px; }
+  .l-plan__amount { font-size: 2.25rem; }
+  .l-plan__popular { font-size: 0.75rem; padding: 6px 14px; }
+
+  /* Marquee — label totalmente escondido */
+  .l-marquee-strip__label { display: none; }
+
+  /* CTA final */
+  .l-cta h2 { font-size: 1.625rem; }
 }

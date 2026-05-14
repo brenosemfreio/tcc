@@ -727,20 +727,13 @@ export default function Landing() {
                   </motion.span>
                   <span className="l-plan__period">/mês</span>
                 </div>
-                <AnimatePresence mode="wait">
-                  {annual && (
-                    <motion.span
-                      key="savings"
-                      className="l-plan__savings"
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.25 }}
-                    >
+                <div className={`l-plan__savings-wrap${annual ? ' is-visible' : ''}`}>
+                  <div className="l-plan__savings-inner">
+                    <span className="l-plan__savings">
                       Economiza R$ {(plan.monthly - plan.annual) * 12}/ano
-                    </motion.span>
-                  )}
-                </AnimatePresence>
+                    </span>
+                  </div>
+                </div>
                 <p className="l-plan__desc">{plan.desc}</p>
                 {plan.inheritsFrom && (
                   <div className="l-plan__inherits">

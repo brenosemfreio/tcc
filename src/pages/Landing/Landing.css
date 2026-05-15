@@ -256,9 +256,15 @@
 
 /* Visual side */
 .l-hero__visual {
-  position: relative;
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+/* Wrapper que abraça o mockup — floats posicionados relativos a ele */
+.l-hero__mockup-wrap {
+  position: relative;
+  width: fit-content;
 }
 
 /* Mockup */
@@ -1790,14 +1796,11 @@
   .l-hero__title { font-size: clamp(1.875rem, 3vw, 2.5rem); white-space: normal; }
   .l-hero__sub   { font-size: 0.9375rem; max-width: 360px; }
 
-  /* Floating badges — menores e sem overflow */
+  /* Floating badges — menores mas mantêm posição relativa ao mockup-wrap */
   .l-float { font-size: 0.6875rem; padding: 7px 10px; gap: 7px; border-radius: 10px; }
   .l-float__icon { width: 26px; height: 26px; font-size: 0.8125rem; border-radius: 6px; }
   .l-float strong { font-size: 0.75rem; }
   .l-float span { font-size: 0.6875rem; }
-  .l-float--1 { left: -8px; top: -8px; }
-  .l-float--2 { right: -8px; bottom: 24px; }
-  .l-float--3 { left: -8px; }
 
   /* Section paddings menores */
   .l-features,

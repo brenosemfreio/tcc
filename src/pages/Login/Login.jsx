@@ -2,14 +2,14 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
-  LuEye, LuEyeOff, LuSparkles, LuArrowLeft, LuStar,
-  LuCircleAlert,
+  LuArrowLeft, LuEye, LuEyeOff, LuSparkles, LuStar,
+  LuTrendingUp, LuShieldCheck, LuZap, LuCircleAlert,
 } from 'react-icons/lu'
 import { useAuth } from '../../contexts/AuthContext'
-import Button from '../../components/Button/Button'
 import logoHub from '../../assets/images/logo-hub.png'
 import './Login.css'
 
+/* SVG oficiais inline para OAuth */
 function GoogleIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
@@ -23,7 +23,7 @@ function GoogleIcon() {
 
 function GitHubIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="#111827">
       <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
     </svg>
   )
@@ -40,14 +40,14 @@ export default function Login() {
 
   const validate = () => {
     const next = {}
-    if (!form.email) next.email = 'Informe seu e-mail'
+    if (!form.email.trim()) next.email = 'Este campo é obrigatório'
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) next.email = 'E-mail inválido'
-    if (!form.password) next.password = 'Informe sua senha'
+    if (!form.password) next.password = 'Este campo é obrigatório'
     setErrors(next)
     return Object.keys(next).length === 0
   }
 
-  const handleChange = (key, value) => {
+  const updateField = (key, value) => {
     setForm(f => ({ ...f, [key]: value }))
     if (errors[key]) setErrors(e => ({ ...e, [key]: undefined }))
     if (globalError) setGlobalError('')
@@ -70,79 +70,99 @@ export default function Login() {
 
   return (
     <div className="auth">
-      {/* ── Lado esquerdo: showcase ── */}
-      <aside className="auth__showcase" aria-hidden="true">
-        <div className="auth__blob auth__blob--1" />
-        <div className="auth__blob auth__blob--2" />
+      {/* ─────────── ESQUERDA — Showcase ─────────── */}
+      <aside className="auth__showcase">
+        <div className="auth__blob auth__blob--1" aria-hidden="true" />
+        <div className="auth__blob auth__blob--2" aria-hidden="true" />
 
         <Link to="/" className="auth__logo" aria-label="HubStudio — ir para a página inicial">
           <img src={logoHub} alt="HubStudio" className="auth__logo-img" />
         </Link>
 
-        <div className="auth__hero">
+        <div className="auth__content">
           <span className="auth__badge">
-            <LuSparkles size={12} />
+            <LuSparkles size={12} aria-hidden="true" />
             Bem-vindo de volta
           </span>
+
           <h2 className="auth__title">
             Continue construindo<br />
             <span className="auth__title-accent">sua presença digital.</span>
           </h2>
+
           <p className="auth__lead">
             Entre na sua conta para acessar agendamentos, métricas e insights
-            de IA — tudo onde você parou.
+            de IA — exatamente onde você parou.
           </p>
 
-          <div className="auth__proof">
-            <div className="auth__proof-avatars">
-              <div className="auth__proof-avatar" style={{ background: 'linear-gradient(135deg, #7C5FE8, #4F35E8)' }} />
-              <div className="auth__proof-avatar" style={{ background: 'linear-gradient(135deg, #E84FA5, #B44FE8)' }} />
-              <div className="auth__proof-avatar" style={{ background: 'linear-gradient(135deg, #4FCEE8, #4F8FE8)' }} />
+          <ul className="auth__perks" aria-label="Benefícios">
+            <li>
+              <span className="auth__perk-icon" aria-hidden="true"><LuZap size={14} /></span>
+              Agendamento ilimitado nas redes principais
+            </li>
+            <li>
+              <span className="auth__perk-icon" aria-hidden="true"><LuTrendingUp size={14} /></span>
+              Métricas unificadas e insights de IA
+            </li>
+            <li>
+              <span className="auth__perk-icon" aria-hidden="true"><LuShieldCheck size={14} /></span>
+              Sem cartão de crédito — cancele quando quiser
+            </li>
+          </ul>
+
+          <div className="auth__proof" role="group" aria-label="Social proof">
+            <div className="auth__avatars" aria-hidden="true">
+              <span className="auth__avatar" style={{ background: 'linear-gradient(135deg, #7C5FE8, #4F35E8)' }}>JS</span>
+              <span className="auth__avatar" style={{ background: 'linear-gradient(135deg, #E84FA5, #B44FE8)' }}>RM</span>
+              <span className="auth__avatar" style={{ background: 'linear-gradient(135deg, #4FCEE8, #4F8FE8)' }}>LV</span>
             </div>
             <div className="auth__proof-text">
-              <strong>+1.200 criadores ativos</strong>
+              <strong>+1.200 criadores já usam o HubStudio</strong>
               <span>Agendaram posts hoje</span>
             </div>
           </div>
-        </div>
 
-        <blockquote className="auth__quote">
-          <div className="auth__quote-stars">
-            {[...Array(5)].map((_, i) => <LuStar key={i} size={12} fill="currentColor" />)}
-          </div>
-          <p>
-            "Reduzi 6 horas por semana de trabalho operacional. Agora foco em criar
-            conteúdo e os insights de IA cuidam do resto."
-          </p>
-          <div className="auth__quote-author">
-            <div className="auth__quote-avatar">JS</div>
-            <div>
-              <strong>Júlia Sampaio</strong>
-              <span>Creator, @juliacria</span>
+          <blockquote className="auth__testimonial">
+            <div className="auth__stars" aria-label="5 estrelas">
+              {[...Array(5)].map((_, i) => <LuStar key={i} size={13} fill="currentColor" />)}
             </div>
-          </div>
-        </blockquote>
+            <p className="auth__testimonial-quote">
+              Reduzi 6 horas por semana de trabalho operacional. Agora foco em
+              criar conteúdo e os insights de IA cuidam do resto.
+            </p>
+            <footer className="auth__testimonial-author">
+              <span className="auth__testimonial-avatar" aria-hidden="true">JS</span>
+              <div>
+                <strong>Júlia Sampaio</strong>
+                <span>@juliacria</span>
+              </div>
+            </footer>
+          </blockquote>
+        </div>
       </aside>
 
-      {/* ── Lado direito: formulário ── */}
-      <motion.section
-        className="auth__form-side"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
-      >
-        <Link to="/" className="auth__back">
-          <LuArrowLeft size={14} />
+      {/* ─────────── DIREITA — Formulário ─────────── */}
+      <section className="auth__pane">
+        <Link to="/" className="auth__back" aria-label="Voltar para a página inicial">
+          <LuArrowLeft size={14} aria-hidden="true" />
           Voltar
         </Link>
 
-        <div className="auth__form-wrap">
+        <motion.div
+          className="auth__card"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+        >
+          <div className="auth__mobile-logo" aria-hidden="true">
+            <img src={logoHub} alt="HubStudio" />
+          </div>
+
           <header className="auth__heading">
             <h1>Entrar na conta</h1>
             <p>Acesse seu painel e continue de onde parou.</p>
           </header>
 
-          {/* OAuth */}
           <div className="auth__oauth">
             <button type="button" className="auth__oauth-btn" aria-label="Entrar com Google">
               <GoogleIcon />
@@ -154,11 +174,9 @@ export default function Login() {
             </button>
           </div>
 
-          <div className="auth__divider">ou continue com email</div>
+          <div className="auth__divider" role="separator">ou continue com email</div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="auth__form" noValidate>
-            {/* E-mail */}
             <div className="auth__field">
               <div className="auth__input-wrap">
                 <input
@@ -166,7 +184,7 @@ export default function Login() {
                   type="email"
                   placeholder=" "
                   value={form.email}
-                  onChange={e => handleChange('email', e.target.value)}
+                  onChange={e => updateField('email', e.target.value)}
                   className={`auth__input${errors.email ? ' auth__input--error' : ''}`}
                   autoComplete="email"
                   aria-label="E-mail"
@@ -176,14 +194,13 @@ export default function Login() {
                 <label htmlFor="email" className="auth__label">E-mail</label>
               </div>
               {errors.email && (
-                <p id="email-error" className="auth__field-error">
-                  <LuCircleAlert size={12} />
+                <p id="email-error" className="auth__field-error" role="alert">
+                  <LuCircleAlert size={12} aria-hidden="true" />
                   {errors.email}
                 </p>
               )}
             </div>
 
-            {/* Senha */}
             <div className="auth__field">
               <div className="auth__input-wrap">
                 <input
@@ -191,7 +208,7 @@ export default function Login() {
                   type={showPassword ? 'text' : 'password'}
                   placeholder=" "
                   value={form.password}
-                  onChange={e => handleChange('password', e.target.value)}
+                  onChange={e => updateField('password', e.target.value)}
                   className={`auth__input auth__input--with-action${errors.password ? ' auth__input--error' : ''}`}
                   autoComplete="current-password"
                   aria-label="Senha"
@@ -210,8 +227,8 @@ export default function Login() {
                 </button>
               </div>
               {errors.password && (
-                <p id="password-error" className="auth__field-error">
-                  <LuCircleAlert size={12} />
+                <p id="password-error" className="auth__field-error" role="alert">
+                  <LuCircleAlert size={12} aria-hidden="true" />
                   {errors.password}
                 </p>
               )}
@@ -222,29 +239,22 @@ export default function Login() {
             </div>
 
             {globalError && (
-              <div className="auth__error" role="alert">
-                <LuCircleAlert size={16} />
+              <p className="auth__field-error" role="alert" style={{ marginTop: 0 }}>
+                <LuCircleAlert size={12} aria-hidden="true" />
                 {globalError}
-              </div>
+              </p>
             )}
 
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              fullWidth
-              loading={loading}
-              className="auth__submit"
-            >
-              Entrar
-            </Button>
+            <button type="submit" className="auth__submit" disabled={loading} aria-busy={loading}>
+              {loading ? <span className="auth__submit-spinner" aria-hidden="true" /> : 'Entrar'}
+            </button>
           </form>
 
           <p className="auth__switch">
-            Ainda não tem conta? <Link to="/cadastro">Criar conta grátis</Link>
+            Não tem uma conta? <Link to="/cadastro">Criar conta grátis</Link>
           </p>
-        </div>
-      </motion.section>
+        </motion.div>
+      </section>
     </div>
   )
 }

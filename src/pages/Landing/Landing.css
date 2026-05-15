@@ -2091,12 +2091,12 @@
 
   /* Visual */
   .l-hero__visual {
-    max-width: 30rem;
+    max-width: 34rem;
     justify-self: center;
   }
 
   /* Mockup */
-  .l-mockup { max-width: 23.75rem; border-radius: 1rem; }
+  .l-mockup { max-width: 30rem; border-radius: 1rem; }
   .l-mockup__bar { padding: 0.5rem 0.875rem; }
   .l-mockup__title { font-size: 0.6875rem; }
   .l-mockup__body { padding: 1.125rem; }

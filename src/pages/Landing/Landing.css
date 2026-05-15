@@ -256,14 +256,13 @@
 
 /* Visual side */
 .l-hero__visual {
+  position: relative;
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
-/* Wrapper que abraça o mockup — floats posicionados relativos a ele */
+/* Wrapper do mockup — ativa position:relative só nos breakpoints menores */
 .l-hero__mockup-wrap {
-  position: relative;
   width: fit-content;
 }
 
@@ -1774,6 +1773,8 @@
   .l-hero__inner { gap: 140px; }
   .l-mockup { max-width: 460px; }
   .l-mockup__chart { height: 120px; }
+  /* Ativa ancoragem das badges ao mockup (não ao visual inteiro) */
+  .l-hero__mockup-wrap { position: relative; }
 }
 
 /* ── ≤1280px: small laptops (1366px common) ────────────── */
@@ -1784,6 +1785,7 @@
     gap: 56px;
     grid-template-columns: 1fr 1fr;
   }
+  .l-hero__mockup-wrap { position: relative; }
   .l-mockup { max-width: 380px; }
   .l-mockup__chart { height: 104px; }
   .l-mockup__body { padding: 18px; }

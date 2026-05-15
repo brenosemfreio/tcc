@@ -3,10 +3,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   LuEye, LuEyeOff, LuSparkles, LuArrowLeft, LuStar,
-  LuCircleAlert, LuMail, LuLock,
+  LuCircleAlert,
 } from 'react-icons/lu'
 import { useAuth } from '../../contexts/AuthContext'
 import Button from '../../components/Button/Button'
+import logoHub from '../../assets/images/logo-hub.png'
 import './Login.css'
 
 function GoogleIcon() {
@@ -74,11 +75,8 @@ export default function Login() {
         <div className="auth__blob auth__blob--1" />
         <div className="auth__blob auth__blob--2" />
 
-        <Link to="/" className="auth__logo">
-          <span className="auth__logo-icon">
-            <LuSparkles size={16} />
-          </span>
-          <span><b>hub</b><i>studio</i></span>
+        <Link to="/" className="auth__logo" aria-label="HubStudio — ir para a página inicial">
+          <img src={logoHub} alt="HubStudio" className="auth__logo-img" />
         </Link>
 
         <div className="auth__hero">

@@ -75,34 +75,22 @@
   50%       { transform: translate(2rem, -1.5rem) scale(1.1); }
 }
 
-/* Logo */
+/* Logo oficial — mesma técnica da Navbar sobre o hero escuro */
 .auth__logo {
   display: inline-flex;
   align-items: center;
-  gap: 0.625rem;
-  color: #fff;
-  font-size: 1.0625rem;
-  font-weight: 800;
-  letter-spacing: -0.01em;
   width: fit-content;
   position: relative;
   z-index: 1;
-  transition: transform var(--transition-fast);
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
 }
-.auth__logo:hover { transform: translateY(-1px); }
-.auth__logo-icon {
-  width: 1.875rem;
-  height: 1.875rem;
-  border-radius: 0.5rem;
-  background: linear-gradient(135deg, #7C5FE8 0%, #4F35E8 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(124, 95, 232, 0.4);
+.auth__logo:hover { transform: translateY(-1px); opacity: 0.92; }
+.auth__logo-img {
+  height: 2rem;
+  width: auto;
+  display: block;
+  filter: brightness(0) invert(1);
 }
-.auth__logo b { font-weight: 800; }
-.auth__logo i { font-weight: 400; font-style: normal; opacity: 0.85; }
 
 /* Bloco central — tagline + mockup */
 .auth__hero {

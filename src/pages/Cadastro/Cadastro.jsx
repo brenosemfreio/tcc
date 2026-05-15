@@ -7,6 +7,7 @@ import {
 } from 'react-icons/lu'
 import { useAuth } from '../../contexts/AuthContext'
 import Button from '../../components/Button/Button'
+import logoHub from '../../assets/images/logo-hub.png'
 import '../Login/Login.css'
 
 function GoogleIcon() {
@@ -107,11 +108,8 @@ export default function Cadastro() {
         <div className="auth__blob auth__blob--1" />
         <div className="auth__blob auth__blob--2" />
 
-        <Link to="/" className="auth__logo">
-          <span className="auth__logo-icon">
-            <LuSparkles size={16} />
-          </span>
-          <span><b>hub</b><i>studio</i></span>
+        <Link to="/" className="auth__logo" aria-label="HubStudio — ir para a página inicial">
+          <img src={logoHub} alt="HubStudio" className="auth__logo-img" />
         </Link>
 
         <div className="auth__hero">

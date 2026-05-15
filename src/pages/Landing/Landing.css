@@ -2062,8 +2062,8 @@
      ───────────────────────────────────────────────────────── */
   .l-hero { min-height: 100vh; }
   .l-hero__inner {
-    grid-template-columns: 1fr 1.15fr;
-    gap: 4rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 4.5rem;
     min-height: 100vh;
     padding-top: 6rem;
     padding-bottom: 4rem;
@@ -2093,14 +2093,14 @@
   /* Visual: cabe mockup + badges flutuantes laterais */
   .l-hero__visual {
     width: 100%;
-    max-width: 44rem;
+    max-width: 38rem;
     justify-self: center;
   }
 
-  /* Mockup wider — destaque visual no notebook */
+  /* Mockup — largura equilibrada */
   .l-mockup {
     width: 100%;
-    max-width: 38rem;
+    max-width: 32rem;
     margin: 0 auto;
     border-radius: 1rem;
   }

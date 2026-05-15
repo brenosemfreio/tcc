@@ -1,15 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import {
-  LuArrowLeft, LuEye, LuEyeOff, LuSparkles, LuStar,
-  LuTrendingUp, LuShieldCheck, LuZap, LuCircleAlert,
-} from 'react-icons/lu'
+import { LuArrowLeft, LuEye, LuEyeOff, LuStar, LuCircleAlert } from 'react-icons/lu'
 import { useAuth } from '../../contexts/AuthContext'
 import logoHub from '../../assets/images/logo-hub.png'
 import './Login.css'
 
-/* SVG oficiais inline para OAuth */
 function GoogleIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
@@ -70,78 +66,44 @@ export default function Login() {
 
   return (
     <div className="auth">
-      {/* ─────────── ESQUERDA — Showcase ─────────── */}
+      {/* ─── ESQUERDA — Showcase (3 zonas) ─── */}
       <aside className="auth__showcase">
         <div className="auth__blob auth__blob--1" aria-hidden="true" />
         <div className="auth__blob auth__blob--2" aria-hidden="true" />
 
-        <Link to="/" className="auth__logo" aria-label="HubStudio — ir para a página inicial">
+        {/* Zona 1 */}
+        <Link to="/" className="auth__logo" aria-label="HubStudio — página inicial">
           <img src={logoHub} alt="HubStudio" className="auth__logo-img" />
         </Link>
 
-        <div className="auth__content">
-          <span className="auth__badge">
-            <LuSparkles size={12} aria-hidden="true" />
-            Bem-vindo de volta
-          </span>
-
-          <h2 className="auth__title">
+        {/* Zona 2 */}
+        <div className="auth__headline-zone">
+          <h2 className="auth__headline">
             Continue construindo<br />
-            <span className="auth__title-accent">sua presença digital.</span>
+            <span className="auth__headline-accent">sua presença digital.</span>
           </h2>
-
-          <p className="auth__lead">
-            Entre na sua conta para acessar agendamentos, métricas e insights
-            de IA — exatamente onde você parou.
-          </p>
-
-          <ul className="auth__perks" aria-label="Benefícios">
-            <li>
-              <span className="auth__perk-icon" aria-hidden="true"><LuZap size={14} /></span>
-              Agendamento ilimitado nas redes principais
-            </li>
-            <li>
-              <span className="auth__perk-icon" aria-hidden="true"><LuTrendingUp size={14} /></span>
-              Métricas unificadas e insights de IA
-            </li>
-            <li>
-              <span className="auth__perk-icon" aria-hidden="true"><LuShieldCheck size={14} /></span>
-              Sem cartão de crédito — cancele quando quiser
-            </li>
-          </ul>
-
-          <div className="auth__proof" role="group" aria-label="Social proof">
-            <div className="auth__avatars" aria-hidden="true">
-              <span className="auth__avatar" style={{ background: 'linear-gradient(135deg, #7C5FE8, #4F35E8)' }}>JS</span>
-              <span className="auth__avatar" style={{ background: 'linear-gradient(135deg, #E84FA5, #B44FE8)' }}>RM</span>
-              <span className="auth__avatar" style={{ background: 'linear-gradient(135deg, #4FCEE8, #4F8FE8)' }}>LV</span>
-            </div>
-            <div className="auth__proof-text">
-              <strong>+1.200 criadores já usam o HubStudio</strong>
-              <span>Agendaram posts hoje</span>
-            </div>
-          </div>
-
-          <blockquote className="auth__testimonial">
-            <div className="auth__stars" aria-label="5 estrelas">
-              {[...Array(5)].map((_, i) => <LuStar key={i} size={13} fill="currentColor" />)}
-            </div>
-            <p className="auth__testimonial-quote">
-              Reduzi 6 horas por semana de trabalho operacional. Agora foco em
-              criar conteúdo e os insights de IA cuidam do resto.
-            </p>
-            <footer className="auth__testimonial-author">
-              <span className="auth__testimonial-avatar" aria-hidden="true">JS</span>
-              <div>
-                <strong>Júlia Sampaio</strong>
-                <span>@juliacria</span>
-              </div>
-            </footer>
-          </blockquote>
         </div>
+
+        {/* Zona 3 — depoimento */}
+        <blockquote className="auth__bottom-card">
+          <div className="auth__stars" aria-label="5 estrelas">
+            {[...Array(5)].map((_, i) => <LuStar key={i} size={14} fill="currentColor" />)}
+          </div>
+          <p className="auth__testimonial-quote">
+            Reduzi 6 horas por semana de trabalho operacional. Agora foco em
+            criar conteúdo e os insights de IA cuidam do resto.
+          </p>
+          <footer className="auth__testimonial-author">
+            <span className="auth__testimonial-avatar" aria-hidden="true">JS</span>
+            <div>
+              <strong>Júlia Sampaio</strong>
+              <span>@juliacria</span>
+            </div>
+          </footer>
+        </blockquote>
       </aside>
 
-      {/* ─────────── DIREITA — Formulário ─────────── */}
+      {/* ─── DIREITA — Formulário ─── */}
       <section className="auth__pane">
         <Link to="/" className="auth__back" aria-label="Voltar para a página inicial">
           <LuArrowLeft size={14} aria-hidden="true" />
@@ -182,7 +144,7 @@ export default function Login() {
                 <input
                   id="email"
                   type="email"
-                  placeholder=" "
+                  placeholder="seu@email.com"
                   value={form.email}
                   onChange={e => updateField('email', e.target.value)}
                   className={`auth__input${errors.email ? ' auth__input--error' : ''}`}
@@ -191,7 +153,6 @@ export default function Login() {
                   aria-invalid={!!errors.email}
                   aria-describedby={errors.email ? 'email-error' : undefined}
                 />
-                <label htmlFor="email" className="auth__label">E-mail</label>
               </div>
               {errors.email && (
                 <p id="email-error" className="auth__field-error" role="alert">
@@ -206,7 +167,7 @@ export default function Login() {
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder=" "
+                  placeholder="Sua senha"
                   value={form.password}
                   onChange={e => updateField('password', e.target.value)}
                   className={`auth__input auth__input--with-action${errors.password ? ' auth__input--error' : ''}`}
@@ -215,7 +176,6 @@ export default function Login() {
                   aria-invalid={!!errors.password}
                   aria-describedby={errors.password ? 'password-error' : undefined}
                 />
-                <label htmlFor="password" className="auth__label">Senha</label>
                 <button
                   type="button"
                   className={`auth__action-btn${showPassword ? ' auth__action-btn--active' : ''}`}

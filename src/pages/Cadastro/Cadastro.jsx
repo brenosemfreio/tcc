@@ -1,10 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import {
-  LuArrowLeft, LuEye, LuEyeOff, LuSparkles, LuCheck,
-  LuTrendingUp, LuShieldCheck, LuZap, LuCircleAlert,
-} from 'react-icons/lu'
+import { LuArrowLeft, LuEye, LuEyeOff, LuCheck, LuCircleAlert } from 'react-icons/lu'
 import { useAuth } from '../../contexts/AuthContext'
 import logoHub from '../../assets/images/logo-hub.png'
 import '../Login/Login.css'
@@ -28,7 +25,6 @@ function GitHubIcon() {
   )
 }
 
-/* Força da senha: 0..4 */
 function calcStrength(pwd) {
   if (!pwd) return 0
   let score = 0
@@ -68,7 +64,7 @@ export default function Cadastro() {
     if (!form.confirm) next.confirm = 'Confirme sua senha'
     else if (form.confirm !== form.password) next.confirm = 'Senhas não coincidem'
 
-    if (!form.acceptTerms) next.acceptTerms = 'Você precisa aceitar os termos para continuar'
+    if (!form.acceptTerms) next.acceptTerms = 'Você precisa aceitar os termos'
 
     setErrors(next)
     return Object.keys(next).length === 0
@@ -101,61 +97,39 @@ export default function Cadastro() {
 
   return (
     <div className="auth">
-      {/* ─────────── ESQUERDA — Showcase ─────────── */}
+      {/* ─── ESQUERDA — Showcase (3 zonas) ─── */}
       <aside className="auth__showcase">
         <div className="auth__blob auth__blob--1" aria-hidden="true" />
         <div className="auth__blob auth__blob--2" aria-hidden="true" />
 
-        <Link to="/" className="auth__logo" aria-label="HubStudio — ir para a página inicial">
+        {/* Zona 1 */}
+        <Link to="/" className="auth__logo" aria-label="HubStudio — página inicial">
           <img src={logoHub} alt="HubStudio" className="auth__logo-img" />
         </Link>
 
-        <div className="auth__content">
-          <span className="auth__badge">
-            <LuSparkles size={12} aria-hidden="true" />
-            Grátis para sempre no plano Lite
-          </span>
-
-          <h2 className="auth__title">
+        {/* Zona 2 */}
+        <div className="auth__headline-zone">
+          <h2 className="auth__headline">
             Comece hoje a simplificar<br />
-            <span className="auth__title-accent">suas redes.</span>
+            <span className="auth__headline-accent">suas redes.</span>
           </h2>
+        </div>
 
-          <p className="auth__lead">
-            Em menos de 2 minutos você conecta suas contas, agenda seu primeiro
-            post e descobre o que está performando de verdade.
-          </p>
-
-          <ul className="auth__perks" aria-label="Benefícios">
-            <li>
-              <span className="auth__perk-icon" aria-hidden="true"><LuZap size={14} /></span>
-              Agendamento ilimitado nas redes principais
-            </li>
-            <li>
-              <span className="auth__perk-icon" aria-hidden="true"><LuTrendingUp size={14} /></span>
-              Métricas unificadas e insights de IA
-            </li>
-            <li>
-              <span className="auth__perk-icon" aria-hidden="true"><LuShieldCheck size={14} /></span>
-              Sem cartão de crédito — cancele quando quiser
-            </li>
-          </ul>
-
-          <div className="auth__proof" role="group" aria-label="Social proof">
+        {/* Zona 3 — métrica */}
+        <div className="auth__bottom-card" role="group" aria-label="Social proof">
+          <div className="auth__metric-row">
             <div className="auth__avatars" aria-hidden="true">
               <span className="auth__avatar" style={{ background: 'linear-gradient(135deg, #7C5FE8, #4F35E8)' }}>JS</span>
               <span className="auth__avatar" style={{ background: 'linear-gradient(135deg, #E84FA5, #B44FE8)' }}>RM</span>
               <span className="auth__avatar" style={{ background: 'linear-gradient(135deg, #4FCEE8, #4F8FE8)' }}>LV</span>
             </div>
-            <div className="auth__proof-text">
-              <strong>+1.200 criadores já usam o HubStudio</strong>
-              <span>Agendaram posts hoje</span>
-            </div>
+            <span className="auth__metric-text">+1.200 criadores já usam o HubStudio</span>
           </div>
+          <p className="auth__metric-sub">Agendaram posts hoje</p>
         </div>
       </aside>
 
-      {/* ─────────── DIREITA — Formulário ─────────── */}
+      {/* ─── DIREITA — Formulário ─── */}
       <section className="auth__pane">
         <Link to="/" className="auth__back" aria-label="Voltar para a página inicial">
           <LuArrowLeft size={14} aria-hidden="true" />
@@ -197,7 +171,7 @@ export default function Cadastro() {
                 <input
                   id="name"
                   type="text"
-                  placeholder=" "
+                  placeholder="Seu nome completo"
                   value={form.name}
                   onChange={e => updateField('name', e.target.value)}
                   className={`auth__input${errors.name ? ' auth__input--error' : ''}`}
@@ -206,7 +180,6 @@ export default function Cadastro() {
                   aria-invalid={!!errors.name}
                   aria-describedby={errors.name ? 'name-error' : undefined}
                 />
-                <label htmlFor="name" className="auth__label">Nome completo</label>
               </div>
               {errors.name && (
                 <p id="name-error" className="auth__field-error" role="alert">
@@ -222,7 +195,7 @@ export default function Cadastro() {
                 <input
                   id="email"
                   type="email"
-                  placeholder=" "
+                  placeholder="seu@email.com"
                   value={form.email}
                   onChange={e => updateField('email', e.target.value)}
                   className={`auth__input${errors.email ? ' auth__input--error' : ''}`}
@@ -231,7 +204,6 @@ export default function Cadastro() {
                   aria-invalid={!!errors.email}
                   aria-describedby={errors.email ? 'email-error' : undefined}
                 />
-                <label htmlFor="email" className="auth__label">E-mail</label>
               </div>
               {errors.email && (
                 <p id="email-error" className="auth__field-error" role="alert">
@@ -247,7 +219,7 @@ export default function Cadastro() {
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder=" "
+                  placeholder="Mínimo 8 caracteres"
                   value={form.password}
                   onChange={e => updateField('password', e.target.value)}
                   className={`auth__input auth__input--with-action${errors.password ? ' auth__input--error' : ''}`}
@@ -256,7 +228,6 @@ export default function Cadastro() {
                   aria-invalid={!!errors.password}
                   aria-describedby={errors.password ? 'password-error' : 'password-strength'}
                 />
-                <label htmlFor="password" className="auth__label">Senha</label>
                 <button
                   type="button"
                   className={`auth__action-btn${showPassword ? ' auth__action-btn--active' : ''}`}
@@ -295,7 +266,7 @@ export default function Cadastro() {
                 <input
                   id="confirm"
                   type={showConfirm ? 'text' : 'password'}
-                  placeholder=" "
+                  placeholder="Confirme sua senha"
                   value={form.confirm}
                   onChange={e => updateField('confirm', e.target.value)}
                   className={`auth__input auth__input--with-action${errors.confirm ? ' auth__input--error' : ''}`}
@@ -304,7 +275,6 @@ export default function Cadastro() {
                   aria-invalid={!!errors.confirm}
                   aria-describedby={errors.confirm ? 'confirm-error' : undefined}
                 />
-                <label htmlFor="confirm" className="auth__label">Confirmar senha</label>
                 <button
                   type="button"
                   className={`auth__action-btn${showConfirm ? ' auth__action-btn--active' : ''}`}
@@ -343,7 +313,7 @@ export default function Cadastro() {
               </span>
             </label>
             {errors.acceptTerms && (
-              <p id="terms-error" className="auth__field-error" role="alert" style={{ marginTop: '-0.5rem' }}>
+              <p id="terms-error" className="auth__field-error" role="alert" style={{ marginTop: '-0.375rem' }}>
                 <LuCircleAlert size={12} aria-hidden="true" />
                 {errors.acceptTerms}
               </p>

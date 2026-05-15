@@ -261,11 +261,6 @@
   justify-content: center;
 }
 
-/* Wrapper do mockup — ativa position:relative só nos breakpoints menores */
-.l-hero__mockup-wrap {
-  width: fit-content;
-}
-
 /* Mockup */
 .l-mockup {
   width: 100%;
@@ -1768,49 +1763,12 @@
    ══════════════════════════════════════════════════════════ */
 
 /* ── ≤1280px: narrow desktop ───────────────────────────── */
-/* ── ≤1440px: laptops / notebooks ─────────────────────── */
-@media (max-width: 1440px) {
-  .l-hero__inner { gap: 140px; }
-  .l-mockup { max-width: 460px; }
-  .l-mockup__chart { height: 120px; }
-  /* Ativa ancoragem das badges ao mockup (não ao visual inteiro) */
-  .l-hero__mockup-wrap { position: relative; }
-}
-
-/* ── ≤1280px: small laptops (1366px common) ────────────── */
 @media (max-width: 1280px) {
-  .l-landing section .container { padding-inline: 32px; }
-
   .l-hero__inner {
-    gap: 56px;
+    gap: 120px;
     grid-template-columns: 1fr 1fr;
   }
-  .l-hero__mockup-wrap { position: relative; }
-  .l-mockup { max-width: 380px; }
-  .l-mockup__chart { height: 104px; }
-  .l-mockup__body { padding: 18px; }
-  .l-mockup__kpis { gap: 8px; margin-bottom: 16px; }
-  .l-mockup__kpi { padding: 10px 8px; }
-  .l-mockup__kpi strong { font-size: 0.875rem; }
-
-  .l-hero__title { font-size: clamp(1.875rem, 3vw, 2.5rem); white-space: normal; }
-  .l-hero__sub   { font-size: 0.9375rem; max-width: 380px; }
-
-  /* Section paddings menores */
-  .l-features,
-  .l-steps,
-  .l-faq,
-  .l-pricing { padding: 88px 0; }
-  .l-stats { padding: 64px 0; }
-  .l-cta    { padding: 96px 0; }
-
-  /* Section head menor */
-  .l-section-head { margin-bottom: 48px; }
-  .l-section-head h2 { font-size: clamp(1.75rem, 3.2vw, 2.5rem); }
-
-  /* Bento cards */
-  .l-bento { gap: 16px; }
-  .l-bento__card { padding: 28px; }
+  .l-mockup { max-width: 460px; }
 }
 
 /* ── ≤1024px: tablet ───────────────────────────────────── */

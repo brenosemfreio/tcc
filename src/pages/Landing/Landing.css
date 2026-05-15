@@ -1765,9 +1765,9 @@
 /* ── ≤1280px: narrow desktop ───────────────────────────── */
 /* ── ≤1440px: laptops / notebooks ─────────────────────── */
 @media (max-width: 1440px) {
-  .l-hero__inner { gap: 140px; }
-  .l-mockup { max-width: 460px; }
-  .l-mockup__chart { height: 120px; }
+  .l-hero__inner { gap: 80px; }
+  .l-mockup { max-width: 420px; }
+  .l-mockup__chart { height: 110px; }
 }
 
 /* ── ≤1280px: small laptops (1366px common) ────────────── */
@@ -1775,26 +1775,29 @@
   .l-landing section .container { padding-inline: 32px; }
 
   .l-hero__inner {
-    gap: 56px;
+    gap: 36px;
     grid-template-columns: 1fr 1fr;
   }
-  .l-mockup { max-width: 380px; }
-  .l-mockup__chart { height: 104px; }
-  .l-mockup__body { padding: 18px; }
-  .l-mockup__kpis { gap: 8px; margin-bottom: 16px; }
-  .l-mockup__kpi { padding: 10px 8px; }
-  .l-mockup__kpi strong { font-size: 0.875rem; }
+  .l-mockup { max-width: 320px; }
+  .l-mockup__chart { height: 90px; }
+  .l-mockup__body { padding: 14px; }
+  .l-mockup__kpis { gap: 6px; margin-bottom: 12px; }
+  .l-mockup__kpi { padding: 8px 6px; }
+  .l-mockup__kpi strong { font-size: 0.8125rem; }
+  .l-mockup__kpi span { font-size: 0.625rem; }
+  .l-mockup__bar { padding: 8px 12px; }
 
   .l-hero__title { font-size: clamp(1.875rem, 3vw, 2.5rem); white-space: normal; }
-  .l-hero__sub   { font-size: 0.9375rem; max-width: 380px; }
+  .l-hero__sub   { font-size: 0.9375rem; max-width: 360px; }
 
-  /* Floating badges — menor e reposicionadas */
-  .l-float { font-size: 0.75rem; padding: 8px 12px; gap: 8px; border-radius: 12px; }
-  .l-float__icon { width: 28px; height: 28px; font-size: 0.875rem; border-radius: 7px; }
-  .l-float strong { font-size: 0.8125rem; }
-  .l-float--1 { left: -16px; top: -8px; }
-  .l-float--2 { right: -16px; }
-  .l-float--3 { left: -20px; }
+  /* Floating badges — menores e sem overflow */
+  .l-float { font-size: 0.6875rem; padding: 7px 10px; gap: 7px; border-radius: 10px; }
+  .l-float__icon { width: 26px; height: 26px; font-size: 0.8125rem; border-radius: 6px; }
+  .l-float strong { font-size: 0.75rem; }
+  .l-float span { font-size: 0.6875rem; }
+  .l-float--1 { left: -8px; top: -8px; }
+  .l-float--2 { right: -8px; bottom: 24px; }
+  .l-float--3 { left: -8px; }
 
   /* Section paddings menores */
   .l-features,

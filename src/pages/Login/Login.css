@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════════════════════
    AUTH — Login + Cadastro
    Filosofia: menos é mais. Tudo cabe em 100vh sem scroll.
-   Split 50/50: showcase escura (3 zonas) + card de formulário.
+   Split 50/50: showcase escura + card de formulário.
    ═══════════════════════════════════════════════════════════ */
 
 .auth {
@@ -12,16 +12,31 @@
   font-family: var(--font-family);
   color: var(--color-text);
   overflow: hidden;
+  animation: authPageIn 350ms ease-out;
+}
+
+/* Transição de saída ao trocar entre login/register */
+.auth--exiting {
+  animation: authPageOut 250ms ease-in forwards;
+  pointer-events: none;
+}
+@keyframes authPageIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes authPageOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
 }
 
 /* ══════════════════════════════════════════════════════════
-   ESQUERDA — Showcase (3 zonas: logo / headline / card)
+   ESQUERDA — Showcase (3 zonas com headline no centro visual)
    ══════════════════════════════════════════════════════════ */
 .auth__showcase {
   position: relative;
   padding: 3rem 3.5rem;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
+  display: flex;
+  flex-direction: column;
   color: #fff;
   background:
     radial-gradient(ellipse at 85% 0%, rgba(124, 95, 232, 0.42), transparent 55%),
@@ -43,40 +58,62 @@
   pointer-events: none;
 }
 
-/* Blobs decorativos */
+/* Blobs animados — fundo "respira" */
 .auth__blob {
   position: absolute;
   border-radius: 50%;
   filter: blur(90px);
   pointer-events: none;
   z-index: -1;
+  will-change: transform;
 }
 .auth__blob--1 {
-  width: 30rem;
-  height: 30rem;
+  width: 32rem;
+  height: 32rem;
   top: -10rem;
   right: -8rem;
   background: radial-gradient(circle, rgba(124, 95, 232, 0.55) 0%, rgba(79, 53, 232, 0.15) 70%);
-  animation: authBlob1 14s ease-in-out infinite;
+  animation: authBlobBreathe1 10s ease-in-out infinite alternate;
 }
 .auth__blob--2 {
-  width: 24rem;
-  height: 24rem;
+  width: 26rem;
+  height: 26rem;
   bottom: -8rem;
   left: -7rem;
-  background: radial-gradient(circle, rgba(232, 79, 165, 0.38) 0%, rgba(180, 79, 232, 0.12) 70%);
-  animation: authBlob2 16s ease-in-out infinite;
+  background: radial-gradient(circle, rgba(232, 79, 165, 0.4) 0%, rgba(180, 79, 232, 0.12) 70%);
+  animation: authBlobBreathe2 12s ease-in-out infinite alternate;
 }
-@keyframes authBlob1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50%       { transform: translate(-1.5rem, 1.5rem) scale(1.06); }
+@keyframes authBlobBreathe1 {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(-2.5rem, 2rem) scale(1.08); }
 }
-@keyframes authBlob2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50%       { transform: translate(2rem, -1.25rem) scale(1.1); }
+@keyframes authBlobBreathe2 {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(2.5rem, -2rem) scale(1.12); }
 }
 
-/* Zona 1: Logo */
+/* Partículas flutuantes — neve etérea */
+.auth__particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.auth__particle {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  pointer-events: none;
+  will-change: transform;
+  animation: authParticle var(--dur, 6s) ease-in-out var(--delay, 0s) infinite alternate;
+}
+@keyframes authParticle {
+  from { transform: translateY(-20px); }
+  to   { transform: translateY(20px); }
+}
+
+/* ── Zona 1: Logo ── */
 .auth__logo {
   display: inline-flex;
   align-items: center;
@@ -84,6 +121,7 @@
   transition: transform var(--transition-fast), opacity var(--transition-fast);
   position: relative;
   z-index: 1;
+  animation: authLogoIn 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .auth__logo:hover { transform: translateY(-1px); opacity: 0.92; }
 .auth__logo-img {
@@ -93,12 +131,15 @@
   filter: brightness(0) invert(1);
 }
 
-/* Zona 2: Headline (centro vertical da row 1fr) */
+/* ── Zona 2: Headline centralizada visualmente via margin auto ── */
 .auth__headline-zone {
   display: flex;
   align-items: center;
   position: relative;
   z-index: 1;
+  margin-top: auto;
+  margin-bottom: auto;
+  animation: authHeadlineIn 600ms cubic-bezier(0.22, 1, 0.36, 1) 150ms both;
 }
 .auth__headline {
   font-size: clamp(2rem, 4vw, 2.75rem);
@@ -117,7 +158,7 @@
   background-clip: text;
 }
 
-/* Zona 3: Card semitransparente (testimonial OU metric) */
+/* ── Zona 3: Card semitransparente ── */
 .auth__bottom-card {
   position: relative;
   z-index: 1;
@@ -127,6 +168,35 @@
   padding: 1.5rem;
   backdrop-filter: blur(10px);
   max-width: 32rem;
+  will-change: transform;
+}
+.auth__bottom-card--login {
+  animation:
+    authBottomIn 600ms cubic-bezier(0.22, 1, 0.36, 1) 350ms both,
+    authFloat 4s ease-in-out 1.1s infinite;
+}
+.auth__bottom-card--register {
+  animation:
+    authBottomIn 600ms cubic-bezier(0.22, 1, 0.36, 1) 350ms both,
+    authFloat 4s ease-in-out 2.6s infinite;
+}
+@keyframes authFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+/* Cascata de entrada — keyframes */
+@keyframes authLogoIn {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes authHeadlineIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes authBottomIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* — Testimonial (login) — */
@@ -209,14 +279,14 @@
 }
 
 /* ══════════════════════════════════════════════════════════
-   DIREITA — Pane com card de formulário
+   DIREITA — Pane com card centralizado
    ══════════════════════════════════════════════════════════ */
 .auth__pane {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem 2rem;
+  padding: 2rem 3.5rem;
   background: #F5F4FF;
   overflow: hidden;
 }
@@ -248,7 +318,7 @@
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.55);
   border: 1px solid transparent;
-  transition: all var(--transition-fast);
+  transition: color 200ms ease, background 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
   z-index: 5;
 }
 .auth__back svg { transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1); }
@@ -260,7 +330,7 @@
 }
 .auth__back:hover svg { transform: translateX(-3px); }
 
-/* Card */
+/* Card — entrada via CSS */
 .auth__card {
   position: relative;
   width: 100%;
@@ -273,6 +343,11 @@
   flex-direction: column;
   gap: 1.25rem;
   z-index: 1;
+  animation: authFormCardIn 700ms cubic-bezier(0.22, 1, 0.36, 1) 200ms both;
+}
+@keyframes authFormCardIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* Header */
@@ -312,11 +387,17 @@
   font-weight: 600;
   font-family: var(--font-family);
   cursor: pointer;
-  transition: background 150ms ease, border-color 150ms ease, box-shadow 200ms ease;
+  transition: background 200ms ease, border-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
 }
 .auth__oauth-btn:hover {
   background: #F8FAFC;
   border-color: #CBD5E1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(17, 24, 39, 0.08);
+}
+.auth__oauth-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(17, 24, 39, 0.05);
 }
 .auth__oauth-btn:focus-visible {
   outline: 2px solid var(--color-primary);
@@ -343,7 +424,7 @@
   background: #E2E8F0;
 }
 
-/* Form — placeholders simples, sem float label */
+/* Form */
 .auth__form {
   display: flex;
   flex-direction: column;
@@ -366,7 +447,7 @@
   font-size: 0.9375rem;
   color: var(--color-text);
   font-family: var(--font-family);
-  transition: border-color 150ms ease, box-shadow 150ms ease;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
 }
 .auth__input::placeholder {
   color: var(--color-text-muted);
@@ -433,12 +514,13 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Strength meter */
+/* Strength meter — barras finas animadas */
 .auth__strength {
   margin-top: 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.375rem;
+  animation: authErrorIn 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .auth__strength-bars {
   display: grid;
@@ -449,17 +531,29 @@
   height: 0.25rem;
   border-radius: 9999px;
   background: #E2E8F0;
-  transition: background 250ms ease;
+  position: relative;
+  overflow: hidden;
 }
-.auth__strength--1 .auth__strength-bar--on { background: #EF4444; }
-.auth__strength--2 .auth__strength-bar--on { background: #F97316; }
-.auth__strength--3 .auth__strength-bar--on { background: #EAB308; }
-.auth__strength--4 .auth__strength-bar--on { background: #22C55E; }
+.auth__strength-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #E2E8F0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 300ms ease, background 300ms ease;
+}
+.auth__strength-bar--on::after { transform: scaleX(1); }
+.auth__strength--1 .auth__strength-bar--on::after { background: #EF4444; }
+.auth__strength--2 .auth__strength-bar--on::after { background: #F97316; }
+.auth__strength--3 .auth__strength-bar--on::after { background: #EAB308; }
+.auth__strength--4 .auth__strength-bar--on::after { background: #22C55E; }
 
 .auth__strength-label {
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--color-text-muted);
+  transition: color 300ms ease;
 }
 .auth__strength--1 .auth__strength-label { color: #EF4444; }
 .auth__strength--2 .auth__strength-label { color: #F97316; }
@@ -483,7 +577,9 @@
   text-decoration: underline;
 }
 
-/* Checkbox custom */
+/* ══════════════════════════════════════════════════════════
+   Checkbox custom — input nativo escondido (sr-only style)
+   ══════════════════════════════════════════════════════════ */
 .auth__checkbox {
   display: flex;
   align-items: flex-start;
@@ -493,15 +589,19 @@
   color: var(--color-text-secondary);
   line-height: 1.45;
   user-select: none;
-  position: relative;
 }
 .auth__checkbox input {
   position: absolute;
-  opacity: 0;
-  width: 1.125rem;
-  height: 1.125rem;
-  margin: 0;
-  cursor: pointer;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  appearance: none;
+  -webkit-appearance: none;
 }
 .auth__checkbox-box {
   flex-shrink: 0;
@@ -513,14 +613,14 @@
   align-items: center;
   justify-content: center;
   background: #fff;
-  transition: all var(--transition-fast);
   margin-top: 0.125rem;
   color: #fff;
+  transition: background 150ms ease, border-color 150ms ease;
 }
 .auth__checkbox-box svg {
   opacity: 0;
-  transform: scale(0.6);
-  transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(0);
+  transition: opacity 150ms ease-out, transform 150ms ease-out;
 }
 .auth__checkbox input:checked ~ .auth__checkbox-box {
   background: var(--color-primary);
@@ -543,8 +643,11 @@
 }
 .auth__checkbox a:hover { text-decoration: underline; }
 
-/* Submit pill */
+/* ══════════════════════════════════════════════════════════
+   Submit — pill com shimmer no hover
+   ══════════════════════════════════════════════════════════ */
 .auth__submit {
+  position: relative;
   width: 100%;
   height: 3rem;
   border: none;
@@ -559,16 +662,31 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background 150ms ease, transform 150ms ease, box-shadow 200ms ease;
+  transition: background 200ms ease, transform 200ms ease, box-shadow 200ms ease;
   margin-top: 0.25rem;
+  overflow: hidden;
+}
+.auth__submit::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 75%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+  transform: skewX(-22deg);
+  pointer-events: none;
 }
 .auth__submit:hover:not(:disabled) {
   background: #4630D6;
-  transform: scale(1.015);
-  box-shadow: 0 8px 24px rgba(79, 53, 232, 0.32);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(79, 53, 232, 0.35);
+}
+.auth__submit:hover:not(:disabled)::after {
+  animation: authShimmer 800ms ease-out;
 }
 .auth__submit:active:not(:disabled) {
-  transform: scale(1);
+  transform: translateY(0) scale(0.98);
   box-shadow: 0 2px 8px rgba(79, 53, 232, 0.22);
 }
 .auth__submit:focus-visible {
@@ -579,6 +697,11 @@
   cursor: not-allowed;
   opacity: 0.85;
 }
+@keyframes authShimmer {
+  from { left: -150%; }
+  to   { left: 200%; }
+}
+
 .auth__submit-spinner {
   width: 1.125rem;
   height: 1.125rem;
@@ -615,10 +738,9 @@
    RESPONSIVO
    ══════════════════════════════════════════════════════════ */
 
-/* Notebook 1024–1439: ~10% menor, mantém split */
 @media (min-width: 1024px) and (max-width: 1439px) {
   .auth__showcase { padding: 2.25rem 2.75rem; }
-  .auth__pane     { padding: 1.25rem 1.5rem; }
+  .auth__pane     { padding: 1.5rem 3rem; }
   .auth__headline { font-size: clamp(1.75rem, 3.2vw, 2.375rem); }
   .auth__bottom-card { padding: 1.25rem; }
   .auth__testimonial-quote { font-size: 0.875rem; }
@@ -632,7 +754,6 @@
   .auth__submit { height: 2.75rem; }
 }
 
-/* Mobile ≤768: showcase oculta, form fullscreen */
 @media (max-width: 768px) {
   .auth {
     grid-template-columns: 1fr;
@@ -668,4 +789,20 @@
 
 @media (max-width: 480px) {
   .auth__oauth { grid-template-columns: 1fr; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   prefers-reduced-motion — desativa animações não essenciais
+   ══════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .auth,
+  .auth *,
+  .auth *::before,
+  .auth *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .auth__particles { display: none; }
+  .auth__blob { display: none; }
 }

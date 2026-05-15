@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { LuArrowLeft, LuEye, LuEyeOff, LuStar, LuCircleAlert } from 'react-icons/lu'
@@ -25,14 +25,35 @@ function GitHubIcon() {
   )
 }
 
+/* Stagger variants para framer-motion */
+const formContainerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.06, delayChildren: 0.5 } },
+}
+const fieldVariants = {
+  hidden: { opacity: 0, y: 8 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
+}
+
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' })
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
   const [globalError, setGlobalError] = useState('')
+  const [isExiting, setIsExiting] = useState(false)
   const { login } = useAuth()
   const navigate = useNavigate()
+
+  // Partículas — 14, propriedades aleatórias estáveis no mount
+  const particles = useMemo(() => Array.from({ length: 14 }, () => ({
+    left: Math.random() * 100,
+    top: Math.random() * 100,
+    size: 4 + Math.random() * 6,
+    opacity: 0.04 + Math.random() * 0.08,
+    delay: Math.random() * 5,
+    duration: 4 + Math.random() * 5,
+  })), [])
 
   const validate = () => {
     const next = {}
@@ -64,12 +85,38 @@ export default function Login() {
     }
   }
 
+  // Transição entre /entrar e /cadastro — fade out 250ms, navega, nova página entra com fade in
+  const handleSwitch = (e, path) => {
+    e.preventDefault()
+    setIsExiting(true)
+    setTimeout(() => navigate(path), 250)
+  }
+
   return (
-    <div className="auth">
+    <div className={`auth${isExiting ? ' auth--exiting' : ''}`}>
       {/* ─── ESQUERDA — Showcase (3 zonas) ─── */}
       <aside className="auth__showcase">
         <div className="auth__blob auth__blob--1" aria-hidden="true" />
         <div className="auth__blob auth__blob--2" aria-hidden="true" />
+
+        {/* Partículas flutuantes — neve etérea */}
+        <div className="auth__particles" aria-hidden="true">
+          {particles.map((p, i) => (
+            <span
+              key={i}
+              className="auth__particle"
+              style={{
+                left: `${p.left}%`,
+                top: `${p.top}%`,
+                width: `${p.size}px`,
+                height: `${p.size}px`,
+                opacity: p.opacity,
+                '--delay': `${p.delay}s`,
+                '--dur': `${p.duration}s`,
+              }}
+            />
+          ))}
+        </div>
 
         {/* Zona 1 */}
         <Link to="/" className="auth__logo" aria-label="HubStudio — página inicial">
@@ -85,7 +132,7 @@ export default function Login() {
         </div>
 
         {/* Zona 3 — depoimento */}
-        <blockquote className="auth__bottom-card">
+        <blockquote className="auth__bottom-card auth__bottom-card--login">
           <div className="auth__stars" aria-label="5 estrelas">
             {[...Array(5)].map((_, i) => <LuStar key={i} size={14} fill="currentColor" />)}
           </div>
@@ -110,12 +157,7 @@ export default function Login() {
           Voltar
         </Link>
 
-        <motion.div
-          className="auth__card"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-        >
+        <div className="auth__card">
           <div className="auth__mobile-logo" aria-hidden="true">
             <img src={logoHub} alt="HubStudio" />
           </div>
@@ -138,8 +180,15 @@ export default function Login() {
 
           <div className="auth__divider" role="separator">ou continue com email</div>
 
-          <form onSubmit={handleSubmit} className="auth__form" noValidate>
-            <div className="auth__field">
+          <motion.form
+            onSubmit={handleSubmit}
+            className="auth__form"
+            noValidate
+            variants={formContainerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.div className="auth__field" variants={fieldVariants}>
               <div className="auth__input-wrap">
                 <input
                   id="email"
@@ -160,9 +209,9 @@ export default function Login() {
                   {errors.email}
                 </p>
               )}
-            </div>
+            </motion.div>
 
-            <div className="auth__field">
+            <motion.div className="auth__field" variants={fieldVariants}>
               <div className="auth__input-wrap">
                 <input
                   id="password"
@@ -192,11 +241,11 @@ export default function Login() {
                   {errors.password}
                 </p>
               )}
-            </div>
+            </motion.div>
 
-            <div className="auth__row">
+            <motion.div className="auth__row" variants={fieldVariants}>
               <a href="#" className="auth__forgot">Esqueceu a senha?</a>
-            </div>
+            </motion.div>
 
             {globalError && (
               <p className="auth__field-error" role="alert" style={{ marginTop: 0 }}>
@@ -205,15 +254,24 @@ export default function Login() {
               </p>
             )}
 
-            <button type="submit" className="auth__submit" disabled={loading} aria-busy={loading}>
+            <motion.button
+              type="submit"
+              className="auth__submit"
+              disabled={loading}
+              aria-busy={loading}
+              variants={fieldVariants}
+            >
               {loading ? <span className="auth__submit-spinner" aria-hidden="true" /> : 'Entrar'}
-            </button>
-          </form>
+            </motion.button>
+          </motion.form>
 
           <p className="auth__switch">
-            Não tem uma conta? <Link to="/cadastro">Criar conta grátis</Link>
+            Não tem uma conta?{' '}
+            <Link to="/cadastro" onClick={(e) => handleSwitch(e, '/cadastro')}>
+              Criar conta grátis
+            </Link>
           </p>
-        </motion.div>
+        </div>
       </section>
     </div>
   )

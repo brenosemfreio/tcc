@@ -36,6 +36,15 @@ function calcStrength(pwd) {
 }
 const STRENGTH_LABELS = ['', 'Fraca', 'Média', 'Boa', 'Forte']
 
+const formContainerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.06, delayChildren: 0.5 } },
+}
+const fieldVariants = {
+  hidden: { opacity: 0, y: 8 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
+}
+
 export default function Cadastro() {
   const [form, setForm] = useState({
     name: '', email: '', password: '', confirm: '', acceptTerms: false,
@@ -45,10 +54,20 @@ export default function Cadastro() {
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
   const [globalError, setGlobalError] = useState('')
+  const [isExiting, setIsExiting] = useState(false)
   const { register } = useAuth()
   const navigate = useNavigate()
 
   const strength = useMemo(() => calcStrength(form.password), [form.password])
+
+  const particles = useMemo(() => Array.from({ length: 14 }, () => ({
+    left: Math.random() * 100,
+    top: Math.random() * 100,
+    size: 4 + Math.random() * 6,
+    opacity: 0.04 + Math.random() * 0.08,
+    delay: Math.random() * 5,
+    duration: 4 + Math.random() * 5,
+  })), [])
 
   const validate = () => {
     const next = {}
@@ -95,12 +114,36 @@ export default function Cadastro() {
     }
   }
 
+  const handleSwitch = (e, path) => {
+    e.preventDefault()
+    setIsExiting(true)
+    setTimeout(() => navigate(path), 250)
+  }
+
   return (
-    <div className="auth">
+    <div className={`auth${isExiting ? ' auth--exiting' : ''}`}>
       {/* ─── ESQUERDA — Showcase (3 zonas) ─── */}
       <aside className="auth__showcase">
         <div className="auth__blob auth__blob--1" aria-hidden="true" />
         <div className="auth__blob auth__blob--2" aria-hidden="true" />
+
+        <div className="auth__particles" aria-hidden="true">
+          {particles.map((p, i) => (
+            <span
+              key={i}
+              className="auth__particle"
+              style={{
+                left: `${p.left}%`,
+                top: `${p.top}%`,
+                width: `${p.size}px`,
+                height: `${p.size}px`,
+                opacity: p.opacity,
+                '--delay': `${p.delay}s`,
+                '--dur': `${p.duration}s`,
+              }}
+            />
+          ))}
+        </div>
 
         {/* Zona 1 */}
         <Link to="/" className="auth__logo" aria-label="HubStudio — página inicial">
@@ -116,7 +159,7 @@ export default function Cadastro() {
         </div>
 
         {/* Zona 3 — métrica */}
-        <div className="auth__bottom-card" role="group" aria-label="Social proof">
+        <div className="auth__bottom-card auth__bottom-card--register" role="group" aria-label="Social proof">
           <div className="auth__metric-row">
             <div className="auth__avatars" aria-hidden="true">
               <span className="auth__avatar" style={{ background: 'linear-gradient(135deg, #7C5FE8, #4F35E8)' }}>JS</span>
@@ -136,12 +179,7 @@ export default function Cadastro() {
           Voltar
         </Link>
 
-        <motion.div
-          className="auth__card"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-        >
+        <div className="auth__card">
           <div className="auth__mobile-logo" aria-hidden="true">
             <img src={logoHub} alt="HubStudio" />
           </div>
@@ -164,9 +202,16 @@ export default function Cadastro() {
 
           <div className="auth__divider" role="separator">ou continue com email</div>
 
-          <form onSubmit={handleSubmit} className="auth__form" noValidate>
+          <motion.form
+            onSubmit={handleSubmit}
+            className="auth__form"
+            noValidate
+            variants={formContainerVariants}
+            initial="hidden"
+            animate="visible"
+          >
             {/* Nome */}
-            <div className="auth__field">
+            <motion.div className="auth__field" variants={fieldVariants}>
               <div className="auth__input-wrap">
                 <input
                   id="name"
@@ -187,10 +232,10 @@ export default function Cadastro() {
                   {errors.name}
                 </p>
               )}
-            </div>
+            </motion.div>
 
             {/* E-mail */}
-            <div className="auth__field">
+            <motion.div className="auth__field" variants={fieldVariants}>
               <div className="auth__input-wrap">
                 <input
                   id="email"
@@ -211,10 +256,10 @@ export default function Cadastro() {
                   {errors.email}
                 </p>
               )}
-            </div>
+            </motion.div>
 
             {/* Senha + força */}
-            <div className="auth__field">
+            <motion.div className="auth__field" variants={fieldVariants}>
               <div className="auth__input-wrap">
                 <input
                   id="password"
@@ -258,10 +303,10 @@ export default function Cadastro() {
                   {errors.password}
                 </p>
               )}
-            </div>
+            </motion.div>
 
             {/* Confirmar */}
-            <div className="auth__field">
+            <motion.div className="auth__field" variants={fieldVariants}>
               <div className="auth__input-wrap">
                 <input
                   id="confirm"
@@ -291,10 +336,10 @@ export default function Cadastro() {
                   {errors.confirm}
                 </p>
               )}
-            </div>
+            </motion.div>
 
             {/* Termos */}
-            <label className="auth__checkbox">
+            <motion.label className="auth__checkbox" variants={fieldVariants}>
               <input
                 type="checkbox"
                 checked={form.acceptTerms}
@@ -311,7 +356,7 @@ export default function Cadastro() {
                 {' '}e a{' '}
                 <a href="#" target="_blank" rel="noreferrer">Política de privacidade</a>.
               </span>
-            </label>
+            </motion.label>
             {errors.acceptTerms && (
               <p id="terms-error" className="auth__field-error" role="alert" style={{ marginTop: '-0.375rem' }}>
                 <LuCircleAlert size={12} aria-hidden="true" />
@@ -326,15 +371,24 @@ export default function Cadastro() {
               </p>
             )}
 
-            <button type="submit" className="auth__submit" disabled={loading} aria-busy={loading}>
+            <motion.button
+              type="submit"
+              className="auth__submit"
+              disabled={loading}
+              aria-busy={loading}
+              variants={fieldVariants}
+            >
               {loading ? <span className="auth__submit-spinner" aria-hidden="true" /> : 'Criar conta grátis'}
-            </button>
-          </form>
+            </motion.button>
+          </motion.form>
 
           <p className="auth__switch">
-            Já tem uma conta? <Link to="/entrar">Entrar</Link>
+            Já tem uma conta?{' '}
+            <Link to="/entrar" onClick={(e) => handleSwitch(e, '/entrar')}>
+              Entrar
+            </Link>
           </p>
-        </motion.div>
+        </div>
       </section>
     </div>
   )

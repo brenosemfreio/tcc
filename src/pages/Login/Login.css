@@ -125,20 +125,24 @@
 }
 .auth__logo:hover { transform: translateY(-1px); opacity: 0.92; }
 .auth__logo-img {
-  height: 2rem;
+  /* Mesmo tamanho da logo na Navbar da landing (.navbar__logo-img) */
+  height: 42px;
   width: auto;
   display: block;
   filter: brightness(0) invert(1);
 }
 
-/* ── Zona 2: Headline centralizada visualmente via margin auto ── */
+/* ── Zona 2: Headline centralizada no espaço entre logo e card.
+   flex: 1 faz a zona absorver todo o espaço vertical livre entre
+   logo (topo) e card (rodapé). align-items: center centraliza o
+   h2 verticalmente dentro dessa zona expandida. ── */
 .auth__headline-zone {
+  flex: 1;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   position: relative;
   z-index: 1;
-  margin-top: auto;
-  margin-bottom: auto;
   animation: authHeadlineIn 600ms cubic-bezier(0.22, 1, 0.36, 1) 150ms both;
 }
 .auth__headline {

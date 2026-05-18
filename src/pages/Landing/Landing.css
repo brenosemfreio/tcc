@@ -263,10 +263,11 @@
   justify-content: center;
 }
 
-/* Mockup */
+/* Mockup — max-width fluido pra escalar suavemente em qualquer zoom */
 .l-mockup {
   width: 100%;
-  max-width: 520px;
+  max-width: clamp(22rem, 40vw, 33rem);
+  min-width: 0;
   background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -425,9 +426,10 @@
   flex-shrink: 0;
 }
 
-.l-float--1 { top: -16px;   left:  -40px; }
-.l-float--2 { bottom: 30px; right: -36px; }
-.l-float--3 { top: 45%;     left:  -48px; }
+/* Floats: left/right em % pro deslocamento escalar com o container pai */
+.l-float--1 { top: -1rem;       left:  -7%; }
+.l-float--2 { bottom: 1.875rem; right: -6.5%; }
+.l-float--3 { top: 45%;         left:  -9%; }
 
 /* Scroll hint */
 .l-scroll {
@@ -2136,9 +2138,10 @@
   }
   .l-float strong { font-size: 0.8125rem; }
   .l-float span   { font-size: 0.6875rem; }
-  .l-float--1 { top: -0.875rem;  left:  -2rem; }
-  .l-float--2 { bottom: 1.75rem; right: -1.75rem; }
-  .l-float--3 { top: 45%;        left:  -2.25rem; }
+  /* Floats: deslocamento horizontal em % pra acompanhar o container */
+  .l-float--1 { top: -0.875rem;  left:  -7%; }
+  .l-float--2 { bottom: 1.75rem; right: -6.5%; }
+  .l-float--3 { top: 45%;        left:  -8%; }
 
   /* ─────────────────────────────────────────────────────────
      FEATURES (bento grid)
@@ -2282,10 +2285,11 @@
 /* ── ≤1280px: narrow desktop ───────────────────────────── */
 @media (max-width: 1280px) {
   .l-hero__inner {
-    gap: 120px;
+    gap: 4rem;
     grid-template-columns: 1fr 1fr;
   }
-  .l-mockup { max-width: 460px; }
+  /* Mockup com clamp() em vez de px fixo — escala com viewport */
+  .l-mockup { max-width: clamp(20rem, 44vw, 30rem); }
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -2312,7 +2316,7 @@
     align-items: center;
   }
 
-  /* Mockup proporcional — substitui max-width fixo em px por relativo */
+  /* Mockup proporcional — clamp() consistente com ≤1280 */
   .l-hero__visual {
     width: 100%;
     max-width: 36rem;
@@ -2320,7 +2324,7 @@
   }
   .l-mockup {
     width: 100%;
-    max-width: clamp(28rem, 38vw, 32rem);
+    max-width: clamp(20rem, 44vw, 30rem);
     margin: 0 auto;
   }
 }

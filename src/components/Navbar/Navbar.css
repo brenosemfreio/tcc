@@ -124,7 +124,13 @@
    RESPONSIVO
    ══════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
-  .navbar__inner { padding-inline: 24px; }
+  /* No mobile o .navbar__nav é position:fixed e .navbar__actions é display:none
+     → sobram apenas logo + burger no flow do flex. space-between empurra
+     o burger pra borda direita. */
+  .navbar__inner {
+    padding-inline: 24px;
+    justify-content: space-between;
+  }
   .navbar__actions { display: none; }
   .navbar__burger   { display: flex; }
 

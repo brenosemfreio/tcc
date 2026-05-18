@@ -121,8 +121,10 @@
    ══════════════════════════════════════════════════════════ */
 .l-hero {
   position: relative;
+  /* 100vh fallback; min() capa em 960px pra não crescer no zoom <80% */
   min-height: 100vh;
-  min-height: 100svh;
+  min-height: min(100svh, 960px);
+  max-height: 960px;
   background: linear-gradient(135deg, #09041A 0%, #130826 40%, #0F0620 100%);
   display: flex;
   flex-direction: column;
@@ -189,8 +191,10 @@
   grid-template-columns: 1fr 1.2fr;
   gap: 220px;
   align-items: center;
+  /* Mesma estratégia do .l-hero — capa em 960 pra evitar expansão em zoom <80% */
   min-height: 100vh;
-  min-height: 100svh;
+  min-height: min(100svh, 960px);
+  max-height: 960px;
   padding-top: 96px;
   padding-bottom: 80px;
   position: relative;
@@ -985,11 +989,15 @@
    STEPS — how it works
    ══════════════════════════════════════════════════════════ */
 .l-steps {
+  /* 100vh fallback; min() capa em 960px pra não crescer no zoom <80% */
   min-height: 100vh;
+  min-height: min(100vh, 960px);
+  max-height: 960px;
   display: flex;
   align-items: flex-start;
   padding: 120px 0;
   background: #F9F8FF;
+  overflow: hidden;
 }
 
 .l-steps > .container {
@@ -997,7 +1005,10 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  /* Capa proporcional ao parent: 960 - 240 (padding) = 720 */
   min-height: calc(100vh - 240px);
+  min-height: min(calc(100vh - 240px), 720px);
+  max-height: 720px;
 }
 
 .l-steps .l-section-head {

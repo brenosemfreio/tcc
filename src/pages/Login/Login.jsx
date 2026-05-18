@@ -244,7 +244,7 @@ export default function Login() {
             </motion.div>
 
             <motion.div className="auth__row" variants={fieldVariants}>
-              <a href="#" className="auth__forgot">Esqueceu a senha?</a>
+              <Link to="/esqueci-senha" className="auth__forgot">Esqueceu a senha?</Link>
             </motion.div>
 
             {globalError && (

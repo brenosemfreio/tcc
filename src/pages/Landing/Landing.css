@@ -122,6 +122,7 @@
 .l-hero {
   position: relative;
   min-height: 100vh;
+  min-height: 100svh;
   background: linear-gradient(135deg, #09041A 0%, #130826 40%, #0F0620 100%);
   display: flex;
   flex-direction: column;
@@ -189,6 +190,7 @@
   gap: 220px;
   align-items: center;
   min-height: 100vh;
+  min-height: 100svh;
   padding-top: 96px;
   padding-bottom: 80px;
   position: relative;
@@ -1846,13 +1848,17 @@
   .l-section-head p { font-size: 0.9375rem; max-width: 460px; }
 
   /* ─────────────────────────────────────────────────────────
-     HERO
+     HERO — preserva 100vh para evitar gap no zoom 125%
      ───────────────────────────────────────────────────────── */
-  .l-hero { min-height: auto; }
+  .l-hero {
+    min-height: 100vh;
+    min-height: 100svh;
+  }
   .l-hero__inner {
     grid-template-columns: 1fr 1fr;
     gap: 80px;
-    min-height: 88vh;
+    min-height: 100vh;
+    min-height: 100svh;
     padding-top: 80px;
     padding-bottom: 56px;
   }
@@ -2280,6 +2286,43 @@
     grid-template-columns: 1fr 1fr;
   }
   .l-mockup { max-width: 460px; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   1152–1280px: zoom 125% em notebooks típicos
+   Garante que o hero preencha viewport e que o mockup não fique estreito.
+   Cobre exatamente o intervalo onde o zoom 125% colapsa o layout:
+   - 1366 @ 125% → ~1093px (fora, pega só ≤1024)
+   - 1440 @ 125% → ~1152px ✓
+   - 1600 @ 125% → ~1280px ✓
+   - 1920 @ 125% → ~1536px (coberto pelo 1281-1600 já corrigido)
+   ══════════════════════════════════════════════════════════ */
+@media (min-width: 1152px) and (max-width: 1280px) {
+  .l-hero {
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+  .l-hero__inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding-top: 6rem;
+    padding-bottom: 4rem;
+    align-items: center;
+  }
+
+  /* Mockup proporcional — substitui max-width fixo em px por relativo */
+  .l-hero__visual {
+    width: 100%;
+    max-width: 36rem;
+    justify-self: center;
+  }
+  .l-mockup {
+    width: 100%;
+    max-width: clamp(28rem, 38vw, 32rem);
+    margin: 0 auto;
+  }
 }
 
 /* ── ≤1024px: tablet ───────────────────────────────────── */

@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { LuArrowLeft, LuEye, LuEyeOff, LuStar, LuCircleAlert } from 'react-icons/lu'
+import { LuArrowLeft, LuEye, LuEyeOff, LuCircleAlert } from 'react-icons/lu'
 import { useAuth } from '../../contexts/AuthContext'
 import logoHub from '../../assets/images/logo-hub.png'
 import './Login.css'
@@ -131,23 +131,6 @@ export default function Login() {
           </h2>
         </div>
 
-        {/* Zona 3 — depoimento */}
-        <blockquote className="auth__bottom-card auth__bottom-card--login">
-          <div className="auth__stars" aria-label="5 estrelas">
-            {[...Array(5)].map((_, i) => <LuStar key={i} size={14} fill="currentColor" />)}
-          </div>
-          <p className="auth__testimonial-quote">
-            Reduzi 6 horas por semana de trabalho operacional. Agora foco em
-            criar conteúdo e os insights de IA cuidam do resto.
-          </p>
-          <footer className="auth__testimonial-author">
-            <span className="auth__testimonial-avatar" aria-hidden="true">JS</span>
-            <div>
-              <strong>Júlia Sampaio</strong>
-              <span>@juliacria</span>
-            </div>
-          </footer>
-        </blockquote>
       </aside>
 
       {/* ─── DIREITA — Formulário ─── */}

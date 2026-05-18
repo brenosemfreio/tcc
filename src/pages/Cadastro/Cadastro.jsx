@@ -158,18 +158,6 @@ export default function Cadastro() {
           </h2>
         </div>
 
-        {/* Zona 3 — métrica */}
-        <div className="auth__bottom-card auth__bottom-card--register" role="group" aria-label="Social proof">
-          <div className="auth__metric-row">
-            <div className="auth__avatars" aria-hidden="true">
-              <span className="auth__avatar" style={{ background: 'linear-gradient(135deg, #7C5FE8, #4F35E8)' }}>JS</span>
-              <span className="auth__avatar" style={{ background: 'linear-gradient(135deg, #E84FA5, #B44FE8)' }}>RM</span>
-              <span className="auth__avatar" style={{ background: 'linear-gradient(135deg, #4FCEE8, #4F8FE8)' }}>LV</span>
-            </div>
-            <span className="auth__metric-text">+1.200 criadores já usam o HubStudio</span>
-          </div>
-          <p className="auth__metric-sub">Agendaram posts hoje</p>
-        </div>
       </aside>
 
       {/* ─── DIREITA — Formulário ─── */}

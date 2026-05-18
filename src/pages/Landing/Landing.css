@@ -2571,3 +2571,34 @@
   /* CTA final */
   .l-cta h2 { font-size: 1.625rem; }
 }
+
+/* ══════════════════════════════════════════════════════════
+   1024–1280px (zoom 125% em notebooks típicos): FIX FINAL
+   Colocado no FIM do arquivo pra vencer no source-order
+   sobre ≤1280 (L2297), 1024-1439 (L2120), 1152-1280 (L2320).
+   ────────────────────────────────────────────────────────────
+   Diagnóstico: o max-width do mockup já era um clamp, mas a
+   col do grid (1fr 1fr + gap 4rem em container 960px = 448px)
+   constrangia o mockup ANTES do max-width ser atingido. Sem
+   alargar a col, qualquer clamp no mockup fica neutralizado.
+   ══════════════════════════════════════════════════════════ */
+@media (min-width: 1024px) and (max-width: 1280px) {
+  /* Alarga a col do visual: 1fr 1.3fr → visual ganha ~58% do espaço */
+  .l-hero__inner {
+    grid-template-columns: 1fr 1.3fr;
+  }
+
+  /* Container do mockup acompanha — max-width generoso para floats caberem */
+  .l-hero__visual {
+    width: 100%;
+    max-width: clamp(360px, 50vw, 540px);
+    justify-self: center;
+  }
+
+  /* Mockup com clamp dimensionado pra acompanhar a col alargada */
+  .l-mockup {
+    width: 100%;
+    min-width: 0;
+    max-width: clamp(280px, 42vw, 460px);
+  }
+}

@@ -602,7 +602,14 @@
    ══════════════════════════════════════════════════════════ */
 
 @media (min-width: 1024px) and (max-width: 1439px) {
-  .auth__showcase { padding: 2.25rem 2.75rem; }
+  /* Blindagem: position: relative + min-height: 100vh são CRÍTICOS para
+     o containing block do position: absolute da headline. Garantidos
+     com !important pra impedir qualquer cascade lateral de quebrá-los. */
+  .auth__showcase {
+    position: relative !important;
+    min-height: 100vh !important;
+    padding: 2.25rem 2.75rem;
+  }
   .auth__pane     { padding: 1.5rem 3rem; }
 
   .auth__card { padding: 2rem 2.25rem; gap: 1rem; max-width: 26.5rem; }
@@ -621,7 +628,11 @@
     min-height: 100vh;
     overflow: visible;
   }
-  .auth__showcase { display: none; }
+  .auth__showcase {
+    display: none;
+    position: relative !important;
+    min-height: 100vh !important;
+  }
   .auth__pane {
     padding: 4.5rem 1.25rem 2rem;
     min-height: 100vh;

@@ -150,11 +150,26 @@ export default function Cadastro() {
           <img src={logoHub} alt="HubStudio" className="auth__logo-img" />
         </Link>
 
-        {/* Zona 2 */}
-        <div className="auth__headline-zone">
-          <h2 className="auth__headline">
+        {/* Headline — position: absolute ancorada no centro vertical do showcase */}
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '3.5rem',
+          right: '3.5rem',
+          transform: 'translateY(-50%)',
+          zIndex: 2,
+        }}>
+          <h2 style={{
+            margin: 0,
+            maxWidth: '32rem',
+            fontSize: 'clamp(2rem, 4vw, 2.75rem)',
+            fontWeight: 800,
+            lineHeight: 1.12,
+            letterSpacing: '-0.025em',
+            color: '#fff',
+          }}>
             Comece hoje a simplificar<br />
-            <span className="auth__headline-accent">suas redes.</span>
+            <span style={{ color: 'var(--color-primary)' }}>suas redes.</span>
           </h2>
         </div>
 

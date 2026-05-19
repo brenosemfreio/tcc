@@ -34,6 +34,7 @@
    ══════════════════════════════════════════════════════════ */
 .auth__showcase {
   position: relative;
+  min-height: 100vh;
   padding: 3rem 3.5rem;
   display: flex;
   flex-direction: column;
@@ -136,12 +137,15 @@
   filter: brightness(0) invert(1);
 }
 
-/* ── Headline — único item no fluxo flex.
-   O showcase tem justify-content: center → headline cai
-   no centro vertical real da metade esquerda da tela. ── */
+/* ── Headline — flex: 1 absorve TODO o espaço vertical do showcase.
+   Dentro do wrapper, align-items: center centraliza o h2 no eixo
+   vertical real (não importa altura da logo absoluta acima). ── */
 .auth__headline-zone {
+  flex: 1;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
+  width: 100%;
   position: relative;
   z-index: 1;
   animation: authHeadlineIn 600ms cubic-bezier(0.22, 1, 0.36, 1) 150ms both;

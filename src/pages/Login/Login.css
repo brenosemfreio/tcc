@@ -38,8 +38,6 @@
   padding: 3rem 3.5rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
   color: #fff;
   background:
     radial-gradient(ellipse at 85% 0%, rgba(124, 95, 232, 0.42), transparent 55%),
@@ -137,16 +135,15 @@
   filter: brightness(0) invert(1);
 }
 
-/* ── Headline — flex: 1 absorve TODO o espaço vertical do showcase.
-   Dentro do wrapper, align-items: center centraliza o h2 no eixo
-   vertical real (não importa altura da logo absoluta acima). ── */
+/* ── Headline — position: absolute ancorada no centro vertical do showcase.
+   top: 50% + translateY(-50%) é à prova de qualquer conflito de flexbox.
+   left/right 3.5rem alinham com o padding-inline do showcase. ── */
 .auth__headline-zone {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 3.5rem;
+  right: 3.5rem;
+  transform: translateY(-50%);
   z-index: 1;
   animation: authHeadlineIn 600ms cubic-bezier(0.22, 1, 0.36, 1) 150ms both;
 }
@@ -173,8 +170,9 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes authHeadlineIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+  /* Preserva translateY(-50%) da centralização absoluta + soma o slide de 20px */
+  from { opacity: 0; transform: translateY(calc(-50% + 20px)); }
+  to   { opacity: 1; transform: translateY(-50%); }
 }
 
 /* ══════════════════════════════════════════════════════════

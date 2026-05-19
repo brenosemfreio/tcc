@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { LuArrowLeft, LuEye, LuEyeOff, LuCircleAlert } from 'react-icons/lu'
@@ -25,7 +25,6 @@ function GitHubIcon() {
   )
 }
 
-/* Stagger variants para framer-motion */
 const formContainerVariants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.06, delayChildren: 0.5 } },
@@ -44,16 +43,6 @@ export default function Login() {
   const [isExiting, setIsExiting] = useState(false)
   const { login } = useAuth()
   const navigate = useNavigate()
-
-  // Partículas — 14, propriedades aleatórias estáveis no mount
-  const particles = useMemo(() => Array.from({ length: 14 }, () => ({
-    left: Math.random() * 100,
-    top: Math.random() * 100,
-    size: 4 + Math.random() * 6,
-    opacity: 0.04 + Math.random() * 0.08,
-    delay: Math.random() * 5,
-    duration: 4 + Math.random() * 5,
-  })), [])
 
   const validate = () => {
     const next = {}
@@ -85,7 +74,6 @@ export default function Login() {
     }
   }
 
-  // Transição entre /entrar e /cadastro — fade out 250ms, navega, nova página entra com fade in
   const handleSwitch = (e, path) => {
     e.preventDefault()
     setIsExiting(true)
@@ -94,45 +82,24 @@ export default function Login() {
 
   return (
     <div className={`auth${isExiting ? ' auth--exiting' : ''}`}>
-      {/* ─── ESQUERDA — Showcase reescrito do zero ─── */}
-      <div className="showcase">
-        {/* Partículas — inline (reusando o padrão useMemo já existente) */}
-        <div className="showcase__particles" aria-hidden="true">
-          {particles.map((p, i) => (
-            <span
-              key={i}
-              className="showcase__particle"
-              style={{
-                left: `${p.left}%`,
-                top: `${p.top}%`,
-                width: `${p.size}px`,
-                height: `${p.size}px`,
-                opacity: p.opacity,
-                '--delay': `${p.delay}s`,
-                '--dur': `${p.duration}s`,
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Logo */}
-        <div className="showcase__logo">
+      {/* ─── LADO ESQUERDO ─── */}
+      <div className="auth__left">
+        <div className="auth__left-logo">
           <Link to="/" aria-label="HubStudio — página inicial">
-            <img src={logoHub} alt="HubStudio" className="showcase__logo-img" />
+            <img src={logoHub} alt="HubStudio" />
           </Link>
         </div>
 
-        {/* Headline centralizada */}
-        <div className="showcase__headline">
-          <h2 className="showcase__title">
+        <div className="auth__left-headline">
+          <h2>
             Continue construindo<br />
             <span>sua presença digital.</span>
           </h2>
         </div>
       </div>
 
-      {/* ─── DIREITA — Formulário ─── */}
-      <section className="auth__pane">
+      {/* ─── LADO DIREITO ─── */}
+      <div className="auth__right">
         <Link to="/" className="auth__back" aria-label="Voltar para a página inicial">
           <LuArrowLeft size={14} aria-hidden="true" />
           Voltar
@@ -253,7 +220,7 @@ export default function Login() {
             </Link>
           </p>
         </div>
-      </section>
+      </div>
     </div>
   )
 }

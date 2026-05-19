@@ -1,40 +1,39 @@
 /* ═══════════════════════════════════════════════════════════
-   AUTH — Login + Cadastro
-   Filosofia: menos é mais. Tudo cabe em 100vh sem scroll.
-   Split 50/50: showcase escura + card de formulário.
+   AUTH — Login + Cadastro (slate limpo, reescrito do zero)
+   Compartilhado entre /entrar e /cadastro.
    ═══════════════════════════════════════════════════════════ */
 
+/* ──────────────────────────────────────────────────────────
+   BLOCO 1 — Layout base
+   .auth = wrapper full-screen, flex (50/50 split)
+   ────────────────────────────────────────────────────────── */
 .auth {
+  display: flex;
+  width: 100%;
   height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
   background: #F5F4FF;
   font-family: var(--font-family);
   color: var(--color-text);
-  overflow: hidden;
   animation: authPageIn 350ms ease-out;
 }
 
-/* Transição de saída ao trocar entre login/register */
 .auth--exiting {
   animation: authPageOut 250ms ease-in forwards;
   pointer-events: none;
 }
-@keyframes authPageIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-@keyframes authPageOut {
-  from { opacity: 1; }
-  to   { opacity: 0; }
-}
 
-/* ─── SHOWCASE (lado esquerdo) — reescrito do zero ─────────── */
-.showcase {
+@keyframes authPageIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes authPageOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* ──────────────────────────────────────────────────────────
+   BLOCO 2 — Lado esquerdo (showcase)
+   width: 50% + height: 100vh → containing block fixo
+   pra centralização absoluta da headline.
+   ────────────────────────────────────────────────────────── */
+.auth__left {
   position: relative;
-  /* width: 100% preenche o grid track de 1fr = 50% do viewport.
-     height fixa torna o top: 50% do filho absoluto matematicamente exato. */
-  width: 100%;
+  width: 50%;
   height: 100vh;
   overflow: hidden;
   background:
@@ -43,49 +42,25 @@
     linear-gradient(135deg, #09041A 0%, #130826 40%, #0F0620 100%);
 }
 
-/* Partículas flutuantes — mesmo visual do projeto */
-.showcase__particles {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  overflow: hidden;
-}
-.showcase__particle {
-  position: absolute;
-  border-radius: 50%;
-  background: #fff;
-  pointer-events: none;
-  will-change: transform;
-  animation: showcaseParticle var(--dur, 6s) ease-in-out var(--delay, 0s) infinite alternate;
-}
-@keyframes showcaseParticle {
-  from { transform: translateY(-20px); }
-  to   { transform: translateY(20px); }
-}
-
-/* Logo no canto superior esquerdo */
-.showcase__logo {
+.auth__left-logo {
   position: absolute;
   top: 2.5rem;
   left: 3rem;
   z-index: 2;
 }
-.showcase__logo a {
+.auth__left-logo a {
   display: inline-flex;
-  align-items: center;
   transition: opacity 150ms ease;
 }
-.showcase__logo a:hover { opacity: 0.85; }
-.showcase__logo-img {
+.auth__left-logo a:hover { opacity: 0.85; }
+.auth__left-logo img {
   height: 42px;
   width: auto;
   display: block;
   filter: brightness(0) invert(1);
 }
 
-/* Headline centralizada — top:50% + translateY(-50%) em pai com height fixa */
-.showcase__headline {
+.auth__left-headline {
   position: absolute;
   top: 50%;
   left: 3rem;
@@ -93,8 +68,7 @@
   transform: translateY(-50%);
   z-index: 2;
 }
-
-.showcase__title {
+.auth__left-headline h2 {
   margin: 0;
   font-size: clamp(2rem, 4vw, 2.75rem);
   font-weight: 800;
@@ -103,38 +77,24 @@
   color: #fff;
   max-width: 32rem;
 }
-
-.showcase__title span {
+.auth__left-headline h2 span {
   color: var(--color-primary);
 }
 
-/* ══════════════════════════════════════════════════════════
-   DIREITA — Pane com card centralizado
-   ══════════════════════════════════════════════════════════ */
-.auth__pane {
+/* ──────────────────────────────────────────────────────────
+   BLOCO 3 — Lado direito (pane + back link)
+   ────────────────────────────────────────────────────────── */
+.auth__right {
   position: relative;
+  width: 50%;
+  height: 100vh;
+  background: #F5F4FF;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem 3.5rem;
-  background: #F5F4FF;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
-/* Sombra suave projetada do lado esquerdo no direito */
-.auth__pane::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 6rem;
-  background: linear-gradient(90deg, rgba(9, 4, 26, 0.18) 0%, rgba(9, 4, 26, 0.05) 40%, transparent 100%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Voltar — canto superior direito */
 .auth__back {
   position: absolute;
   top: 1.5rem;
@@ -160,7 +120,10 @@
 }
 .auth__back:hover svg { transform: translateX(-3px); }
 
-/* Card — entrada via CSS */
+/* ──────────────────────────────────────────────────────────
+   BLOCO 4 — Card e formulário
+   Mesmos valores visuais do CSS anterior (preservados)
+   ────────────────────────────────────────────────────────── */
 .auth__card {
   position: relative;
   width: 100%;
@@ -173,14 +136,17 @@
   flex-direction: column;
   gap: 1.25rem;
   z-index: 1;
-  animation: authFormCardIn 700ms cubic-bezier(0.22, 1, 0.36, 1) 200ms both;
+  animation: authCardIn 700ms cubic-bezier(0.22, 1, 0.36, 1) 200ms both;
 }
-@keyframes authFormCardIn {
+@keyframes authCardIn {
   from { opacity: 0; transform: translateY(16px) scale(0.97); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Header */
+/* Logo dentro do card (mobile apenas) */
+.auth__mobile-logo { display: none; }
+
+/* Heading */
 .auth__heading h1 {
   font-size: 1.75rem;
   font-weight: 800;
@@ -260,12 +226,8 @@
   flex-direction: column;
   gap: 0.875rem;
 }
-
 .auth__field { position: relative; }
-
-.auth__input-wrap {
-  position: relative;
-}
+.auth__input-wrap { position: relative; }
 
 .auth__input {
   width: 100%;
@@ -279,9 +241,7 @@
   font-family: var(--font-family);
   transition: border-color 200ms ease, box-shadow 200ms ease;
 }
-.auth__input::placeholder {
-  color: var(--color-text-muted);
-}
+.auth__input::placeholder { color: var(--color-text-muted); }
 .auth__input:hover:not(:focus):not(.auth__input--error) {
   border-color: #CBD5E1;
 }
@@ -318,14 +278,11 @@
 .auth__action-btn--active svg { transform: scale(1.08); }
 
 /* Erros inline */
-.auth__input--error {
-  border-color: #EF4444;
-}
+.auth__input--error { border-color: #EF4444; }
 .auth__input--error:focus {
   border-color: #EF4444;
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
 }
-
 .auth__field-error {
   display: flex;
   align-items: center;
@@ -338,13 +295,12 @@
   animation: authErrorIn 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .auth__field-error svg { flex-shrink: 0; }
-
 @keyframes authErrorIn {
   from { opacity: 0; transform: translateY(-4px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Strength meter — barras finas animadas */
+/* Strength meter */
 .auth__strength {
   margin-top: 0.5rem;
   display: flex;
@@ -378,7 +334,6 @@
 .auth__strength--2 .auth__strength-bar--on::after { background: #F97316; }
 .auth__strength--3 .auth__strength-bar--on::after { background: #EAB308; }
 .auth__strength--4 .auth__strength-bar--on::after { background: #22C55E; }
-
 .auth__strength-label {
   font-size: 0.75rem;
   font-weight: 600;
@@ -390,7 +345,7 @@
 .auth__strength--3 .auth__strength-label { color: #CA8A04; }
 .auth__strength--4 .auth__strength-label { color: #16A34A; }
 
-/* Linha esqueceu senha */
+/* Forgot link row */
 .auth__row {
   display: flex;
   justify-content: flex-end;
@@ -407,9 +362,7 @@
   text-decoration: underline;
 }
 
-/* ══════════════════════════════════════════════════════════
-   Checkbox custom — input nativo escondido (sr-only style)
-   ══════════════════════════════════════════════════════════ */
+/* Checkbox custom */
 .auth__checkbox {
   display: flex;
   align-items: flex-start;
@@ -473,9 +426,7 @@
 }
 .auth__checkbox a:hover { text-decoration: underline; }
 
-/* ══════════════════════════════════════════════════════════
-   Submit — pill com shimmer no hover
-   ══════════════════════════════════════════════════════════ */
+/* Submit pill com shimmer no hover */
 .auth__submit {
   position: relative;
   width: 100%;
@@ -523,10 +474,7 @@
   outline: 2px solid var(--color-primary);
   outline-offset: 3px;
 }
-.auth__submit:disabled {
-  cursor: not-allowed;
-  opacity: 0.85;
-}
+.auth__submit:disabled { cursor: not-allowed; opacity: 0.85; }
 @keyframes authShimmer {
   from { left: -150%; }
   to   { left: 200%; }
@@ -542,7 +490,7 @@
 }
 @keyframes authSpin { to { transform: rotate(360deg); } }
 
-/* Switch link */
+/* Switch login ↔ cadastro */
 .auth__switch {
   text-align: center;
   font-size: 0.875rem;
@@ -559,53 +507,28 @@
   text-decoration: underline;
 }
 
-/* Logo mobile (apenas mobile) */
-.auth__mobile-logo {
-  display: none;
-}
-
-/* ══════════════════════════════════════════════════════════
-   RESPONSIVO
-   ══════════════════════════════════════════════════════════ */
-
+/* ──────────────────────────────────────────────────────────
+   BLOCO 5 — Media queries
+   ────────────────────────────────────────────────────────── */
 @media (min-width: 1024px) and (max-width: 1439px) {
-  /* Blindagem: position: relative + min-height: 100vh são CRÍTICOS para
-     o containing block do position: absolute da headline. Garantidos
-     com !important pra impedir qualquer cascade lateral de quebrá-los. */
-  .showcase__headline {
-    left: 2.5rem;
-    right: 2.5rem;
-  }
-  .showcase__logo {
-    top: 2rem;
-    left: 2.5rem;
-  }
-  .auth__pane     { padding: 1.5rem 3rem; }
-
-  .auth__card { padding: 2rem 2.25rem; gap: 1rem; max-width: 26.5rem; }
-  .auth__heading h1 { font-size: 1.5rem; }
-  .auth__heading p  { font-size: 0.8125rem; }
-  .auth__form { gap: 0.75rem; }
-  .auth__input { height: 2.75rem; }
-  .auth__oauth-btn { height: 2.5rem; }
-  .auth__submit { height: 2.75rem; }
+  .auth__left-headline { left: 2.5rem; right: 2.5rem; }
+  .auth__left-logo     { top: 2rem; left: 2.5rem; }
+  .auth__card          { padding: 2rem 2.25rem; gap: 1rem; max-width: 26.5rem; }
+  .auth__heading h1    { font-size: 1.5rem; }
+  .auth__heading p     { font-size: 0.8125rem; }
+  .auth__form          { gap: 0.75rem; }
+  .auth__input         { height: 2.75rem; }
+  .auth__oauth-btn     { height: 2.5rem; }
+  .auth__submit        { height: 2.75rem; }
 }
 
 @media (max-width: 768px) {
-  .auth {
-    grid-template-columns: 1fr;
-    height: auto;
-    min-height: 100vh;
-    overflow: visible;
-  }
-  .showcase { display: none; }
-  .auth__pane {
-    padding: 4.5rem 1.25rem 2rem;
-    min-height: 100vh;
+  .auth__left  { display: none; }
+  .auth__right {
+    width: 100%;
     align-items: flex-start;
-    overflow: visible;
+    padding: 4.5rem 1.25rem 2rem;
   }
-  .auth__pane::before { display: none; }
   .auth__card {
     max-width: 26rem;
     margin: 0 auto;
@@ -618,27 +541,17 @@
     justify-content: center;
     margin-bottom: 0.75rem;
   }
-  .auth__mobile-logo img {
-    height: 1.875rem;
-    width: auto;
-  }
+  .auth__mobile-logo img { height: 1.875rem; width: auto; }
 }
 
 @media (max-width: 480px) {
   .auth__oauth { grid-template-columns: 1fr; }
 }
 
-/* ══════════════════════════════════════════════════════════
-   prefers-reduced-motion — desativa animações não essenciais
-   ══════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
-  .auth,
-  .auth *,
-  .auth *::before,
-  .auth *::after {
+  .auth, .auth *, .auth *::before, .auth *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .showcase__particles { display: none; }
 }

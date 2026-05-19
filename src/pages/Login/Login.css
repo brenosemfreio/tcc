@@ -29,116 +29,83 @@
   to   { opacity: 0; }
 }
 
-/* ══════════════════════════════════════════════════════════
-   ESQUERDA — Showcase (3 zonas com headline no centro visual)
-   ══════════════════════════════════════════════════════════ */
-.auth__showcase {
+/* ─── SHOWCASE (lado esquerdo) — reescrito do zero ─────────── */
+.showcase {
   position: relative;
-  min-height: 100vh;
-  padding: 3rem 3.5rem;
-  display: flex;
-  flex-direction: column;
-  color: #fff;
+  /* width: 100% preenche o grid track de 1fr = 50% do viewport.
+     height fixa torna o top: 50% do filho absoluto matematicamente exato. */
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
   background:
     radial-gradient(ellipse at 85% 0%, rgba(124, 95, 232, 0.42), transparent 55%),
     radial-gradient(ellipse at 0% 100%, rgba(232, 79, 165, 0.26), transparent 50%),
     linear-gradient(135deg, #09041A 0%, #130826 40%, #0F0620 100%);
-  overflow: hidden;
-  isolation: isolate;
 }
 
-/* Noise texture (mesma técnica da landing) */
-.auth__showcase::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  background-size: 220px 220px;
-  opacity: 0.55;
-  z-index: -2;
-  pointer-events: none;
-}
-
-/* Blobs animados — fundo "respira" */
-.auth__blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(90px);
-  pointer-events: none;
-  z-index: -1;
-  will-change: transform;
-}
-.auth__blob--1 {
-  width: 32rem;
-  height: 32rem;
-  top: -10rem;
-  right: -8rem;
-  background: radial-gradient(circle, rgba(124, 95, 232, 0.55) 0%, rgba(79, 53, 232, 0.15) 70%);
-  animation: authBlobBreathe1 10s ease-in-out infinite alternate;
-}
-.auth__blob--2 {
-  width: 26rem;
-  height: 26rem;
-  bottom: -8rem;
-  left: -7rem;
-  background: radial-gradient(circle, rgba(232, 79, 165, 0.4) 0%, rgba(180, 79, 232, 0.12) 70%);
-  animation: authBlobBreathe2 12s ease-in-out infinite alternate;
-}
-@keyframes authBlobBreathe1 {
-  from { transform: translate(0, 0) scale(1); }
-  to   { transform: translate(-2.5rem, 2rem) scale(1.08); }
-}
-@keyframes authBlobBreathe2 {
-  from { transform: translate(0, 0) scale(1); }
-  to   { transform: translate(2.5rem, -2rem) scale(1.12); }
-}
-
-/* Partículas flutuantes — neve etérea */
-.auth__particles {
+/* Partículas flutuantes — mesmo visual do projeto */
+.showcase__particles {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
   overflow: hidden;
 }
-.auth__particle {
+.showcase__particle {
   position: absolute;
   border-radius: 50%;
   background: #fff;
   pointer-events: none;
   will-change: transform;
-  animation: authParticle var(--dur, 6s) ease-in-out var(--delay, 0s) infinite alternate;
+  animation: showcaseParticle var(--dur, 6s) ease-in-out var(--delay, 0s) infinite alternate;
 }
-@keyframes authParticle {
+@keyframes showcaseParticle {
   from { transform: translateY(-20px); }
   to   { transform: translateY(20px); }
 }
 
-/* ── Logo no canto superior esquerdo (fora do flex flow) ── */
-.auth__logo {
+/* Logo no canto superior esquerdo */
+.showcase__logo {
+  position: absolute;
+  top: 2.5rem;
+  left: 3rem;
+  z-index: 2;
+}
+.showcase__logo a {
   display: inline-flex;
   align-items: center;
-  width: fit-content;
-  transition: transform var(--transition-fast), opacity var(--transition-fast);
-  position: absolute;
-  top: 3rem;
-  left: 3.5rem;
-  z-index: 2;
-  animation: authLogoIn 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition: opacity 150ms ease;
 }
-.auth__logo:hover { transform: translateY(-1px); opacity: 0.92; }
-.auth__logo-img {
-  /* Mesmo tamanho da logo na Navbar da landing (.navbar__logo-img) */
+.showcase__logo a:hover { opacity: 0.85; }
+.showcase__logo-img {
   height: 42px;
   width: auto;
   display: block;
   filter: brightness(0) invert(1);
 }
 
-/* Cascata de entrada — keyframes */
-@keyframes authLogoIn {
-  from { opacity: 0; transform: translateY(-12px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* Headline centralizada — top:50% + translateY(-50%) em pai com height fixa */
+.showcase__headline {
+  position: absolute;
+  top: 50%;
+  left: 3rem;
+  right: 3rem;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+.showcase__title {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: #fff;
+  max-width: 32rem;
+}
+
+.showcase__title span {
+  color: var(--color-primary);
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -605,10 +572,13 @@
   /* Blindagem: position: relative + min-height: 100vh são CRÍTICOS para
      o containing block do position: absolute da headline. Garantidos
      com !important pra impedir qualquer cascade lateral de quebrá-los. */
-  .auth__showcase {
-    position: relative !important;
-    min-height: 100vh !important;
-    padding: 2.25rem 2.75rem;
+  .showcase__headline {
+    left: 2.5rem;
+    right: 2.5rem;
+  }
+  .showcase__logo {
+    top: 2rem;
+    left: 2.5rem;
   }
   .auth__pane     { padding: 1.5rem 3rem; }
 
@@ -628,11 +598,7 @@
     min-height: 100vh;
     overflow: visible;
   }
-  .auth__showcase {
-    display: none;
-    position: relative !important;
-    min-height: 100vh !important;
-  }
+  .showcase { display: none; }
   .auth__pane {
     padding: 4.5rem 1.25rem 2rem;
     min-height: 100vh;
@@ -674,6 +640,5 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .auth__particles { display: none; }
-  .auth__blob { display: none; }
+  .showcase__particles { display: none; }
 }

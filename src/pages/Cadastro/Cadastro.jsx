@@ -122,16 +122,14 @@ export default function Cadastro() {
 
   return (
     <div className={`auth${isExiting ? ' auth--exiting' : ''}`}>
-      {/* ─── ESQUERDA — Showcase (3 zonas) ─── */}
-      <aside className="auth__showcase">
-        <div className="auth__blob auth__blob--1" aria-hidden="true" />
-        <div className="auth__blob auth__blob--2" aria-hidden="true" />
-
-        <div className="auth__particles" aria-hidden="true">
+      {/* ─── ESQUERDA — Showcase reescrito do zero ─── */}
+      <div className="showcase">
+        {/* Partículas — inline (reusando o padrão useMemo já existente) */}
+        <div className="showcase__particles" aria-hidden="true">
           {particles.map((p, i) => (
             <span
               key={i}
-              className="auth__particle"
+              className="showcase__particle"
               style={{
                 left: `${p.left}%`,
                 top: `${p.top}%`,
@@ -145,35 +143,21 @@ export default function Cadastro() {
           ))}
         </div>
 
-        {/* Zona 1 */}
-        <Link to="/" className="auth__logo" aria-label="HubStudio — página inicial">
-          <img src={logoHub} alt="HubStudio" className="auth__logo-img" />
-        </Link>
-
-        {/* Headline — position: absolute ancorada no centro vertical do showcase */}
-        <div style={{
-          position: 'absolute',
-          top: '50%',
-          left: '3.5rem',
-          right: '3.5rem',
-          transform: 'translateY(-50%)',
-          zIndex: 2,
-        }}>
-          <h2 style={{
-            margin: 0,
-            maxWidth: '32rem',
-            fontSize: 'clamp(2rem, 4vw, 2.75rem)',
-            fontWeight: 800,
-            lineHeight: 1.12,
-            letterSpacing: '-0.025em',
-            color: '#fff',
-          }}>
-            Comece hoje a simplificar<br />
-            <span style={{ color: 'var(--color-primary)' }}>suas redes.</span>
-          </h2>
+        {/* Logo */}
+        <div className="showcase__logo">
+          <Link to="/" aria-label="HubStudio — página inicial">
+            <img src={logoHub} alt="HubStudio" className="showcase__logo-img" />
+          </Link>
         </div>
 
-      </aside>
+        {/* Headline centralizada */}
+        <div className="showcase__headline">
+          <h2 className="showcase__title">
+            Comece hoje a simplificar<br />
+            <span>suas redes.</span>
+          </h2>
+        </div>
+      </div>
 
       {/* ─── DIREITA — Formulário ─── */}
       <section className="auth__pane">

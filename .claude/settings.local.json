@@ -4,7 +4,8 @@
       "Bash(node -e ' *)",
       "Bash(git *)",
       "Bash(python3 \"C:/Users/gabinete16/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"social media SaaS scheduling analytics creator tool\" --design-system -p \"HubStudio\")",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(xargs rm -f)"
     ]
   },
   "hooks": {

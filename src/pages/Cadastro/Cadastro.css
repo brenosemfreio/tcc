@@ -2,7 +2,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 /* Wrapper principal */
-.login-page {
+.cadastro-page {
   display: flex;
   width: 100vw;
   height: 100vh;
@@ -10,7 +10,7 @@
 }
 
 /* ── LADO ESQUERDO ── */
-.login-left {
+.cadastro-left {
   position: relative;
   width: 50%;
   height: 100vh;
@@ -18,14 +18,14 @@
   background: linear-gradient(135deg, #09041A 0%, #130826 40%, #0F0620 100%);
 }
 
-.login-left__logo {
+.cadastro-left__logo {
   position: absolute;
   top: 2.5rem;
   left: 3rem;
   z-index: 2;
 }
 
-.login-left__headline {
+.cadastro-left__headline {
   position: absolute;
   top: 50%;
   left: 3rem;
@@ -34,19 +34,19 @@
   z-index: 2;
 }
 
-.login-left__headline h2 {
+.cadastro-left__headline h2 {
   font-size: clamp(2rem, 3.5vw, 2.75rem);
   font-weight: 800;
   line-height: 1.2;
   color: #ffffff;
 }
 
-.login-left__headline h2 span {
+.cadastro-left__headline h2 span {
   color: #c084fc;
 }
 
 /* ── LADO DIREITO ── */
-.login-right {
+.cadastro-right {
   width: 50%;
   height: 100vh;
   background: #f5f4ff;
@@ -57,7 +57,7 @@
   position: relative;
 }
 
-.login-voltar {
+.cadastro-voltar {
   position: absolute;
   top: 1.5rem;
   right: 2rem;
@@ -67,10 +67,10 @@
   cursor: pointer;
   transition: transform 0.2s;
 }
-.login-voltar:hover { transform: translateX(-3px); }
+.cadastro-voltar:hover { transform: translateX(-3px); }
 
 /* ── CARD ── */
-.login-card {
+.cadastro-card {
   background: #ffffff;
   border-radius: 20px;
   box-shadow: 0 8px 48px rgba(0,0,0,0.10);
@@ -79,27 +79,27 @@
   max-width: 460px;
 }
 
-.login-card__title {
+.cadastro-card__title {
   font-size: 28px;
   font-weight: 700;
   color: #111;
   margin-bottom: 6px;
 }
 
-.login-card__subtitle {
+.cadastro-card__subtitle {
   font-size: 14px;
   color: #888;
   margin-bottom: 24px;
 }
 
 /* ── OAUTH ── */
-.login-oauth {
+.cadastro-oauth {
   display: flex;
   gap: 12px;
   margin-bottom: 24px;
 }
 
-.login-oauth__btn {
+.cadastro-oauth__btn {
   flex: 1;
   height: 44px;
   border-radius: 10px;
@@ -114,21 +114,21 @@
   cursor: pointer;
   transition: background 0.15s;
 }
-.login-oauth__btn:hover { background: #f8fafc; }
+.cadastro-oauth__btn:hover { background: #f8fafc; }
 
 /* ── SEPARADOR ── */
-.login-divider {
+.cadastro-divider {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 20px;
 }
-.login-divider__line {
+.cadastro-divider__line {
   flex: 1;
   height: 1px;
   background: #e2e8f0;
 }
-.login-divider__text {
+.cadastro-divider__text {
   font-size: 11px;
   letter-spacing: 0.08em;
   color: #aaa;
@@ -136,12 +136,12 @@
 }
 
 /* ── INPUTS ── */
-.login-field {
+.cadastro-field {
   position: relative;
   margin-bottom: 14px;
 }
 
-.login-field input {
+.cadastro-field input {
   width: 100%;
   height: 48px;
   border-radius: 10px;
@@ -153,13 +153,13 @@
   transition: border 0.15s, box-shadow 0.15s;
   background: #fff;
 }
-.login-field input::placeholder { color: #bbb; }
-.login-field input:focus {
+.cadastro-field input::placeholder { color: #bbb; }
+.cadastro-field input:focus {
   border-color: #4f35e8;
   box-shadow: 0 0 0 3px rgba(79,53,232,0.12);
 }
 
-.login-field__eye {
+.cadastro-field__eye {
   position: absolute;
   right: 14px;
   top: 50%;
@@ -172,18 +172,55 @@
   display: flex;
 }
 
-.login-forgot {
-  display: block;
-  text-align: right;
+/* ── CHECKBOX TERMOS ── */
+.cadastro-terms {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
   font-size: 13px;
-  color: #4f35e8;
-  text-decoration: none;
+  color: #555;
   margin-bottom: 20px;
-  margin-top: -8px;
+  cursor: pointer;
+  user-select: none;
+  line-height: 1.45;
+}
+.cadastro-terms input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1.5px solid #cbd5e1;
+  background: #fff;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: background 0.15s, border-color 0.15s;
+}
+.cadastro-terms input:checked {
+  background: #4f35e8;
+  border-color: #4f35e8;
+}
+.cadastro-terms input:checked::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 5px;
+  height: 9px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.cadastro-terms a {
+  color: #4f35e8;
+  font-weight: 600;
+  text-decoration: none;
 }
 
 /* ── BOTÃO PRIMÁRIO ── */
-.login-btn {
+.cadastro-btn {
   width: 100%;
   height: 48px;
   border-radius: 999px;
@@ -196,19 +233,19 @@
   transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
   margin-bottom: 16px;
 }
-.login-btn:hover {
+.cadastro-btn:hover {
   background: #3d28c4;
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(79,53,232,0.35);
 }
-.login-btn:active { transform: translateY(0); }
+.cadastro-btn:active { transform: translateY(0); }
 
-.login-switch {
+.cadastro-switch {
   text-align: center;
   font-size: 13px;
   color: #888;
 }
-.login-switch a {
+.cadastro-switch a {
   color: #4f35e8;
   font-weight: 600;
   text-decoration: none;
@@ -216,7 +253,7 @@
 
 /* ── MOBILE ── */
 @media (max-width: 768px) {
-  .login-left { display: none; }
-  .login-right { width: 100%; }
-  .login-card { padding: 32px 24px; }
+  .cadastro-left { display: none; }
+  .cadastro-right { width: 100%; }
+  .cadastro-card { padding: 32px 24px; }
 }

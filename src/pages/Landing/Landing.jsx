@@ -689,6 +689,17 @@ export default function Landing() {
             </span>
           </motion.div>
 
+          <motion.div
+            className="l-pricing__free-banner"
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45 }}
+          >
+            <LuGift size={16} />
+            <span>Primeiro mês grátis em todos os planos — sem cartão de crédito</span>
+          </motion.div>
+
           <div className="l-plans">
             {PLANS.map((plan, i) => (
               <motion.div
@@ -757,7 +768,7 @@ export default function Landing() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <span><LuShieldCheck /> 14 dias grátis</span>
+            <span><LuShieldCheck /> 1º mês grátis</span>
             <span><LuCreditCard /> Sem cartão de crédito</span>
             <span><LuRotateCcw /> Cancele quando quiser</span>
           </motion.div>

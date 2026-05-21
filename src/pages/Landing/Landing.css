@@ -189,7 +189,7 @@
 .l-hero__inner {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
-  gap: 220px;
+  gap: 280px;
   align-items: center;
   /* Mesma estratégia do .l-hero — capa em 960 pra evitar expansão em zoom <80% */
   min-height: 100vh;

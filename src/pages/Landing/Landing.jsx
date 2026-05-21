@@ -659,9 +659,6 @@ export default function Landing() {
             <motion.h2 variants={fadeUp}>
               Projetado para<br /><span className="l-gradient-text">cada etapa</span>
             </motion.h2>
-            <motion.p variants={fadeUp}>
-              Preços transparentes. Cancele quando quiser.
-            </motion.p>
           </motion.div>
 
           {/* Billing toggle */}

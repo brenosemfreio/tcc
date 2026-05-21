@@ -1869,30 +1869,30 @@
   }
   .l-hero__inner {
     grid-template-columns: 1fr 0.60fr;
-    gap: 80px;
+    gap: 40px;
     min-height: 100vh;
     min-height: 100svh;
     padding-top: 80px;
     padding-bottom: 56px;
   }
 
-  .l-hero__content { gap: 18px; }
+  .l-hero__content { gap: 20px; }
   .l-hero__title {
-    font-size: clamp(1.875rem, 2.6vw, 2.5rem);
+    font-size: clamp(2.25rem, 3.5vw, 3.25rem);
     white-space: normal;
   }
   .l-hero__sub {
-    font-size: 0.9375rem;
-    max-width: 380px;
+    font-size: 1.0625rem;
+    max-width: 460px;
   }
   .l-hero__ctas { gap: 14px; }
   .l-hero__ctas .btn {
-    padding: 11px 20px;
-    font-size: 0.9375rem;
+    padding: 13px 24px;
+    font-size: 1rem;
   }
-  .l-hero__link { font-size: 0.875rem; }
-  .l-hero__proof { font-size: 0.8125rem; gap: 10px; }
-  .l-hero__proof .l-avatar { width: 26px; height: 26px; }
+  .l-hero__link { font-size: 0.9375rem; }
+  .l-hero__proof { font-size: 0.875rem; gap: 10px; }
+  .l-hero__proof .l-avatar { width: 28px; height: 28px; }
 
   /* Mockup escala reduzida */
   .l-mockup { max-width: 528px; }

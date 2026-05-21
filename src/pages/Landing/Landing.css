@@ -2582,17 +2582,27 @@
     grid-template-columns: 1fr 1.3fr;
   }
 
-  /* Container do mockup acompanha — max-width generoso para floats caberem */
+  /* Título maior nessa faixa */
+  .l-hero__title {
+    font-size: clamp(2.25rem, 3.8vw, 3.5rem);
+    white-space: normal;
+  }
+  .l-hero__sub {
+    font-size: 1rem;
+    max-width: 28rem;
+  }
+
+  /* Container do mockup menor para balancear o título grande */
   .l-hero__visual {
     width: 100%;
-    max-width: clamp(360px, 50vw, 540px);
+    max-width: clamp(300px, 43vw, 480px);
     justify-self: center;
   }
 
-  /* Mockup com clamp dimensionado pra acompanhar a col alargada */
+  /* Mockup reduzido */
   .l-mockup {
     width: 100%;
     min-width: 0;
-    max-width: clamp(280px, 42vw, 460px);
+    max-width: clamp(240px, 36vw, 400px);
   }
 }

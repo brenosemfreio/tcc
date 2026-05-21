@@ -2609,4 +2609,8 @@
     min-width: 0;
     max-width: clamp(240px, 36vw, 400px);
   }
+
+  .l-float--1 { left:  -2%; }
+  .l-float--2 { right: -1%; }
+  .l-float--3 { left:  -3%; }
 }

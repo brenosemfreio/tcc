@@ -78,7 +78,10 @@
   color: #fff;
 }
 .auth__left-headline h2 span {
-  color: var(--color-primary);
+  background: linear-gradient(135deg, #7C5FE8 0%, #4F35E8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* ──────────────────────────────────────────────────────────

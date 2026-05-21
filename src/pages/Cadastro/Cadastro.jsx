@@ -124,7 +124,7 @@ export default function Cadastro() {
         <div className="auth__left-headline">
           <h2>
             Comece hoje a <span>simplificar</span><br />
-            e <span>melhorar</span> suas redes.
+            <span>e melhorar</span> suas redes.
           </h2>
         </div>
       </div>

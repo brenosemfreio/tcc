@@ -1868,7 +1868,7 @@
     min-height: 100svh;
   }
   .l-hero__inner {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1.2fr;
     gap: 80px;
     min-height: 100vh;
     min-height: 100svh;
@@ -1893,12 +1893,6 @@
   .l-hero__link { font-size: 0.875rem; }
   .l-hero__proof { font-size: 0.8125rem; gap: 10px; }
   .l-hero__proof .l-avatar { width: 26px; height: 26px; }
-
-  /* Visual: limita largura para manter badges ancoradas ao mockup */
-  .l-hero__visual {
-    max-width: 580px;
-    justify-self: center;
-  }
 
   /* Mockup escala reduzida */
   .l-mockup { max-width: 528px; }

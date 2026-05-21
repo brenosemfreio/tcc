@@ -93,7 +93,7 @@ export default function Login() {
         <div className="auth__left-headline">
           <h2>
             Continue construindo<br />
-            <span>sua presença digital.</span>
+            sua <span>presença digital.</span>
           </h2>
         </div>
       </div>

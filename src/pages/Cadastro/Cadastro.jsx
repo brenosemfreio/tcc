@@ -123,8 +123,8 @@ export default function Cadastro() {
 
         <div className="auth__left-headline">
           <h2>
-            Comece hoje a simplificar<br />
-            <span>suas redes.</span>
+            Comece hoje a <span>simplificar</span><br />
+            e <span>melhorar</span> suas redes.
           </h2>
         </div>
       </div>

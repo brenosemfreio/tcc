@@ -466,7 +466,7 @@ export default function Landing() {
           >
             <motion.span variants={fadeUp} className="l-badge l-badge--primary">Funcionalidades</motion.span>
             <motion.h2 variants={fadeUp}>
-              Tudo que você precisa,<br /><span className="l-gradient-text">num só lugar</span>
+              Tudo que você precisa,<br /><span className="l-gradient-text">em um só lugar</span>
             </motion.h2>
             <motion.p variants={fadeUp}>
               Do planejamento à análise, o HubStudio centraliza toda a sua gestão de redes sociais.

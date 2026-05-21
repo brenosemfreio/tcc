@@ -1177,6 +1177,8 @@
   overflow: hidden;
 }
 
+.l-pricing .l-section-head { margin-bottom: 32px; }
+
 .l-pricing::before,
 .l-pricing::after {
   content: '';
@@ -1208,7 +1210,7 @@
   justify-content: center;
   gap: 14px;
   margin-top: 0;
-  margin-bottom: 0;
+  margin-bottom: 32px;
   font-size: 0.9375rem;
   font-weight: 600;
   color: var(--color-text-secondary);

@@ -121,12 +121,19 @@ export default function Cadastro() {
           </Link>
         </div>
 
-        <div className="auth__left-headline">
-          <h2>
+        <motion.div
+          className="auth__left-headline"
+          initial="hidden"
+          animate="visible"
+          variants={{ visible: { transition: { staggerChildren: 0.12, delayChildren: 0.2 } } }}
+        >
+          <motion.h2
+            variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } } }}
+          >
             Comece hoje a <span>simplificar</span><br />
             <span>e melhorar</span> suas redes.
-          </h2>
-        </div>
+          </motion.h2>
+        </motion.div>
       </div>
 
       {/* ─── LADO DIREITO ─── */}

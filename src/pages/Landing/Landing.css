@@ -1868,8 +1868,8 @@
     min-height: 100svh;
   }
   .l-hero__inner {
-    grid-template-columns: 1fr 0.60fr;
-    gap: 40px;
+    grid-template-columns: 1fr 0.68fr;
+    gap: 20px;
     min-height: 100vh;
     min-height: 100svh;
     padding-top: 80px;
@@ -1895,16 +1895,16 @@
   .l-hero__proof .l-avatar { width: 28px; height: 28px; }
 
   /* Mockup escala reduzida */
-  .l-mockup { max-width: 528px; }
-  .l-mockup__bar { padding: 9px 14px; }
-  .l-mockup__title { font-size: 0.6875rem; }
-  .l-mockup__body { padding: 18px; }
-  .l-mockup__kpis { gap: 8px; margin-bottom: 16px; }
-  .l-mockup__kpi { padding: 10px 8px; }
-  .l-mockup__kpi strong { font-size: 0.875rem; }
-  .l-mockup__kpi span { font-size: 0.625rem; }
-  .l-mockup__chart { height: 110px; padding: 10px; margin-bottom: 16px; }
-  .l-mockup__days { gap: 4px; }
+  .l-mockup { max-width: 548px; }
+  .l-mockup__bar { padding: 10px 15px; }
+  .l-mockup__title { font-size: 0.75rem; }
+  .l-mockup__body { padding: 20px; }
+  .l-mockup__kpis { gap: 9px; margin-bottom: 17px; }
+  .l-mockup__kpi { padding: 11px 9px; }
+  .l-mockup__kpi strong { font-size: 0.9375rem; }
+  .l-mockup__kpi span { font-size: 0.6875rem; }
+  .l-mockup__chart { height: 122px; padding: 11px; margin-bottom: 17px; }
+  .l-mockup__days { gap: 5px; }
   .l-mockup__day { padding: 4px 2px; font-size: 0.6rem; }
 
   /* Badges flutuantes menores */

@@ -262,8 +262,7 @@ const PLANS = [
     annual: 23,
     desc: 'Ferramentas essenciais para criadores emergentes.',
     cta: 'Começar grátis',
-    ctaAction: 'signup',
-    features: ['Até 3 perfis sociais', '30 posts/mês', 'Analytics básico', 'Suporte por e-mail'],
+    features: ['Até 3 perfis sociais', '30 posts/mês', 'Analytics básico', 'Calendário visual', 'Suporte por e-mail'],
     highlight: false,
   },
   {
@@ -272,10 +271,8 @@ const PLANS = [
     monthly: 79,
     annual: 63,
     desc: 'Para criadores prontos para dominar o algoritmo.',
-    cta: 'Escolher Pro',
-    ctaAction: 'signup',
-    inheritsFrom: 'Lite',
-    features: ['Até 10 perfis sociais', 'Posts ilimitados', 'Analytics avançado', 'Agendamento com IA', 'Suporte prioritário'],
+    cta: 'Começar grátis',
+    features: ['Até 10 perfis sociais', 'Posts ilimitados', 'Analytics avançado', 'Agendamento com IA', 'Calendário editorial', 'Sugestões de hashtags', 'Suporte prioritário'],
     highlight: true,
   },
   {
@@ -284,10 +281,8 @@ const PLANS = [
     monthly: 199,
     annual: 159,
     desc: 'Acesso ilimitado para agências e times.',
-    cta: 'Falar com vendas',
-    ctaAction: 'sales',
-    inheritsFrom: 'Pro',
-    features: ['Perfis ilimitados', 'Posts ilimitados', 'Analytics premium', 'IA completa', 'Multi-usuário', 'Suporte 24/7'],
+    cta: 'Começar grátis',
+    features: ['Perfis ilimitados', 'Posts ilimitados', 'Analytics premium', 'IA completa', 'Calendário avançado', 'Multi-usuário', 'Gerente dedicado', 'Suporte 24/7'],
     highlight: false,
   },
 ]
@@ -735,12 +730,6 @@ export default function Landing() {
                   </div>
                 </div>
                 <p className="l-plan__desc">{plan.desc}</p>
-                {plan.inheritsFrom && (
-                  <div className="l-plan__inherits">
-                    <LuCheck />
-                    Tudo do {plan.inheritsFrom}, mais:
-                  </div>
-                )}
                 <ul className="l-plan__features">
                   {plan.features.map(f => (
                     <li key={f}>
@@ -752,14 +741,8 @@ export default function Landing() {
                 <Button
                   variant={plan.highlight ? 'primary' : 'outline'}
                   fullWidth
-                  iconRight={plan.highlight ? <LuArrowRight /> : null}
-                  onClick={() => {
-                    if (plan.ctaAction === 'sales') {
-                      window.location.href = 'mailto:vendas@hubstudio.com'
-                      return
-                    }
-                    navigate('/cadastro')
-                  }}
+                  iconRight={<LuArrowRight />}
+                  onClick={() => navigate('/cadastro')}
                 >
                   {plan.cta}
                 </Button>

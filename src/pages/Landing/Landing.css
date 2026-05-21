@@ -1796,7 +1796,7 @@
     padding-top: 88px;
     padding-bottom: 72px;
   }
-  .l-hero__title { font-size: clamp(2.6rem, 4.4vw, 3.9rem); }
+  .l-hero__title { font-size: clamp(2.6rem, 4.4vw, 3.5rem); }
   .l-hero__sub   { font-size: 1rem; max-width: 440px; }
   .l-mockup { max-width: 528px; }
   .l-mockup__body { padding: 22px; }

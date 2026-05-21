@@ -36,6 +36,9 @@
   width: 50%;
   height: 100vh;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background:
     radial-gradient(ellipse at 85% 0%, rgba(124, 95, 232, 0.42), transparent 55%),
     radial-gradient(ellipse at 0% 100%, rgba(232, 79, 165, 0.26), transparent 50%),
@@ -61,12 +64,10 @@
 }
 
 .auth__left-headline {
-  position: absolute;
-  top: 50%;
-  left: 3rem;
-  right: 3rem;
-  transform: translateY(-50%);
+  position: relative;
   z-index: 2;
+  text-align: center;
+  padding: 0 3rem;
 }
 .auth__left-headline h2 {
   margin: 0;
@@ -75,7 +76,6 @@
   line-height: 1.15;
   letter-spacing: -0.025em;
   color: #fff;
-  max-width: 32rem;
 }
 .auth__left-headline h2 span {
   color: var(--color-primary);

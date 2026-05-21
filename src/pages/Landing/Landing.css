@@ -1207,7 +1207,8 @@
   align-items: center;
   justify-content: center;
   gap: 14px;
-  margin-bottom: 56px;
+  margin-top: 40px;
+  margin-bottom: 0;
   font-size: 0.9375rem;
   font-weight: 600;
   color: var(--color-text-secondary);
@@ -1466,13 +1467,13 @@
   color: #4F35E8;
 }
 
-/* Trust badges abaixo dos cards */
+/* Trust badges acima dos cards */
 .l-pricing__trust {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 40px;
-  margin-top: 56px;
+  margin-bottom: 40px;
   flex-wrap: wrap;
 }
 

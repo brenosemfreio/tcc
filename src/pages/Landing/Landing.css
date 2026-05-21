@@ -1899,7 +1899,7 @@
   .l-hero__proof .l-avatar { width: 28px; height: 28px; }
 
   /* Mockup escala reduzida */
-  .l-mockup { max-width: 532px; }
+  .l-mockup { max-width: 505px; }
   .l-mockup__bar { padding: 10px 15px; }
   .l-mockup__title { font-size: 0.75rem; }
   .l-mockup__body { padding: 20px; }

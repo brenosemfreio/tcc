@@ -1801,6 +1801,9 @@
   .l-mockup { max-width: 475px; }
   .l-mockup__body { padding: 22px; }
   .l-mockup__chart { height: 128px; }
+  .l-float--1 { left:  -2%; }
+  .l-float--2 { right: -1%; }
+  .l-float--3 { left:  -3%; }
 
   /* ── Features (bento) ── */
   .l-features { padding: 104px 0; }

@@ -1872,8 +1872,8 @@
   }
   .l-hero__inner {
     grid-template-columns: 1fr 0.68fr;
-    gap: 40px;
-    column-gap: 40px;
+    gap: 16px;
+    column-gap: 16px;
     min-height: 100vh;
     min-height: 100svh;
     padding-top: 80px;

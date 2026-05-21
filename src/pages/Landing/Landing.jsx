@@ -664,13 +664,38 @@ export default function Landing() {
             </motion.p>
           </motion.div>
 
+          {/* Billing toggle */}
+          <motion.div
+            className="l-toggle"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <span className={!annual ? 'l-toggle__opt--active' : ''}>Mensal</span>
+            <button
+              className={`l-toggle__btn${annual ? ' l-toggle__btn--on' : ''}`}
+              onClick={() => setAnnual(!annual)}
+              aria-label="Alternar cobrança"
+            >
+              <motion.div
+                className="l-toggle__thumb"
+                animate={{ x: annual ? 24 : 2 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              />
+            </button>
+            <span className={annual ? 'l-toggle__opt--active' : ''}>
+              Anual <span className="l-toggle__save">-20%</span>
+            </span>
+          </motion.div>
+
           {/* Trust badges */}
           <motion.div
             className="l-pricing__trust"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
           >
             <span><LuShieldCheck /> Primeiro mês grátis</span>
             <span><LuCreditCard /> Sem cartão de crédito</span>
@@ -738,30 +763,6 @@ export default function Landing() {
             ))}
           </div>
 
-          {/* Billing toggle */}
-          <motion.div
-            className="l-toggle"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <span className={!annual ? 'l-toggle__opt--active' : ''}>Mensal</span>
-            <button
-              className={`l-toggle__btn${annual ? ' l-toggle__btn--on' : ''}`}
-              onClick={() => setAnnual(!annual)}
-              aria-label="Alternar cobrança"
-            >
-              <motion.div
-                className="l-toggle__thumb"
-                animate={{ x: annual ? 24 : 2 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-              />
-            </button>
-            <span className={annual ? 'l-toggle__opt--active' : ''}>
-              Anual <span className="l-toggle__save">-20%</span>
-            </span>
-          </motion.div>
         </div>
       </section>
 

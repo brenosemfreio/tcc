@@ -65,7 +65,41 @@ substituir apenas o corpo das funções — os contratos de retorno não mudam.
 
 - `src/utils/password.js` — `calcStrength(pwd)` e `STRENGTH_LABELS`.
 - `src/utils/string.js` — `getInitials(name)`.
+- `src/utils/export.js` — `exportDashboardReport(stats, engagement)` gera CSV e dispara download.
 - `src/styles/animations.js` — `formContainerVariants`, `fieldVariants` (auth) e `dashFadeUp` (dashboard).
+
+### Estrutura do Dashboard Home
+
+`DashboardHome.jsx` é apenas composição. Sub-componentes em `src/pages/Dashboard/Home/components/`:
+
+- `DashboardHeader.jsx` — título de boas-vindas + filtros (período, rede) + ações (Novo post, Exportar).
+- `KpiGrid.jsx` — 4 KPI cards com skeleton fallback.
+- `NotificationsBanner.jsx` — banner rotativo de notificações (success/warning/info), dispensável.
+- `AIInsightsCarousel.jsx` — carrossel rotativo (auto-play + setas + dots) de insights da IA.
+- `BestTimeHeatmap.jsx` — heatmap 7 dias × 4 períodos com melhor horário para postar.
+- `EngagementChart.jsx` — line chart com toggle Diário/Semanal/Mensal.
+- `NetworkDonut.jsx` — donut da divisão de engajamento entre redes.
+- `NetworkComparison.jsx` — 4 mini-cards comparando crescimento por rede.
+- `ContentReachCard.jsx` — barras de progresso por tipo de conteúdo.
+- `TopPostsCard.jsx` — top 5 publicações.
+- `GoalsCard.jsx` — metas do mês com progress bars.
+- `AISuggestionsCard.jsx` — sugestões da IA (gerar/copiar).
+- `RecentPostsCard.jsx` — publicações recentes com `PostMenu` (editar/duplicar/excluir).
+- `PostMenu.jsx` — dropdown de ações para um post.
+- `ScheduleCTA.jsx` — banner CTA que abre o `PostModal`.
+- `MiniCalendar.jsx` — calendário com navegação entre meses e 3 status (agendado/publicado/rascunho).
+- `ChartTooltip.jsx` — tooltip customizado do Recharts.
+
+### Acesso ao PostModal pelas páginas filhas
+
+`DashboardLayout` expõe `openPostModal(prefill?)` via `Outlet context`. Páginas filhas usam:
+
+```js
+const { openPostModal } = useOutletContext()
+openPostModal({ text: '...', networks: [...] })  // prefill opcional
+```
+
+`PostModal` aceita a prop `prefill` para pré-preencher campos quando aberto via sugestão de IA / edição / duplicação.
 
 ### Estrutura do Landing
 

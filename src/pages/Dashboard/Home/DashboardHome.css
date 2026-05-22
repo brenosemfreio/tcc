@@ -737,14 +737,12 @@
   padding: 14px 16px;
 }
 .ai-insights__viewport {
-  position: relative;
-  height: 84px;          /* fixo — mantém setas em posição constante */
-  padding: 0 38px;       /* espaço pras setas absolutas */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 84px;          /* fixo — setas no meio dele ficam constantes */
 }
 .ai-insights__nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
   width: 26px;
   height: 26px;
   border: 1px solid rgba(255, 255, 255, 0.25);
@@ -755,17 +753,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   transition: background var(--transition-fast);
-  z-index: 2;
 }
-.ai-insights__nav--prev { left: 0; }
-.ai-insights__nav--next { right: 0; }
 .ai-insights__nav:hover { background: rgba(255, 255, 255, 0.18); }
 .ai-insight-card--solo {
-  position: absolute;
-  inset: 0 38px;          /* preenche o viewport entre as setas */
-  display: flex;
-  align-items: center;
+  flex: 1;
+  min-width: 0;           /* anula min-width: 200px herdado */
+  align-self: center;
 }
 .ai-insight-card--solo p {
   display: -webkit-box;

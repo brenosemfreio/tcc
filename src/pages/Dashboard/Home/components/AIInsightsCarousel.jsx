@@ -19,6 +19,7 @@ export default function AIInsightsCarousel({ insights }) {
   if (!insights.length) return null
 
   const current = insights[active]
+  const Icon = current.icon
   const goPrev = () => setActive(i => (i - 1 + insights.length) % insights.length)
   const goNext = () => setActive(i => (i + 1) % insights.length)
 
@@ -51,7 +52,9 @@ export default function AIInsightsCarousel({ insights }) {
             exit={{ opacity: 0, x: -12 }}
             transition={{ duration: 0.25 }}
           >
-            <span className="ai-insight-card__icon">{current.icon}</span>
+            <span className="ai-insight-card__icon">
+              {Icon && <Icon size={18} />}
+            </span>
             <div>
               <strong>{current.title}</strong>
               <p>{current.text}</p>

@@ -2,7 +2,12 @@ import { useMemo } from 'react'
 import { LuClock } from 'react-icons/lu'
 
 const DAYS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']
-const SLOTS = ['Manhã', 'Tarde', 'Noite', 'Madrugada']
+const SLOTS = [
+  { label: 'Manhã',     range: '6h–12h'  },
+  { label: 'Tarde',     range: '12h–18h' },
+  { label: 'Noite',     range: '18h–24h' },
+  { label: 'Madrugada', range: '0h–6h'   },
+]
 
 /**
  * Heatmap 7 dias × 4 períodos do dia indicando melhores horários para postar.
@@ -35,7 +40,7 @@ export default function BestTimeHeatmap() {
         }
       }
     }
-    return { slot: SLOTS[maxI], day: DAYS[maxJ], value: maxV }
+    return { slot: SLOTS[maxI].label, day: DAYS[maxJ], value: maxV }
   }, [])
 
   return (
@@ -52,17 +57,22 @@ export default function BestTimeHeatmap() {
           <div key={d} className="heatmap__day-label">{d}</div>
         ))}
         {MOCK_INTENSITY.map((row, i) => (
-          <div key={SLOTS[i]} className="heatmap__row" style={{ display: 'contents' }}>
-            <div className="heatmap__slot-label">{SLOTS[i]}</div>
+          <div key={SLOTS[i].label} className="heatmap__row" style={{ display: 'contents' }}>
+            <div className="heatmap__slot-label">
+              <span className="heatmap__slot-name">{SLOTS[i].label}</span>
+              <span className="heatmap__slot-range">{SLOTS[i].range}</span>
+            </div>
             {row.map((intensity, j) => {
-              const isBest = SLOTS[i] === best.slot && DAYS[j] === best.day
+              const isBest = SLOTS[i].label === best.slot && DAYS[j] === best.day
               return (
                 <div
                   key={j}
                   className={`heatmap__cell${isBest ? ' heatmap__cell--best' : ''}`}
                   style={{ background: cellColor(intensity) }}
-                  title={`${SLOTS[i]} · ${DAYS[j]} — engajamento ${Math.round(intensity * 100)}%`}
-                />
+                  title={`${SLOTS[i].label} · ${DAYS[j]} — engajamento ${Math.round(intensity * 100)}%`}
+                >
+                  {isBest && <span className="heatmap__cell-value">{Math.round(intensity * 100)}%</span>}
+                </div>
               )
             })}
           </div>
@@ -71,7 +81,7 @@ export default function BestTimeHeatmap() {
       <div className="heatmap__legend">
         <span>Menor</span>
         <div className="heatmap__legend-bar" />
-        <span>Maior</span>
+        <span>Maior engajamento</span>
       </div>
     </div>
   )

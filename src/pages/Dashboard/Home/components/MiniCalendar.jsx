@@ -22,7 +22,9 @@ export default function MiniCalendar({ markers = {} }) {
 
   const firstDay = new Date(view.year, view.month, 1).getDay()
   const daysInMonth = new Date(view.year, view.month + 1, 0).getDate()
-  const cells = [...Array(firstDay).fill(null), ...Array.from({ length: daysInMonth }, (_, i) => i + 1)]
+  // Sempre 42 células (6 semanas × 7 dias) — calendário fica com altura fixa
+  const baseCells = [...Array(firstDay).fill(null), ...Array.from({ length: daysInMonth }, (_, i) => i + 1)]
+  const cells = [...baseCells, ...Array(Math.max(0, 42 - baseCells.length)).fill(null)]
 
   const isCurrentMonth = view.year === today.getFullYear() && view.month === today.getMonth()
 

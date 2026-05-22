@@ -21,7 +21,7 @@ export default function DashboardHeader({
   return (
     <div className="dash-home__header">
       <div>
-        <h1 className="dash-home__greeting">{greeting} 👋</h1>
+        <h1 className="dash-home__greeting">{greeting}</h1>
         <p className="dash-home__sub">Aqui está o desempenho das suas redes sociais.</p>
       </div>
       <div className="dash-home__filters">

@@ -12,7 +12,6 @@ import {
 import { dashFadeUp as fadeUp } from '../../../styles/animations'
 import { exportDashboardReport } from '../../../utils/export'
 
-import NotificationsBanner from './components/NotificationsBanner'
 import DashboardHeader from './components/DashboardHeader'
 import KpiGrid from './components/KpiGrid'
 import AIInsightsCarousel from './components/AIInsightsCarousel'
@@ -127,8 +126,6 @@ export default function DashboardHome() {
 
   return (
     <div className="dash-home">
-      <NotificationsBanner />
-
       <DashboardHeader
         greeting={`Bem-vindo de volta, ${firstName}!`}
         period={period}
@@ -145,6 +142,16 @@ export default function DashboardHome() {
         <div className="dash-home__left">
           <KpiGrid stats={stats} />
 
+          {/* Engajamento + Donut (prioridade visual maior) */}
+          <div className="dash-home__charts">
+            <EngagementChart
+              data={engagement}
+              granularity={granularity}
+              onGranularityChange={setGranularity}
+            />
+            <NetworkDonut data={socialBreakdown} />
+          </div>
+
           {/* AI Insights + Heatmap lado a lado */}
           <div className="dash-home__row dash-home__row--2">
             <AIInsightsCarousel insights={aiInsights} />
@@ -154,16 +161,6 @@ export default function DashboardHome() {
             >
               <BestTimeHeatmap />
             </motion.div>
-          </div>
-
-          {/* Engajamento + Donut */}
-          <div className="dash-home__charts">
-            <EngagementChart
-              data={engagement}
-              granularity={granularity}
-              onGranularityChange={setGranularity}
-            />
-            <NetworkDonut data={socialBreakdown} />
           </div>
 
           {/* Comparação entre redes */}

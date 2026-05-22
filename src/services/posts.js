@@ -23,10 +23,12 @@ export const getCalendarMarkers = () => Promise.resolve({
 // Mantido por compatibilidade; usa o mesmo dado de scheduled.
 export const getScheduledDates = () => Promise.resolve([23, 27])
 
+import { LuMessageSquare, LuChartBar, LuHash } from 'react-icons/lu'
+
 export const getAiSuggestions = () => Promise.resolve([
-  { id: 1, icon: '💬', label: 'Ideia de post', text: 'Faça um post sobre tendências do seu nicho este mês!', action: 'Gerar' },
-  { id: 2, icon: '📊', label: 'Engajamento',   text: 'Clique para gerar legendas envolventes.',              action: 'Gerar' },
-  { id: 3, icon: '#',  label: 'Hashtags',       text: '#marketingdigital #branding #redessociais',           action: 'Copiar' },
+  { id: 1, icon: LuMessageSquare, label: 'Ideia de post', text: 'Faça um post sobre tendências do seu nicho este mês!', action: 'Gerar' },
+  { id: 2, icon: LuChartBar,      label: 'Engajamento',   text: 'Clique para gerar legendas envolventes.',              action: 'Gerar' },
+  { id: 3, icon: LuHash,          label: 'Hashtags',      text: '#marketingdigital #branding #redessociais',           action: 'Copiar' },
 ])
 
 export const schedulePost = (data) => Promise.resolve({ id: Date.now(), ...data, status: 'scheduled' })

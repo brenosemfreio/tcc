@@ -189,14 +189,14 @@
 .l-hero__inner {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
-  gap: 320px;
+  gap: 160px;
   align-items: center;
   /* Mesma estratégia do .l-hero — capa em 960 pra evitar expansão em zoom <80% */
   min-height: 100vh;
   min-height: min(100svh, 960px);
   max-height: 960px;
-  padding-top: 96px;
-  padding-bottom: 80px;
+  padding-top: 88px;
+  padding-bottom: 72px;
   position: relative;
   z-index: 1;
 }
@@ -209,7 +209,7 @@
 }
 
 .l-hero__title {
-  font-size: clamp(2.2rem, 3.8vw, 3.5rem);
+  font-size: clamp(2.6rem, 4.4vw, 3.5rem);
   font-weight: 900;
   line-height: 1.08;
   letter-spacing: -0.03em;
@@ -218,10 +218,10 @@
 }
 
 .l-hero__sub {
-  font-size: 1.0625rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.6);
   line-height: 1.75;
-  max-width: 460px;
+  max-width: 440px;
 }
 
 .l-hero__ctas {
@@ -270,7 +270,7 @@
 /* Mockup — max-width fluido pra escalar suavemente em qualquer zoom */
 .l-mockup {
   width: 100%;
-  max-width: clamp(22rem, 40vw, 33rem);
+  max-width: 489px;
   min-width: 0;
   background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(20px);
@@ -311,7 +311,7 @@
 }
 
 .l-mockup__body {
-  padding: 24px;
+  padding: 22px;
 }
 
 .l-mockup__kpis {
@@ -345,7 +345,7 @@
   display: flex;
   align-items: flex-end;
   gap: 5px;
-  height: 140px;
+  height: 128px;
   background: rgba(255, 255, 255, 0.04);
   border-radius: 10px;
   padding: 12px;
@@ -431,9 +431,9 @@
 }
 
 /* Floats: left/right em % pro deslocamento escalar com o container pai */
-.l-float--1 { top: -1rem;       left:  -7%; }
-.l-float--2 { bottom: 1.875rem; right: -6.5%; }
-.l-float--3 { top: 45%;         left:  -9%; }
+.l-float--1 { top: -1rem;       left:  -2%; }
+.l-float--2 { bottom: 1.875rem; right: -1%; }
+.l-float--3 { top: 45%;         left:  -3%; }
 
 /* Scroll hint */
 .l-scroll {

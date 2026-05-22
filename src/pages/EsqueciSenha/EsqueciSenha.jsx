@@ -173,17 +173,6 @@ export default function EsqueciSenha() {
                   </p>
                 </header>
 
-                <a
-                  href="https://mail.google.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="recovery__outline-btn"
-                  aria-label="Abrir Gmail em nova aba"
-                >
-                  Abrir Gmail
-                  <LuExternalLink size={15} aria-hidden="true" />
-                </a>
-
                 <p className="recovery__resend" aria-live="polite">
                   {resendState === 'idle' ? (
                     <>

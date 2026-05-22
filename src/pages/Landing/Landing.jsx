@@ -720,31 +720,17 @@ export default function Landing() {
                   <h3 className="l-plan__name">{plan.name}</h3>
                 </div>
                 <div className="l-plan__price">
-                  {plan.monthly === 0 ? (
-                    <motion.span
-                      className="l-plan__amount"
-                      key="free"
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.25 }}
-                    >
-                      Grátis
-                    </motion.span>
-                  ) : (
-                    <>
-                      <span className="l-plan__currency">R$</span>
-                      <motion.span
-                        className="l-plan__amount"
-                        key={annual ? 'a' : 'm'}
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.25 }}
-                      >
-                        {annual ? plan.annual : plan.monthly}
-                      </motion.span>
-                      <span className="l-plan__period">/mês</span>
-                    </>
-                  )}
+                  <span className="l-plan__currency">R$</span>
+                  <motion.span
+                    className="l-plan__amount"
+                    key={annual ? 'a' : 'm'}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    {annual ? plan.annual : plan.monthly}
+                  </motion.span>
+                  <span className="l-plan__period">/mês</span>
                 </div>
                 <div className={`l-plan__savings-wrap${annual && plan.monthly > 0 ? ' is-visible' : ''}`}>
                   <div className="l-plan__savings-inner">

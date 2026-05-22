@@ -258,8 +258,8 @@ const PLANS = [
   {
     name: 'Lite',
     tagline: 'INDIVIDUAL',
-    monthly: 29,
-    annual: 23,
+    monthly: 0,
+    annual: 0,
     desc: 'Ferramentas essenciais para criadores emergentes.',
     cta: 'Começar grátis',
     features: ['Até 3 perfis sociais', '30 posts/mês', 'Analytics básico', 'Calendário visual', 'Suporte por e-mail'],
@@ -720,19 +720,33 @@ export default function Landing() {
                   <h3 className="l-plan__name">{plan.name}</h3>
                 </div>
                 <div className="l-plan__price">
-                  <span className="l-plan__currency">R$</span>
-                  <motion.span
-                    className="l-plan__amount"
-                    key={annual ? 'a' : 'm'}
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.25 }}
-                  >
-                    {annual ? plan.annual : plan.monthly}
-                  </motion.span>
-                  <span className="l-plan__period">/mês</span>
+                  {plan.monthly === 0 ? (
+                    <motion.span
+                      className="l-plan__amount"
+                      key="free"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.25 }}
+                    >
+                      Grátis
+                    </motion.span>
+                  ) : (
+                    <>
+                      <span className="l-plan__currency">R$</span>
+                      <motion.span
+                        className="l-plan__amount"
+                        key={annual ? 'a' : 'm'}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.25 }}
+                      >
+                        {annual ? plan.annual : plan.monthly}
+                      </motion.span>
+                      <span className="l-plan__period">/mês</span>
+                    </>
+                  )}
                 </div>
-                <div className={`l-plan__savings-wrap${annual ? ' is-visible' : ''}`}>
+                <div className={`l-plan__savings-wrap${annual && plan.monthly > 0 ? ' is-visible' : ''}`}>
                   <div className="l-plan__savings-inner">
                     <span className="l-plan__savings">
                       Economiza R$ {(plan.monthly - plan.annual) * 12}/ano

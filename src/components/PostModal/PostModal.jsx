@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Modal from '../Modal/Modal'
 import Button from '../Button/Button'
 import { LuInstagram, LuTwitter, LuYoutube, LuCloudUpload, LuSparkles, LuCheck } from 'react-icons/lu'
@@ -13,7 +13,7 @@ const NETWORKS = [
 
 const STEPS = ['Conteúdo', 'Agendamento', 'Confirmar']
 
-export default function PostModal({ isOpen, onClose }) {
+export default function PostModal({ isOpen, onClose, prefill = null }) {
   const [step, setStep] = useState(0)
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
@@ -23,6 +23,13 @@ export default function PostModal({ isOpen, onClose }) {
     date: '',
     time: '12:00',
   })
+
+  // Aplica prefill quando o modal abre com sugestão da IA / duplicação de post
+  useEffect(() => {
+    if (isOpen && prefill) {
+      setForm(f => ({ ...f, ...prefill }))
+    }
+  }, [isOpen, prefill])
 
   const handleClose = () => {
     setStep(0)

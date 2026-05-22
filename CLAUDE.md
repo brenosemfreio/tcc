@@ -58,6 +58,20 @@ substituir apenas o corpo das funções — os contratos de retorno não mudam.
 - `Modal` — wrapper animado com overlay. Props: `isOpen`, `onClose`, `title`, `size`.
 - `PostModal` — modal de 3 etapas para agendamento de post (Conteúdo → Agendamento → Confirmar).
 - `Sidebar` — colapsável, com dark mode toggle e logout. Props: `isCollapsed`, `onToggle`, `onNewPost`.
+- `OAuthIcons` — exporta `GoogleIcon` e `FacebookIcon` (SVGs inline com cores oficiais).
+
+### Estrutura do Landing
+
+Para evitar inchaço do `Landing.jsx`, os sub-componentes e dados ficam separados:
+
+- `src/pages/Landing/Landing.jsx` — composição da página (apenas JSX das seções).
+- `src/pages/Landing/data.js` — `PLATFORMS`, `FEATURES`, `STEPS`, `PLANS`, `FAQS`, `MOCKUP_BARS`, variants `fadeUp`.
+- `src/pages/Landing/components/`:
+  - `HeroMockup.jsx` — dashboard mockup + badges flutuantes do hero.
+  - `Marquee.jsx` — strip animada de plataformas (controlada por `requestAnimationFrame`).
+  - `Counter.jsx` — contador animado dos stats.
+  - `FaqItem.jsx` — item de FAQ com accordion.
+  - `FeaturePreviews.jsx` — `FeatureCalendarPreview`, `FeatureChartPreview`, `FeatureHashtagsPreview`, `FeaturePlatformsPreview`.
 
 ### Imagens da Deb (persona)
 
@@ -73,6 +87,7 @@ As imagens têm fundo branco — usar `mix-blend-mode: multiply` no CSS quando n
 
 - Variáveis em `src/styles/variables.css` (cores, tipografia, espaçamentos, transições).
 - Estilos globais em `src/styles/global.css` (reset, animações, skeleton loader).
+- `src/styles/auth.css` — estilos compartilhados pelas telas de autenticação (Login + Cadastro).
 - Cada componente/página tem seu próprio `.css` na mesma pasta.
 - Dark mode via `[data-theme='dark']` nas variáveis CSS.
 - Cor primária: `--color-primary: #4F35E8`.

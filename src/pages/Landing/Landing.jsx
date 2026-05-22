@@ -1,310 +1,37 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import {
-  LuArrowRight, LuCheck, LuSparkles, LuTrendingUp, LuBell,
-  LuCalendarClock, LuChartBar, LuZap, LuShare2, LuStar,
-  LuBrain, LuChevronRight, LuPlus,
-  LuRotateCcw, LuUser, LuGift, LuMessageCircle,
-  LuShieldCheck, LuCreditCard,
+  LuArrowRight, LuCheck, LuStar, LuChevronRight,
+  LuZap, LuMessageCircle, LuRotateCcw, LuShieldCheck, LuCreditCard,
 } from 'react-icons/lu'
-import {
-  FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin, FaPinterest,
-} from 'react-icons/fa'
-import { FaXTwitter } from 'react-icons/fa6'
+
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import Button from '../../components/Button/Button'
+
+import Marquee from './components/Marquee'
+import Counter from './components/Counter'
+import FaqItem from './components/FaqItem'
+import HeroMockup from './components/HeroMockup'
+import {
+  FeatureCalendarPreview, FeatureChartPreview,
+  FeatureHashtagsPreview, FeaturePlatformsPreview,
+} from './components/FeaturePreviews'
+
+import { PLATFORMS, FEATURES, STEPS, PLANS, FAQS, fadeUp } from './data'
 import './Landing.css'
 
-// ── Marquee controlado por rAF com desaceleração suave
-function Marquee({ items }) {
-  const trackRef = useRef(null)
-  const s = useRef({ pos: 0, speed: 0.5, target: 0.5, halfW: 0, raf: null })
-
-  useEffect(() => {
-    const track = trackRef.current
-    if (!track) return
-    s.current.halfW = track.scrollWidth / 2
-
-    function tick() {
-      const st = s.current
-      st.speed += (st.target - st.speed) * 0.04
-      st.pos -= st.speed
-      if (Math.abs(st.pos) >= st.halfW) st.pos = 0
-      track.style.transform = `translateX(${st.pos}px)`
-      st.raf = requestAnimationFrame(tick)
-    }
-    s.current.raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(s.current.raf)
-  }, [])
-
-  return (
-    <div
-      className="l-marquee-strip__track-wrap"
-      onMouseEnter={() => { s.current.target = 0.08 }}
-      onMouseLeave={() => { s.current.target = 0.5 }}
-    >
-      <div ref={trackRef} className="l-marquee-strip__track">
-        {[...items, ...items].map((p, i) => (
-          <span key={i} className="l-marquee-strip__item">
-            <p.icon style={{ color: p.color }} />
-            {p.name}
-          </span>
-        ))}
-      </div>
-    </div>
-  )
+const PREVIEWS = {
+  calendar:  FeatureCalendarPreview,
+  chart:     FeatureChartPreview,
+  hashtags:  FeatureHashtagsPreview,
+  platforms: FeaturePlatformsPreview,
 }
 
-// ── Feature previews
-function FeatureCalendarPreview() {
-  const days = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D']
-  const posts = new Set([1, 4, 8, 11])
-  return (
-    <div className="l-bento__preview l-bento__preview--calendar">
-      <div className="l-fp-cal__head">
-        {days.map((d, i) => <span key={i}>{d}</span>)}
-      </div>
-      <div className="l-fp-cal__grid">
-        {Array.from({ length: 14 }).map((_, i) => (
-          <div key={i} className={`l-fp-cal__cell${posts.has(i) ? ' l-fp-cal__cell--post' : ''}`}>
-            <span>{i + 14}</span>
-            {posts.has(i) && <span className="l-fp-cal__dot" />}
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
+const HERO_AVATARS = ['#7C5FE8', '#E84FA5', '#4F35E8', '#B44FE8']
 
-function FeatureChartPreview() {
-  const bars = [42, 60, 48, 75, 55, 88, 70]
-  return (
-    <div className="l-bento__preview l-bento__preview--chart">
-      <div className="l-fp-chart__head">
-        <span className="l-fp-chart__metric">
-          <LuTrendingUp />
-          +127%
-        </span>
-        <span className="l-fp-chart__live">
-          <span className="l-fp-chart__pulse" />
-          Ao vivo
-        </span>
-      </div>
-      <div className="l-fp-chart__bars">
-        {bars.map((h, i) => (
-          <div key={i} className="l-fp-chart__bar" style={{ '--h': `${h}%`, '--i': i }} />
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function FeatureHashtagsPreview() {
-  return (
-    <div className="l-bento__preview l-bento__preview--hashtags">
-      <span className="l-fp-tag-label">
-        <LuSparkles size={12} />
-        IA sugeriu
-      </span>
-      <div className="l-fp-tag-list">
-        {['#marketing', '#growth', '#socialmedia', '#contentcreator'].map((tag, i) => (
-          <span key={tag} className="l-fp-tag" style={{ '--i': i }}>{tag}</span>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function FeaturePlatformsPreview() {
-  const platforms = [
-    { Icon: FaInstagram, color: '#E1306C' },
-    { Icon: FaTiktok,    color: '#010101' },
-    { Icon: FaYoutube,   color: '#FF0000' },
-    { Icon: FaFacebook,  color: '#1877F2' },
-    { Icon: FaLinkedin,  color: '#0A66C2' },
-  ]
-  return (
-    <div className="l-bento__preview l-bento__preview--platforms">
-      <div className="l-fp-platform-stack">
-        {platforms.map(({ Icon, color }, i) => (
-          <span key={i} className="l-fp-platform" style={{ '--i': i, background: color }}>
-            <Icon />
-          </span>
-        ))}
-      </div>
-      <span className="l-fp-platform-count">+5 redes</span>
-    </div>
-  )
-}
-
-// ── FAQ item
-function FaqItem({ icon: Icon, question, answer }) {
-  const [open, setOpen] = useState(false)
-  return (
-    <div className={`l-faq__item${open ? ' l-faq__item--open' : ''}`}>
-      <button className="l-faq__q" onClick={() => setOpen(o => !o)}>
-        <span className="l-faq__q-wrap">
-          {Icon && (
-            <span className="l-faq__q-icon">
-              <Icon />
-            </span>
-          )}
-          <span className="l-faq__q-text">{question}</span>
-        </span>
-        <span className="l-faq__icon">
-          <LuPlus />
-        </span>
-      </button>
-      <div className="l-faq__a-wrap">
-        <div className="l-faq__a-inner">
-          <div className="l-faq__a">
-            <p>{answer}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// ── Animated counter
-function Counter({ end, suffix = '', label, delay = 0 }) {
-  const [count, setCount] = useState(0)
-  const [started, setStarted] = useState(false)
-
-  const start = () => {
-    if (started) return
-    setStarted(true)
-    const steps = 60
-    const stepTime = 2000 / steps
-    const inc = end / steps
-    let cur = 0
-    const t = setInterval(() => {
-      cur += inc
-      if (cur >= end) { setCount(end); clearInterval(t) }
-      else setCount(Math.round(cur))
-    }, stepTime)
-  }
-
-  return (
-    <motion.div
-      className="l-stat"
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay, duration: 0.5 }}
-      onViewportEnter={start}
-    >
-      <strong>{count.toLocaleString('pt-BR')}{suffix}</strong>
-      <span>{label}</span>
-    </motion.div>
-  )
-}
-
-// ── Data
-const PLATFORMS = [
-  { icon: FaPinterest, name: 'Pinterest',  color: '#E60023' },
-  { icon: FaXTwitter,  name: 'X',          color: '#000'    },
-  { icon: FaInstagram, name: 'Instagram',  color: '#E1306C' },
-  { icon: FaTiktok,    name: 'TikTok',     color: '#010101' },
-  { icon: FaYoutube,   name: 'YouTube',    color: '#FF0000' },
-  { icon: FaFacebook,  name: 'Facebook',   color: '#1877F2' },
-  { icon: FaLinkedin,  name: 'LinkedIn',   color: '#0A66C2' },
-]
-
-const FEATURES = [
-  {
-    slot: 'wide',
-    icon: LuCalendarClock,
-    color: '#7C5FE8',
-    preview: 'calendar',
-    title: 'Agendamento Inteligente',
-    desc: 'Planeje e publique em todas as redes num calendário visual. A IA sugere os horários de maior engajamento automaticamente.',
-  },
-  {
-    slot: 'tall',
-    icon: LuChartBar,
-    color: '#E84FA5',
-    preview: 'chart',
-    title: 'Analytics em Tempo Real',
-    desc: 'Dashboards lindos com alcance, engajamento, crescimento de seguidores e muito mais — atualizados ao vivo.',
-  },
-  {
-    slot: 'sm',
-    icon: LuBrain,
-    color: '#4F35E8',
-    preview: 'hashtags',
-    title: 'IA Insights',
-    desc: 'Sugestões de conteúdo, hashtags e tendências geradas por inteligência artificial.',
-  },
-  {
-    slot: 'sm',
-    icon: LuShare2,
-    color: '#B44FE8',
-    preview: 'platforms',
-    title: 'Multi-plataforma',
-    desc: 'Instagram, TikTok, LinkedIn, YouTube e mais em uma única tela.',
-  },
-]
-
-const STEPS = [
-  { icon: LuShare2,        num: '01', title: 'Conecte suas redes',   desc: 'Vincule todas as suas contas sociais em segundos. Instagram, TikTok, YouTube e mais — tudo em um só lugar.' },
-  { icon: LuCalendarClock, num: '02', title: 'Crie e agende',        desc: 'Crie conteúdo incrível com ajuda da IA, agende para o melhor horário e deixe a plataforma trabalhar por você.' },
-  { icon: LuTrendingUp,    num: '03', title: 'Analise e cresça',     desc: 'Acompanhe métricas em tempo real, entenda o que funciona e tome decisões baseadas em dados reais.' },
-]
-
-const PLANS = [
-  {
-    name: 'Lite',
-    tagline: 'INDIVIDUAL',
-    monthly: 0,
-    annual: 0,
-    desc: 'Ferramentas essenciais para criadores emergentes.',
-    cta: 'Começar grátis',
-    features: ['Até 3 perfis sociais', '30 posts/mês', 'Analytics básico', 'Calendário visual', 'Suporte por e-mail'],
-    highlight: false,
-  },
-  {
-    name: 'Pro',
-    tagline: 'CRIADOR PRO',
-    monthly: 79,
-    annual: 63,
-    desc: 'Para criadores prontos para dominar o algoritmo.',
-    cta: 'Começar grátis',
-    features: ['Até 10 perfis sociais', 'Posts ilimitados', 'Analytics avançado', 'Agendamento com IA', 'Calendário editorial', 'Sugestões de hashtags', 'Suporte prioritário'],
-    highlight: true,
-  },
-  {
-    name: 'Elite',
-    tagline: 'AGÊNCIAS & TIMES',
-    monthly: 199,
-    annual: 159,
-    desc: 'Acesso ilimitado para agências e times.',
-    cta: 'Começar grátis',
-    features: ['Perfis ilimitados', 'Posts ilimitados', 'Analytics premium', 'IA completa', 'Calendário avançado', 'Multi-usuário', 'Gerente dedicado', 'Suporte 24/7'],
-    highlight: false,
-  },
-]
-
-const FAQS = [
-  { icon: LuRotateCcw,     q: 'Posso cancelar quando quiser?',            a: 'Sim! Não há fidelidade. Cancele a qualquer momento, sem burocracia ou taxas adicionais.' },
-  { icon: LuUser,          q: 'Funciona com conta pessoal do Instagram?', a: 'O agendamento requer conta Profissional (Criador ou Empresa). A conversão é gratuita e leva menos de 1 minuto nas configurações do Instagram.' },
-  { icon: LuGift,          q: 'Tem período de teste gratuito?',           a: 'Sim, 14 dias gratuitos em qualquer plano, sem precisar cadastrar cartão de crédito.' },
-  { icon: LuShare2,        q: 'Quantas plataformas posso conectar?',      a: 'Lite: até 3 perfis. Pro: até 10. Elite: ilimitado. Suportamos Instagram, TikTok, YouTube, Facebook, LinkedIn e Pinterest.' },
-  { icon: LuBrain,         q: 'A IA gera conteúdo automaticamente?',     a: 'A IA sugere horários ideais, hashtags relevantes e tendências. A criação final é sempre sua — autenticidade vem de você.' },
-  { icon: LuMessageCircle, q: 'Como funciona o suporte?',                 a: 'Lite: e-mail. Pro: suporte prioritário com resposta em até 4h. Elite: 24/7 com gerente de conta dedicado.' },
-]
-
-const MOCKUP_BARS = [40, 65, 50, 80, 60, 90, 70]
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: (i = 0) => ({
-    opacity: 1, y: 0,
-    transition: { delay: i * 0.08, duration: 0.6, ease: [0.4, 0, 0.2, 1] },
-  }),
-}
+const STEPS_PERKS = ['Grátis para começar', 'Sem cartão de crédito', 'Cancele quando quiser']
 
 export default function Landing() {
   const navigate = useNavigate()
@@ -323,7 +50,6 @@ export default function Landing() {
         </div>
 
         <div className="container l-hero__inner">
-          {/* Content */}
           <motion.div
             className="l-hero__content"
             initial="hidden"
@@ -356,7 +82,7 @@ export default function Landing() {
 
             <motion.div variants={fadeUp} className="l-hero__proof">
               <div className="l-avatars">
-                {['#7C5FE8', '#E84FA5', '#4F35E8', '#B44FE8'].map((c, i) => (
+                {HERO_AVATARS.map((c, i) => (
                   <span key={i} className="l-avatar" style={{ background: c, marginLeft: i ? -10 : 0 }} />
                 ))}
               </div>
@@ -364,94 +90,8 @@ export default function Landing() {
             </motion.div>
           </motion.div>
 
-          {/* Visual */}
-          <motion.div
-            className="l-hero__visual"
-            initial={{ opacity: 0, x: 60, y: 10 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.25, ease: [0.4, 0, 0.2, 1] }}
-          >
-            {/* Dashboard mockup */}
-            <div className="l-mockup">
-              <div className="l-mockup__bar">
-                <div className="l-mockup__dots">
-                  <span style={{ background: '#FF5F57' }} />
-                  <span style={{ background: '#FFBD2E' }} />
-                  <span style={{ background: '#28CA42' }} />
-                </div>
-                <span className="l-mockup__title">HubStudio — Dashboard</span>
-              </div>
-              <div className="l-mockup__body">
-                <div className="l-mockup__kpis">
-                  {[{ v: '24.5k', l: 'Alcance' }, { v: '8.3%', l: 'Engaj.' }, { v: '12', l: 'Agendados' }].map(k => (
-                    <div key={k.l} className="l-mockup__kpi">
-                      <strong>{k.v}</strong>
-                      <span>{k.l}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="l-mockup__chart">
-                  {MOCKUP_BARS.map((h, i) => (
-                    <motion.div
-                      key={i}
-                      className="l-mockup__bar-item"
-                      style={{ '--h': h + '%' }}
-                      initial={{ scaleY: 0 }}
-                      animate={{ scaleY: 1 }}
-                      transition={{ delay: 0.6 + i * 0.07, duration: 0.5, ease: 'easeOut' }}
-                    />
-                  ))}
-                </div>
-                <div className="l-mockup__days">
-                  {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map((d, i) => (
-                    <div key={d} className={`l-mockup__day${i < 4 ? ' has-post' : ''}`}>
-                      <span>{d}</span>
-                      {i < 4 && <div className="l-mockup__dot" />}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Floating badges */}
-            <motion.div
-              className="l-float l-float--1"
-              animate={{ y: [0, -10, 0] }}
-              transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-            >
-              <div className="l-float__icon"><LuTrendingUp /></div>
-              <div>
-                <strong>+127%</strong>
-                <span>engajamento</span>
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="l-float l-float--2"
-              animate={{ y: [0, 10, 0] }}
-              transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-            >
-              <div className="l-float__icon"><LuBell /></div>
-              <div>
-                <strong>Post agendado</strong>
-                <span>amanhã, 09:00</span>
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="l-float l-float--3"
-              animate={{ y: [0, -8, 0] }}
-              transition={{ repeat: Infinity, duration: 3.5, ease: 'easeInOut' }}
-            >
-              <div className="l-float__icon"><LuSparkles /></div>
-              <div>
-                <strong>IA sugeriu</strong>
-                <span>5 hashtags</span>
-              </div>
-            </motion.div>
-          </motion.div>
+          <HeroMockup />
         </div>
-
       </section>
 
       {/* ── Features ─────────────────────────────────── */}
@@ -476,6 +116,7 @@ export default function Landing() {
           <div className="l-bento">
             {FEATURES.map((f, i) => {
               const Icon = f.icon
+              const Preview = PREVIEWS[f.preview]
               return (
                 <motion.div
                   key={f.title}
@@ -492,10 +133,7 @@ export default function Landing() {
                     <h3>{f.title}</h3>
                     <p>{f.desc}</p>
                   </div>
-                  {f.preview === 'calendar'  && <FeatureCalendarPreview />}
-                  {f.preview === 'chart'     && <FeatureChartPreview />}
-                  {f.preview === 'hashtags'  && <FeatureHashtagsPreview />}
-                  {f.preview === 'platforms' && <FeaturePlatformsPreview />}
+                  {Preview && <Preview />}
                   <div className="l-bento__glow" />
                 </motion.div>
               )
@@ -508,10 +146,10 @@ export default function Landing() {
       <section className="l-stats">
         <div className="l-stats__noise" />
         <div className="container l-stats__inner">
-          <Counter end={1200} suffix="+" label="Usuários ativos" delay={0} />
-          <Counter end={48000} suffix="" label="Posts agendados" delay={0.1} />
-          <Counter end={6}    suffix=""  label="Plataformas" delay={0.2} />
-          <Counter end={98}   suffix="%" label="Satisfação" delay={0.3} />
+          <Counter end={1200}  suffix="+" label="Usuários ativos" delay={0}    />
+          <Counter end={48000} suffix=""  label="Posts agendados" delay={0.1}  />
+          <Counter end={6}     suffix=""  label="Plataformas"     delay={0.2}  />
+          <Counter end={98}    suffix="%" label="Satisfação"      delay={0.3}  />
         </div>
       </section>
 
@@ -540,7 +178,7 @@ export default function Landing() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            {['Grátis para começar', 'Sem cartão de crédito', 'Cancele quando quiser'].map(text => (
+            {STEPS_PERKS.map(text => (
               <span key={text} className="l-steps__perk">
                 <LuCheck size={14} />
                 {text}
@@ -661,7 +299,6 @@ export default function Landing() {
             </motion.h2>
           </motion.div>
 
-          {/* Billing toggle */}
           <motion.div
             className="l-toggle"
             initial={{ opacity: 0, y: 20 }}
@@ -686,7 +323,6 @@ export default function Landing() {
             </span>
           </motion.div>
 
-          {/* Trust badges */}
           <motion.div
             className="l-pricing__trust"
             initial={{ opacity: 0, y: 20 }}
@@ -759,7 +395,6 @@ export default function Landing() {
               </motion.div>
             ))}
           </div>
-
         </div>
       </section>
 

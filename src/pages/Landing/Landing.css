@@ -1947,6 +1947,14 @@
   .l-float strong { font-size: 0.8125rem; }
   .l-float span   { font-size: 0.6875rem; }
 
+  /* Visual deslocado para o centro via margem (transform conflita com framer-motion) */
+  .l-hero__visual { margin-left: -28px; }
+
+  /* Badges mais para fora */
+  .l-float--1 { top: -0.875rem;  left:  -12%; }
+  .l-float--2 { bottom: 1.75rem; right: -11%; }
+  .l-float--3 { top: 45%;        left:  -13%; }
+
   /* ─────────────────────────────────────────────────────────
      FEATURES (bento grid)
      ───────────────────────────────────────────────────────── */
@@ -2167,13 +2175,10 @@
   }
   .l-float strong { font-size: 0.8125rem; }
   .l-float span   { font-size: 0.6875rem; }
-  /* Visual deslocado levemente para o centro */
-  .l-hero__visual { transform: translateX(-28px); }
-
-  /* Floats: mais para fora do dashboard */
-  .l-float--1 { top: -0.875rem;  left:  -12%; }
-  .l-float--2 { bottom: 1.75rem; right: -11%; }
-  .l-float--3 { top: 45%;        left:  -13%; }
+  /* Floats: deslocamento horizontal em % pra acompanhar o container */
+  .l-float--1 { top: -0.875rem;  left:  -7%; }
+  .l-float--2 { bottom: 1.75rem; right: -6.5%; }
+  .l-float--3 { top: 45%;        left:  -8%; }
 
   /* ─────────────────────────────────────────────────────────
      FEATURES (bento grid)

@@ -1951,9 +1951,9 @@
   .l-hero__visual { margin-left: -28px; }
 
   /* Badges mais para fora */
-  .l-float--1 { top: -0.875rem;  left:  -9%; }
-  .l-float--2 { bottom: 1.75rem; right: -8%; }
-  .l-float--3 { top: 45%;        left:  -10%; }
+  .l-float--1 { top: -0.875rem;  left:  -8%; }
+  .l-float--2 { bottom: 1.75rem; right: -7%; }
+  .l-float--3 { top: 45%;        left:  -9%; }
 
   /* ─────────────────────────────────────────────────────────
      FEATURES (bento grid)

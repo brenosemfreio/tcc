@@ -2638,7 +2638,7 @@
     max-width: clamp(270px, 40vw, 440px);
   }
 
-  .l-float--1 { left:  -2%; }
-  .l-float--2 { right: -1%; }
-  .l-float--3 { left:  -3%; }
+  .l-float--1 { left:  -9%; }
+  .l-float--2 { right: -8%; }
+  .l-float--3 { left:  -10%; }
 }

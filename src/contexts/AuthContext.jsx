@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react'
+import { loginService, registerService } from '../services/auth'
 
 const AuthContext = createContext(null)
 
@@ -15,18 +16,20 @@ export function AuthProvider({ children }) {
     return stored ? JSON.parse(stored) : null
   })
 
-  const login = (email, _password) => {
+  const login = async (email, password) => {
+    await loginService(email, password)
     const loggedUser = { ...MOCK_USER, email }
     localStorage.setItem('hs-user', JSON.stringify(loggedUser))
     setUser(loggedUser)
-    return Promise.resolve(loggedUser)
+    return loggedUser
   }
 
-  const register = (data) => {
+  const register = async (data) => {
+    await registerService(data)
     const newUser = { ...MOCK_USER, ...data }
     localStorage.setItem('hs-user', JSON.stringify(newUser))
     setUser(newUser)
-    return Promise.resolve(newUser)
+    return newUser
   }
 
   const logout = () => {

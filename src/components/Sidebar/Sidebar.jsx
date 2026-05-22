@@ -7,6 +7,7 @@ import {
 } from 'react-icons/lu'
 import { useAuth } from '../../contexts/AuthContext'
 import { useTheme } from '../../contexts/ThemeContext'
+import { getInitials } from '../../utils/string'
 import './Sidebar.css'
 
 const NAV_ITEMS = [
@@ -28,9 +29,6 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost }) {
     logout()
     navigate('/')
   }
-
-  const getInitials = (name = '') =>
-    name.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase()
 
   return (
     <motion.aside

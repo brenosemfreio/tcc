@@ -8,6 +8,7 @@ import './Navbar.css'
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 900)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -17,7 +18,10 @@ export default function Navbar() {
   }, [])
 
   useEffect(() => {
-    const onResize = () => { if (window.innerWidth > 900) setMenuOpen(false) }
+    const onResize = () => {
+      setIsMobile(window.innerWidth < 900)
+      if (window.innerWidth > 900) setMenuOpen(false)
+    }
     window.addEventListener('resize', onResize)
     return () => window.removeEventListener('resize', onResize)
   }, [])
@@ -37,7 +41,7 @@ export default function Navbar() {
           <img src={logoHub} alt="HubStudio" className="navbar__logo-img" />
         </Link>
 
-        <nav className={`navbar__nav${menuOpen ? ' navbar__nav--open' : ''}`} aria-hidden={!menuOpen && window.innerWidth < 900}>
+        <nav className={`navbar__nav${menuOpen ? ' navbar__nav--open' : ''}`} aria-hidden={!menuOpen && isMobile}>
           <a href="#funcionalidades" className="navbar__link" onClick={close}>Funcionalidades</a>
           <a href="#sobre"           className="navbar__link" onClick={close}>Sobre</a>
           <a href="#faq"             className="navbar__link" onClick={close}>FAQ</a>

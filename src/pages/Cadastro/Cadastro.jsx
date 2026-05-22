@@ -1,38 +1,19 @@
 import { useState, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { LuArrowLeft, LuEye, LuEyeOff, LuCheck, LuCircleAlert } from 'react-icons/lu'
+import { LuArrowLeft, LuCheck, LuCircleAlert } from 'react-icons/lu'
 import { useAuth } from '../../contexts/AuthContext'
 import { GoogleIcon, FacebookIcon } from '../../components/OAuthIcons/OAuthIcons'
+import { AuthPasswordField, StrengthMeter } from '../../components/PasswordField/PasswordField'
+import { formContainerVariants, fieldVariants } from '../../styles/animations'
+import { calcStrength } from '../../utils/password'
 import logoHub from '../../assets/images/logo-hub.png'
 import '../../styles/auth.css'
-
-function calcStrength(pwd) {
-  if (!pwd) return 0
-  let score = 0
-  if (pwd.length >= 8) score++
-  if (/[A-Z]/.test(pwd) && /[a-z]/.test(pwd)) score++
-  if (/\d/.test(pwd)) score++
-  if (/[^A-Za-z0-9]/.test(pwd)) score++
-  return Math.min(score, 4)
-}
-const STRENGTH_LABELS = ['', 'Fraca', 'Média', 'Boa', 'Forte']
-
-const formContainerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.06, delayChildren: 0.5 } },
-}
-const fieldVariants = {
-  hidden: { opacity: 0, y: 8 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
-}
 
 export default function Cadastro() {
   const [form, setForm] = useState({
     name: '', email: '', password: '', confirm: '', acceptTerms: false,
   })
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirm, setShowConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
   const [globalError, setGlobalError] = useState('')
@@ -205,84 +186,33 @@ export default function Cadastro() {
             </motion.div>
 
             {/* Senha + força */}
-            <motion.div className="auth__field" variants={fieldVariants}>
-              <div className="auth__input-wrap">
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Mínimo 8 caracteres"
-                  value={form.password}
-                  onChange={e => updateField('password', e.target.value)}
-                  className={`auth__input auth__input--with-action${errors.password ? ' auth__input--error' : ''}`}
-                  autoComplete="new-password"
-                  aria-label="Senha"
-                  aria-invalid={!!errors.password}
-                  aria-describedby={errors.password ? 'password-error' : 'password-strength'}
-                />
-                <button
-                  type="button"
-                  className={`auth__action-btn${showPassword ? ' auth__action-btn--active' : ''}`}
-                  onClick={() => setShowPassword(v => !v)}
-                  aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-                  tabIndex={-1}
-                >
-                  {showPassword ? <LuEyeOff size={16} /> : <LuEye size={16} />}
-                </button>
-              </div>
-
+            <AuthPasswordField
+              id="password"
+              placeholder="Mínimo 8 caracteres"
+              value={form.password}
+              onChange={v => updateField('password', v)}
+              error={errors.password}
+              errorId="password-error"
+              autoComplete="new-password"
+              ariaLabel="Senha"
+              describedBy="password-strength"
+            >
               {form.password && (
-                <div className={`auth__strength auth__strength--${strength}`} id="password-strength">
-                  <div className="auth__strength-bars" aria-hidden="true">
-                    {[1, 2, 3, 4].map(i => (
-                      <span key={i} className={`auth__strength-bar${i <= strength ? ' auth__strength-bar--on' : ''}`} />
-                    ))}
-                  </div>
-                  <span className="auth__strength-label">
-                    {STRENGTH_LABELS[strength] || 'Fraca'}
-                  </span>
-                </div>
+                <StrengthMeter strength={strength} prefix="auth" id="password-strength" />
               )}
-
-              {errors.password && (
-                <p id="password-error" className="auth__field-error" role="alert">
-                  <LuCircleAlert size={12} aria-hidden="true" />
-                  {errors.password}
-                </p>
-              )}
-            </motion.div>
+            </AuthPasswordField>
 
             {/* Confirmar */}
-            <motion.div className="auth__field" variants={fieldVariants}>
-              <div className="auth__input-wrap">
-                <input
-                  id="confirm"
-                  type={showConfirm ? 'text' : 'password'}
-                  placeholder="Confirme sua senha"
-                  value={form.confirm}
-                  onChange={e => updateField('confirm', e.target.value)}
-                  className={`auth__input auth__input--with-action${errors.confirm ? ' auth__input--error' : ''}`}
-                  autoComplete="new-password"
-                  aria-label="Confirmar senha"
-                  aria-invalid={!!errors.confirm}
-                  aria-describedby={errors.confirm ? 'confirm-error' : undefined}
-                />
-                <button
-                  type="button"
-                  className={`auth__action-btn${showConfirm ? ' auth__action-btn--active' : ''}`}
-                  onClick={() => setShowConfirm(v => !v)}
-                  aria-label={showConfirm ? 'Ocultar senha' : 'Mostrar senha'}
-                  tabIndex={-1}
-                >
-                  {showConfirm ? <LuEyeOff size={16} /> : <LuEye size={16} />}
-                </button>
-              </div>
-              {errors.confirm && (
-                <p id="confirm-error" className="auth__field-error" role="alert">
-                  <LuCircleAlert size={12} aria-hidden="true" />
-                  {errors.confirm}
-                </p>
-              )}
-            </motion.div>
+            <AuthPasswordField
+              id="confirm"
+              placeholder="Confirme sua senha"
+              value={form.confirm}
+              onChange={v => updateField('confirm', v)}
+              error={errors.confirm}
+              errorId="confirm-error"
+              autoComplete="new-password"
+              ariaLabel="Confirmar senha"
+            />
 
             {/* Termos */}
             <motion.label className="auth__checkbox" variants={fieldVariants}>

@@ -1,9 +1,9 @@
 import { useState, useMemo } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-  LuArrowLeft, LuEye, LuEyeOff, LuLockOpen, LuCircleAlert,
-} from 'react-icons/lu'
+import { LuArrowLeft, LuLockOpen } from 'react-icons/lu'
+import { RecoveryPasswordField, StrengthMeter } from '../../components/PasswordField/PasswordField'
+import { calcStrength } from '../../utils/password'
 import logoHub from '../../assets/images/logo-hub.png'
 import '../EsqueciSenha/EsqueciSenha.css'
 
@@ -13,22 +13,9 @@ const viewVariants = {
   exit:    { opacity: 0, scale: 0.97, transition: { duration: 0.2, ease: 'easeIn' } },
 }
 
-function calcStrength(pwd) {
-  if (!pwd) return 0
-  let score = 0
-  if (pwd.length >= 8) score++
-  if (/[A-Z]/.test(pwd) && /[a-z]/.test(pwd)) score++
-  if (/\d/.test(pwd)) score++
-  if (/[^A-Za-z0-9]/.test(pwd)) score++
-  return Math.min(score, 4)
-}
-const STRENGTH_LABELS = ['', 'Fraca', 'Média', 'Boa', 'Forte']
-
 export default function RedefinirSenha() {
   const [view, setView] = useState('form')   // 'form' | 'success'
   const [form, setForm] = useState({ password: '', confirm: '' })
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirm, setShowConfirm] = useState(false)
   const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
 
@@ -135,84 +122,33 @@ export default function RedefinirSenha() {
                   <input type="hidden" name="token" value={token} />
 
                   {/* Nova senha + strength */}
-                  <div className="recovery__field">
-                    <div className="recovery__input-wrap">
-                      <input
-                        id="password"
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder="Mínimo 8 caracteres"
-                        value={form.password}
-                        onChange={e => updateField('password', e.target.value)}
-                        className={`recovery__input recovery__input--with-action${errors.password ? ' recovery__input--error' : ''}`}
-                        autoComplete="new-password"
-                        aria-label="Nova senha"
-                        aria-invalid={!!errors.password}
-                        aria-describedby={errors.password ? 'password-error' : 'password-strength'}
-                      />
-                      <button
-                        type="button"
-                        className={`recovery__action-btn${showPassword ? ' recovery__action-btn--active' : ''}`}
-                        onClick={() => setShowPassword(v => !v)}
-                        aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-                        tabIndex={-1}
-                      >
-                        {showPassword ? <LuEyeOff size={16} /> : <LuEye size={16} />}
-                      </button>
-                    </div>
-
+                  <RecoveryPasswordField
+                    id="password"
+                    placeholder="Mínimo 8 caracteres"
+                    value={form.password}
+                    onChange={v => updateField('password', v)}
+                    error={errors.password}
+                    errorId="password-error"
+                    autoComplete="new-password"
+                    ariaLabel="Nova senha"
+                    describedBy="password-strength"
+                  >
                     {form.password && (
-                      <div className={`recovery__strength recovery__strength--${strength}`} id="password-strength">
-                        <div className="recovery__strength-bars" aria-hidden="true">
-                          {[1, 2, 3, 4].map(i => (
-                            <span key={i} className={`recovery__strength-bar${i <= strength ? ' recovery__strength-bar--on' : ''}`} />
-                          ))}
-                        </div>
-                        <span className="recovery__strength-label">
-                          {STRENGTH_LABELS[strength] || 'Fraca'}
-                        </span>
-                      </div>
+                      <StrengthMeter strength={strength} prefix="recovery" id="password-strength" />
                     )}
-
-                    {errors.password && (
-                      <p id="password-error" className="recovery__field-error" role="alert">
-                        <LuCircleAlert size={12} aria-hidden="true" />
-                        {errors.password}
-                      </p>
-                    )}
-                  </div>
+                  </RecoveryPasswordField>
 
                   {/* Confirmar nova senha */}
-                  <div className="recovery__field">
-                    <div className="recovery__input-wrap">
-                      <input
-                        id="confirm"
-                        type={showConfirm ? 'text' : 'password'}
-                        placeholder="Confirme sua nova senha"
-                        value={form.confirm}
-                        onChange={e => updateField('confirm', e.target.value)}
-                        className={`recovery__input recovery__input--with-action${errors.confirm ? ' recovery__input--error' : ''}`}
-                        autoComplete="new-password"
-                        aria-label="Confirmar nova senha"
-                        aria-invalid={!!errors.confirm}
-                        aria-describedby={errors.confirm ? 'confirm-error' : undefined}
-                      />
-                      <button
-                        type="button"
-                        className={`recovery__action-btn${showConfirm ? ' recovery__action-btn--active' : ''}`}
-                        onClick={() => setShowConfirm(v => !v)}
-                        aria-label={showConfirm ? 'Ocultar senha' : 'Mostrar senha'}
-                        tabIndex={-1}
-                      >
-                        {showConfirm ? <LuEyeOff size={16} /> : <LuEye size={16} />}
-                      </button>
-                    </div>
-                    {errors.confirm && (
-                      <p id="confirm-error" className="recovery__field-error" role="alert">
-                        <LuCircleAlert size={12} aria-hidden="true" />
-                        {errors.confirm}
-                      </p>
-                    )}
-                  </div>
+                  <RecoveryPasswordField
+                    id="confirm"
+                    placeholder="Confirme sua nova senha"
+                    value={form.confirm}
+                    onChange={v => updateField('confirm', v)}
+                    error={errors.confirm}
+                    errorId="confirm-error"
+                    autoComplete="new-password"
+                    ariaLabel="Confirmar nova senha"
+                  />
 
                   <button
                     type="submit"

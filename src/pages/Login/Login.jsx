@@ -1,24 +1,16 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { LuArrowLeft, LuEye, LuEyeOff, LuCircleAlert } from 'react-icons/lu'
+import { LuArrowLeft, LuCircleAlert } from 'react-icons/lu'
 import { useAuth } from '../../contexts/AuthContext'
 import { GoogleIcon, FacebookIcon } from '../../components/OAuthIcons/OAuthIcons'
+import { AuthPasswordField } from '../../components/PasswordField/PasswordField'
+import { formContainerVariants, fieldVariants } from '../../styles/animations'
 import logoHub from '../../assets/images/logo-hub.png'
 import '../../styles/auth.css'
 
-const formContainerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.06, delayChildren: 0.5 } },
-}
-const fieldVariants = {
-  hidden: { opacity: 0, y: 8 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
-}
-
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' })
-  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
   const [globalError, setGlobalError] = useState('')
@@ -148,37 +140,16 @@ export default function Login() {
               )}
             </motion.div>
 
-            <motion.div className="auth__field" variants={fieldVariants}>
-              <div className="auth__input-wrap">
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Sua senha"
-                  value={form.password}
-                  onChange={e => updateField('password', e.target.value)}
-                  className={`auth__input auth__input--with-action${errors.password ? ' auth__input--error' : ''}`}
-                  autoComplete="current-password"
-                  aria-label="Senha"
-                  aria-invalid={!!errors.password}
-                  aria-describedby={errors.password ? 'password-error' : undefined}
-                />
-                <button
-                  type="button"
-                  className={`auth__action-btn${showPassword ? ' auth__action-btn--active' : ''}`}
-                  onClick={() => setShowPassword(v => !v)}
-                  aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-                  tabIndex={-1}
-                >
-                  {showPassword ? <LuEyeOff size={16} /> : <LuEye size={16} />}
-                </button>
-              </div>
-              {errors.password && (
-                <p id="password-error" className="auth__field-error" role="alert">
-                  <LuCircleAlert size={12} aria-hidden="true" />
-                  {errors.password}
-                </p>
-              )}
-            </motion.div>
+            <AuthPasswordField
+              id="password"
+              placeholder="Sua senha"
+              value={form.password}
+              onChange={v => updateField('password', v)}
+              error={errors.password}
+              errorId="password-error"
+              autoComplete="current-password"
+              ariaLabel="Senha"
+            />
 
             <motion.div className="auth__row" variants={fieldVariants}>
               <Link to="/esqueci-senha" className="auth__forgot">Esqueceu a senha?</Link>

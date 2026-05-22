@@ -7,6 +7,7 @@ import {
 } from 'react-icons/lu'
 import { FaTiktok, FaFacebook, FaPinterest } from 'react-icons/fa'
 import Button from '../../../components/Button/Button'
+import { dashFadeUp as fadeUp } from '../../../styles/animations'
 import './Redes.css'
 
 const NETWORKS = [
@@ -28,11 +29,6 @@ const PERMISSIONS = [
   { label: 'Publicação de conteúdo', desc: 'Crie, agende e exclua publicações em perfis vinculados.', done: true },
   { label: 'Análises e Insights', desc: 'Veja dados sobre crescimento do perfil, taxas de engajamento e desempenho.', done: false },
 ]
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 16 },
-  visible: (i = 0) => ({ opacity: 1, y: 0, transition: { delay: i * 0.07, duration: 0.4 } }),
-}
 
 export default function Redes() {
   const [networks, setNetworks] = useState(NETWORKS)

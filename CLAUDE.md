@@ -59,6 +59,13 @@ substituir apenas o corpo das funções — os contratos de retorno não mudam.
 - `PostModal` — modal de 3 etapas para agendamento de post (Conteúdo → Agendamento → Confirmar).
 - `Sidebar` — colapsável, com dark mode toggle e logout. Props: `isCollapsed`, `onToggle`, `onNewPost`.
 - `OAuthIcons` — exporta `GoogleIcon` e `FacebookIcon` (SVGs inline com cores oficiais).
+- `PasswordField` — exporta `AuthPasswordField` (telas auth), `RecoveryPasswordField` (telas recovery) e `StrengthMeter` (medidor de força reutilizável, prefix `auth` ou `recovery`).
+
+### Utils
+
+- `src/utils/password.js` — `calcStrength(pwd)` e `STRENGTH_LABELS`.
+- `src/utils/string.js` — `getInitials(name)`.
+- `src/styles/animations.js` — `formContainerVariants`, `fieldVariants` (auth) e `dashFadeUp` (dashboard).
 
 ### Estrutura do Landing
 

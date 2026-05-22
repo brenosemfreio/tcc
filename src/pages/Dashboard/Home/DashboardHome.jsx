@@ -15,6 +15,9 @@ import {
   getContentReach, getAiInsights,
 } from '../../../services/analytics'
 import { getTopPosts, getRecentPosts, getScheduledDates, getAiSuggestions } from '../../../services/posts'
+import { dashFadeUp as fadeUp } from '../../../styles/animations'
+import MiniCalendar from './components/MiniCalendar'
+import ChartTooltip from './components/ChartTooltip'
 import './DashboardHome.css'
 
 const STAT_ICONS = {
@@ -31,67 +34,6 @@ const STAT_COLORS = {
 }
 
 const CHART_PERIOD = ['Diário', 'Semanal', 'Mensal']
-const MONTHS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
-const WEEKDAYS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
-
-function MiniCalendar({ scheduledDates = [] }) {
-  const today = new Date()
-  const year  = today.getFullYear()
-  const month = today.getMonth()
-
-  const firstDay = new Date(year, month, 1).getDay()
-  const daysInMonth = new Date(year, month + 1, 0).getDate()
-  const cells = [...Array(firstDay).fill(null), ...Array.from({ length: daysInMonth }, (_, i) => i + 1)]
-
-  return (
-    <div className="mini-cal">
-      <div className="mini-cal__header">
-        <span>{MONTHS[month]} {year}</span>
-      </div>
-      <div className="mini-cal__weekdays">
-        {WEEKDAYS.map(d => <span key={d}>{d}</span>)}
-      </div>
-      <div className="mini-cal__days">
-        {cells.map((day, i) => (
-          <div
-            key={i}
-            className={`mini-cal__day
-              ${day === today.getDate() ? 'mini-cal__day--today' : ''}
-              ${day && scheduledDates.includes(day) ? 'mini-cal__day--scheduled' : ''}
-              ${!day ? 'mini-cal__day--empty' : ''}
-            `}
-          >
-            {day}
-          </div>
-        ))}
-      </div>
-      <div className="mini-cal__legend">
-        <span className="mini-cal__legend-item mini-cal__legend-item--scheduled">Agendado</span>
-        <span className="mini-cal__legend-item mini-cal__legend-item--published">Publicado</span>
-        <span className="mini-cal__legend-item mini-cal__legend-item--draft">Rascunho</span>
-      </div>
-    </div>
-  )
-}
-
-const CustomTooltip = ({ active, payload, label }) => {
-  if (!active || !payload?.length) return null
-  return (
-    <div className="chart-tooltip">
-      <p className="chart-tooltip__label">{label}</p>
-      {payload.map(p => (
-        <p key={p.name} style={{ color: p.color }}>
-          {p.name}: <strong>{p.value.toLocaleString('pt-BR')}</strong>
-        </p>
-      ))}
-    </div>
-  )
-}
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 16 },
-  visible: (i = 0) => ({ opacity: 1, y: 0, transition: { delay: i * 0.07, duration: 0.4 } }),
-}
 
 export default function DashboardHome() {
   const { user } = useAuth()
@@ -107,15 +49,30 @@ export default function DashboardHome() {
   const [period, setPeriod] = useState('Diário')
 
   useEffect(() => {
-    getStats().then(setStats)
-    getEngagementData().then(setEngagement)
-    getSocialBreakdown().then(setSocialBreakdown)
-    getContentReach().then(setContentReach)
-    getAiInsights().then(setAiInsights)
-    getTopPosts().then(setTopPosts)
-    getRecentPosts().then(setRecentPosts)
-    getScheduledDates().then(setScheduledDates)
-    getAiSuggestions().then(setAiSuggestions)
+    Promise.all([
+      getStats(),
+      getEngagementData(),
+      getSocialBreakdown(),
+      getContentReach(),
+      getAiInsights(),
+      getTopPosts(),
+      getRecentPosts(),
+      getScheduledDates(),
+      getAiSuggestions(),
+    ]).then(([
+      statsRes, engagementRes, socialBreakdownRes, contentReachRes,
+      aiInsightsRes, topPostsRes, recentPostsRes, scheduledDatesRes, aiSuggestionsRes,
+    ]) => {
+      setStats(statsRes)
+      setEngagement(engagementRes)
+      setSocialBreakdown(socialBreakdownRes)
+      setContentReach(contentReachRes)
+      setAiInsights(aiInsightsRes)
+      setTopPosts(topPostsRes)
+      setRecentPosts(recentPostsRes)
+      setScheduledDates(scheduledDatesRes)
+      setAiSuggestions(aiSuggestionsRes)
+    })
   }, [])
 
   const firstName = user?.name?.split(' ')[0] || 'usuário'
@@ -241,7 +198,7 @@ export default function DashboardHome() {
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
                   <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-text-muted)' }} />
                   <YAxis tick={{ fontSize: 11, fill: 'var(--color-text-muted)' }} tickFormatter={v => `${v/1000}K`} />
-                  <Tooltip content={<CustomTooltip />} />
+                  <Tooltip content={<ChartTooltip />} />
                   <Line type="monotone" dataKey="views"    stroke="#4F35E8" strokeWidth={2} dot={false} name="Visualizações" />
                   <Line type="monotone" dataKey="likes"    stroke="#E1306C" strokeWidth={2} dot={false} name="Curtidas" />
                   <Line type="monotone" dataKey="comments" stroke="#10B981" strokeWidth={2} dot={false} name="Comentários" />

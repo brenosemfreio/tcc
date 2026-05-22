@@ -2627,7 +2627,7 @@
   /* Container do mockup menor para balancear o título grande */
   .l-hero__visual {
     width: 100%;
-    max-width: clamp(300px, 43vw, 480px);
+    max-width: clamp(330px, 47vw, 520px);
     justify-self: center;
   }
 
@@ -2635,7 +2635,7 @@
   .l-mockup {
     width: 100%;
     min-width: 0;
-    max-width: clamp(240px, 36vw, 400px);
+    max-width: clamp(270px, 40vw, 440px);
   }
 
   .l-float--1 { left:  -2%; }

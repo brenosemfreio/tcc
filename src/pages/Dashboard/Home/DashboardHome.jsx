@@ -14,8 +14,8 @@ import { exportDashboardReport } from '../../../utils/export'
 
 import DashboardHeader from './components/DashboardHeader'
 import KpiGrid from './components/KpiGrid'
-import AIInsightsCarousel from './components/AIInsightsCarousel'
-import BestTimeHeatmap from './components/BestTimeHeatmap'
+import AIInsightsGrid from './components/AIInsightsGrid'
+import BestTimeCard from './components/BestTimeCard'
 import EngagementChart from './components/EngagementChart'
 import NetworkDonut from './components/NetworkDonut'
 import NetworkComparison from './components/NetworkComparison'
@@ -152,14 +152,16 @@ export default function DashboardHome() {
             <NetworkDonut data={socialBreakdown} />
           </div>
 
-          {/* AI Insights + Heatmap lado a lado */}
+          {/* AI Insights + Best Time lado a lado */}
           <div className="dash-home__row dash-home__row--2">
-            <AIInsightsCarousel insights={aiInsights} />
+            <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={4}>
+              <AIInsightsGrid insights={aiInsights} />
+            </motion.div>
             <motion.div
               className="chart-card"
               variants={fadeUp} initial="hidden" animate="visible" custom={5}
             >
-              <BestTimeHeatmap />
+              <BestTimeCard onSchedule={(slot) => openPostModal({ text: '', schedule: slot })} />
             </motion.div>
           </div>
 

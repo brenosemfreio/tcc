@@ -74,9 +74,8 @@ substituir apenas o corpo das funções — os contratos de retorno não mudam.
 
 - `DashboardHeader.jsx` — título de boas-vindas + filtros (período, rede) + ações (Novo post, Exportar).
 - `KpiGrid.jsx` — 4 KPI cards com skeleton fallback.
-- `NotificationsBanner.jsx` — banner rotativo de notificações (success/warning/info), dispensável.
-- `AIInsightsCarousel.jsx` — carrossel rotativo (auto-play + setas + dots) de insights da IA.
-- `BestTimeHeatmap.jsx` — heatmap 7 dias × 4 períodos com melhor horário para postar.
+- `AIInsightsGrid.jsx` — grid 2×2 com todos os insights da IA visíveis ao mesmo tempo.
+- `BestTimeCard.jsx` — destaque do pico de engajamento + lista das 3 alternativas + CTA de agendamento.
 - `EngagementChart.jsx` — line chart com toggle Diário/Semanal/Mensal.
 - `NetworkDonut.jsx` — donut da divisão de engajamento entre redes.
 - `NetworkComparison.jsx` — 4 mini-cards comparando crescimento por rede.

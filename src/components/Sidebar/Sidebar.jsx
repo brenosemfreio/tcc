@@ -176,32 +176,28 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
           </AnimatePresence>
         </button>
 
-        {/* Theme toggle */}
+        {/* Theme toggle — horizontal quando expandido, vertical quando colapsado */}
         <div className={`sidebar__theme ${isCollapsed ? 'sidebar__theme--collapsed' : ''}`}>
-          {isCollapsed ? (
+          <div className={`sidebar__theme-toggle ${isCollapsed ? 'sidebar__theme-toggle--vertical' : ''}`}>
             <button
-              className="sidebar__item sidebar__item--theme-icon"
-              onClick={toggleTheme}
-              title={theme === 'light' ? 'Modo escuro' : 'Modo claro'}
+              className={`sidebar__theme-btn ${theme === 'light' ? 'sidebar__theme-btn--active' : ''}`}
+              onClick={() => theme !== 'light' && toggleTheme()}
+              title="Modo claro"
+              aria-label="Modo claro"
             >
-              {theme === 'light' ? <LuMoon size={20} /> : <LuSun size={20} />}
+              <LuSun size={14} />
+              {!isCollapsed && <span>Claro</span>}
             </button>
-          ) : (
-            <div className="sidebar__theme-toggle">
-              <button
-                className={`sidebar__theme-btn ${theme === 'light' ? 'sidebar__theme-btn--active' : ''}`}
-                onClick={() => theme !== 'light' && toggleTheme()}
-              >
-                <LuSun size={14} /> Claro
-              </button>
-              <button
-                className={`sidebar__theme-btn ${theme === 'dark' ? 'sidebar__theme-btn--active' : ''}`}
-                onClick={() => theme !== 'dark' && toggleTheme()}
-              >
-                <LuMoon size={14} /> Escuro
-              </button>
-            </div>
-          )}
+            <button
+              className={`sidebar__theme-btn ${theme === 'dark' ? 'sidebar__theme-btn--active' : ''}`}
+              onClick={() => theme !== 'dark' && toggleTheme()}
+              title="Modo escuro"
+              aria-label="Modo escuro"
+            >
+              <LuMoon size={14} />
+              {!isCollapsed && <span>Escuro</span>}
+            </button>
+          </div>
         </div>
       </nav>
 

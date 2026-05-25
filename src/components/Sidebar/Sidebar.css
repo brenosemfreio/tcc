@@ -133,12 +133,10 @@
   flex-direction: column;
   gap: 20px;
   padding: 8px 10px;
-  flex: 1;
 }
 
-.sidebar__nav--bottom {
-  flex: 0;
-}
+/* Nav inferior fica logo abaixo da primária — não ocupa toda altura */
+.sidebar__nav--bottom { gap: 8px; }
 
 /* Items */
 .sidebar__item {
@@ -227,12 +225,23 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.sidebar__item--theme-icon {
-  color: var(--color-text-secondary);
+/* Versão vertical pra quando a sidebar está colapsada */
+.sidebar__theme-toggle--vertical {
+  flex-direction: column;
+  width: 36px;
+  margin: 0 auto;
+  gap: 3px;
+}
+.sidebar__theme-toggle--vertical .sidebar__theme-btn {
+  flex: none;
+  width: 100%;
+  padding: 6px 0;
+  justify-content: center;
 }
 
-/* User */
+/* User — sempre na base da sidebar */
 .sidebar__user {
+  margin-top: auto;
   display: flex;
   align-items: center;
   gap: 10px;

@@ -74,7 +74,7 @@ substituir apenas o corpo das funções — os contratos de retorno não mudam.
 
 - `DashboardHeader.jsx` — título de boas-vindas + filtros (período, rede) + ações (Novo post, Exportar).
 - `KpiGrid.jsx` — 4 KPI cards com skeleton fallback.
-- `AIInsightsGrid.jsx` — grid 2×2 com todos os insights da IA visíveis ao mesmo tempo.
+- `AudienceCard.jsx` — demografia da audiência: faixa etária (barras), gênero (barra dividida) e top localizações.
 - `BestTimeCard.jsx` — destaque do pico de engajamento + lista das 3 alternativas + CTA de agendamento.
 - `EngagementChart.jsx` — line chart com toggle Diário/Semanal/Mensal.
 - `NetworkDonut.jsx` — donut da divisão de engajamento entre redes.

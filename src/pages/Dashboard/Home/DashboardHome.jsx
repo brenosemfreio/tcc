@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { useAuth } from '../../../contexts/AuthContext'
 import {
   getStats, getEngagementData, getSocialBreakdown,
-  getContentReach, getAiInsights,
+  getContentReach, getAudience,
 } from '../../../services/analytics'
 import {
   getTopPosts, getRecentPosts, getCalendarMarkers, getAiSuggestions,
@@ -14,7 +14,7 @@ import { exportDashboardReport } from '../../../utils/export'
 
 import DashboardHeader from './components/DashboardHeader'
 import KpiGrid from './components/KpiGrid'
-import AIInsightsGrid from './components/AIInsightsGrid'
+import AudienceCard from './components/AudienceCard'
 import BestTimeCard from './components/BestTimeCard'
 import EngagementChart from './components/EngagementChart'
 import NetworkDonut from './components/NetworkDonut'
@@ -37,7 +37,7 @@ export default function DashboardHome() {
   const [engagement, setEngagement] = useState([])
   const [socialBreakdown, setSocialBreakdown] = useState([])
   const [contentReach, setContentReach] = useState([])
-  const [aiInsights, setAiInsights] = useState([])
+  const [audience, setAudience] = useState(null)
   const [topPosts, setTopPosts] = useState([])
   const [recentPosts, setRecentPosts] = useState([])
   const [calendarMarkers, setCalendarMarkers] = useState({})
@@ -54,18 +54,18 @@ export default function DashboardHome() {
     Promise.all([
       getSocialBreakdown(),
       getContentReach(),
-      getAiInsights(),
+      getAudience(),
       getTopPosts(),
       getRecentPosts(),
       getCalendarMarkers(),
       getAiSuggestions(),
     ]).then(([
-      socialBreakdownRes, contentReachRes, aiInsightsRes,
+      socialBreakdownRes, contentReachRes, audienceRes,
       topPostsRes, recentPostsRes, markersRes, aiSuggestionsRes,
     ]) => {
       setSocialBreakdown(socialBreakdownRes)
       setContentReach(contentReachRes)
-      setAiInsights(aiInsightsRes)
+      setAudience(audienceRes)
       setTopPosts(topPostsRes)
       setRecentPosts(recentPostsRes)
       setCalendarMarkers(markersRes)
@@ -152,10 +152,13 @@ export default function DashboardHome() {
             <NetworkDonut data={socialBreakdown} />
           </div>
 
-          {/* AI Insights + Best Time lado a lado */}
+          {/* Audience + Best Time lado a lado */}
           <div className="dash-home__row dash-home__row--2">
-            <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={4}>
-              <AIInsightsGrid insights={aiInsights} />
+            <motion.div
+              className="chart-card"
+              variants={fadeUp} initial="hidden" animate="visible" custom={4}
+            >
+              <AudienceCard data={audience} />
             </motion.div>
             <motion.div
               className="chart-card"

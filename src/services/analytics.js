@@ -89,31 +89,18 @@ export const getContentReach = () => Promise.resolve([
   { type: 'Stories',   value: 6,  color: '#C4B5FD' },
 ])
 
-import { LuClock, LuActivity, LuHash, LuBot } from 'react-icons/lu'
-
-export const getAiInsights = () => Promise.resolve([
-  {
-    id: 1,
-    icon: LuClock,
-    title: 'Melhor horário para publicar',
-    text: 'Seus Reels alcançam 2.8x mais engajamento às 19h–21h.',
-  },
-  {
-    id: 2,
-    icon: LuActivity,
-    title: 'Rede tem melhor desempenho',
-    text: 'Seus Reels alcançaram 2.8x mais no Instagram este mês.',
-  },
-  {
-    id: 3,
-    icon: LuHash,
-    title: 'Hashtags em alta',
-    text: '#marketingdigital, #conteúdo e #empreendedorismo geram mais alcance.',
-  },
-  {
-    id: 4,
-    icon: LuBot,
-    title: 'Dica da IA',
-    text: 'Conteúdos educativos geram 45% mais salvamentos.',
-  },
-])
+export const getAudience = () => Promise.resolve({
+  ageGroups: [
+    { range: '13–17', value: 14 },
+    { range: '18–24', value: 42 },
+    { range: '25–34', value: 28 },
+    { range: '35–44', value: 10 },
+    { range: '45+',   value: 6  },
+  ],
+  gender: { female: 64, male: 36 },
+  topLocations: [
+    { city: 'São Paulo',      value: 32 },
+    { city: 'Rio de Janeiro', value: 18 },
+    { city: 'Belo Horizonte', value: 9  },
+  ],
+})

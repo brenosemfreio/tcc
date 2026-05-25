@@ -16,6 +16,7 @@ import DashboardHeader from './components/DashboardHeader'
 import KpiGrid from './components/KpiGrid'
 import AudienceCard from './components/AudienceCard'
 import BestTimeCard from './components/BestTimeCard'
+import CalendarModal from '../../../components/CalendarModal/CalendarModal'
 import EngagementChart from './components/EngagementChart'
 import NetworkDonut from './components/NetworkDonut'
 import NetworkComparison from './components/NetworkComparison'
@@ -48,6 +49,7 @@ export default function DashboardHome() {
   const [granularity, setGranularity] = useState('daily')
 
   const [feedback, setFeedback] = useState({})
+  const [showCalendarModal, setShowCalendarModal] = useState(false)
 
   // Dados estáticos (não dependem dos filtros).
   useEffect(() => {
@@ -187,7 +189,10 @@ export default function DashboardHome() {
             variants={fadeUp} initial="hidden" animate="visible" custom={1}
           >
             <h3>Calendário de publicações</h3>
-            <MiniCalendar markers={calendarMarkers} />
+            <MiniCalendar
+              markers={calendarMarkers}
+              onExpand={() => setShowCalendarModal(true)}
+            />
           </motion.div>
 
           <motion.div
@@ -211,6 +216,12 @@ export default function DashboardHome() {
           />
         </div>
       </div>
+
+      <CalendarModal
+        isOpen={showCalendarModal}
+        onClose={() => setShowCalendarModal(false)}
+        markers={calendarMarkers}
+      />
     </div>
   )
 }

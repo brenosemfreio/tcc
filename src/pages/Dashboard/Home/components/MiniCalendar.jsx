@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { LuChevronLeft, LuChevronRight } from 'react-icons/lu'
+import { LuChevronLeft, LuChevronRight, LuMaximize2 } from 'react-icons/lu'
 
 const MONTHS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
 const WEEKDAYS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
@@ -16,7 +16,7 @@ function dayStatus(day, markers) {
   return null
 }
 
-export default function MiniCalendar({ markers = {} }) {
+export default function MiniCalendar({ markers = {}, onExpand }) {
   const today = new Date()
   const [view, setView] = useState({ year: today.getFullYear(), month: today.getMonth() })
 
@@ -58,6 +58,17 @@ export default function MiniCalendar({ markers = {} }) {
         >
           <LuChevronRight size={14} />
         </button>
+        {onExpand && (
+          <button
+            className="mini-cal__expand"
+            onClick={onExpand}
+            aria-label="Expandir calendário"
+            type="button"
+            title="Expandir"
+          >
+            <LuMaximize2 size={12} />
+          </button>
+        )}
       </div>
       <div className="mini-cal__weekdays">
         {WEEKDAYS.map(d => <span key={d}>{d}</span>)}

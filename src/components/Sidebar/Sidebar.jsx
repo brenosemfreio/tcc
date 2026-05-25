@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   LuLayoutDashboard, LuShare2, LuSquarePen,
   LuSettings, LuCircleHelp, LuSun, LuMoon,
-  LuLogOut, LuChevronLeft, LuChevronRight,
+  LuLogOut, LuChevronLeft, LuChevronRight, LuSearch,
 } from 'react-icons/lu'
 import { useAuth } from '../../contexts/AuthContext'
 import { useTheme } from '../../contexts/ThemeContext'
@@ -19,7 +19,7 @@ const BOTTOM_ITEMS = [
   { to: '/dashboard/configuracoes', icon: LuSettings, label: 'Configurações' },
 ]
 
-export default function Sidebar({ isCollapsed, onToggle, onNewPost }) {
+export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch }) {
   const { user, logout } = useAuth()
   const { theme, toggleTheme } = useTheme()
   const navigate = useNavigate()
@@ -61,6 +61,30 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost }) {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Search trigger — abre o modal global de busca (Ctrl+K) */}
+      <button
+        type="button"
+        className="sidebar__search"
+        onClick={onOpenSearch}
+        aria-label="Abrir busca"
+      >
+        <LuSearch size={16} />
+        <AnimatePresence>
+          {!isCollapsed && (
+            <motion.span
+              className="sidebar__search-label"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+            >
+              Pesquisar
+              <kbd>Ctrl K</kbd>
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </button>
 
       {/* Main nav */}
       <nav className="sidebar__nav">

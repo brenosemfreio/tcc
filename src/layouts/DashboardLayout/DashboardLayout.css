@@ -9,7 +9,13 @@
   margin-left: 240px;
   min-width: 0;
   transition: margin-left 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-content {
+  padding: 24px 28px 28px;
+  flex: 1;
 }
 
 .dashboard-layout--collapsed .dashboard-main {
@@ -17,8 +23,6 @@
 }
 
 @media (max-width: 768px) {
-  .dashboard-main {
-    margin-left: 0;
-    padding: 16px;
-  }
+  .dashboard-main { margin-left: 0; }
+  .dashboard-content { padding: 16px; }
 }

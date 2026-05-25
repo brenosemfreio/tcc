@@ -235,7 +235,7 @@
   width: 36px;
   margin: 0 auto;
   gap: 3px;
-  transform: translateX(-8px);  /* nudge pra esquerda */
+  transform: translateX(-6px);  /* nudge pra esquerda */
 }
 .sidebar__theme-toggle--vertical .sidebar__theme-btn {
   flex: none;

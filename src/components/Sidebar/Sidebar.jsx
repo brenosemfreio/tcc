@@ -9,6 +9,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { useTheme } from '../../contexts/ThemeContext'
 import { getInitials } from '../../utils/string'
 import logoHub from '../../assets/images/logo-hub.png'
+import logoHubIcon from '../../assets/images/logo-hub-icon.png'
 import './Sidebar.css'
 
 const NAV_ITEMS = [
@@ -40,10 +41,10 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
         {isCollapsed ? <LuChevronRight size={16} /> : <LuChevronLeft size={16} />}
       </button>
 
-      {/* Logo — clicável, volta pro dashboard */}
+      {/* Logo — clicável, volta pro dashboard. Troca a imagem conforme estado da sidebar */}
       <Link to="/dashboard" className="sidebar__logo" aria-label="Ir para o Dashboard">
         <img
-          src={logoHub}
+          src={isCollapsed ? logoHubIcon : logoHub}
           alt="HubStudio"
           className="sidebar__logo-img"
         />

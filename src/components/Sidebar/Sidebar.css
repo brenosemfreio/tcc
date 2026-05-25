@@ -58,15 +58,12 @@
   display: block;
   flex-shrink: 0;
   object-fit: contain;
-  object-position: left center;
 }
 
-/* Quando colapsada, mostra só o asterisco do logo */
+/* Quando colapsada, usa o logo-icon (asterisco + h/b) em formato quadrado */
 .sidebar--collapsed .sidebar__logo-img {
   width: 32px;
   height: 32px;
-  object-fit: cover;
-  object-position: 0% center;
 }
 
 .sidebar__plan-badge {

@@ -48,9 +48,23 @@
   overflow: hidden;
   text-decoration: none;
   cursor: pointer;
-  transition: opacity var(--transition-fast);
+  transition: opacity var(--transition-fast),
+              padding 0.32s cubic-bezier(0.32, 0.72, 0, 1),
+              justify-content 0.32s cubic-bezier(0.32, 0.72, 0, 1);
 }
 .sidebar__logo:hover { opacity: 0.85; }
+
+/* Stage do logo — wrapper que mantém o crossfade no mesmo lugar */
+.sidebar__logo-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+}
+.sidebar__logo-stage .sidebar__logo-img {
+  position: relative;
+}
 
 .sidebar__logo-img {
   height: 32px;
@@ -92,8 +106,15 @@
   font-size: var(--font-size-sm);
   font-family: var(--font-family);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  overflow: hidden;
+  white-space: nowrap;
+  transition: border-color var(--transition-fast),
+              color var(--transition-fast),
+              padding 0.32s cubic-bezier(0.32, 0.72, 0, 1),
+              margin 0.32s cubic-bezier(0.32, 0.72, 0, 1),
+              justify-content 0.32s cubic-bezier(0.32, 0.72, 0, 1);
 }
+.sidebar__search-icon { flex-shrink: 0; }
 .sidebar__search:hover {
   border-color: var(--color-primary);
   color: var(--color-text);
@@ -152,7 +173,6 @@
   font-size: var(--font-size-sm);
   font-weight: 500;
   cursor: pointer;
-  transition: all var(--transition-fast);
   white-space: nowrap;
   width: 100%;
   text-align: left;
@@ -160,6 +180,11 @@
   border: none;
   background: none;
   font-family: var(--font-family);
+  overflow: hidden;
+  transition: background var(--transition-fast),
+              color var(--transition-fast),
+              padding 0.32s cubic-bezier(0.32, 0.72, 0, 1),
+              justify-content 0.32s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .sidebar__item:hover {
@@ -203,6 +228,9 @@
   border-radius: var(--radius-full);
   padding: 3px;
   gap: 2px;
+  transition: width 0.32s cubic-bezier(0.32, 0.72, 0, 1),
+              margin 0.32s cubic-bezier(0.32, 0.72, 0, 1),
+              transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .sidebar__theme-btn {
@@ -217,8 +245,12 @@
   font-weight: 500;
   color: var(--color-text-secondary);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  white-space: nowrap;
+  overflow: hidden;
   font-family: var(--font-family);
+  transition: background var(--transition-fast),
+              color var(--transition-fast),
+              padding 0.32s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .sidebar__theme-btn--active {
@@ -249,6 +281,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  transition: padding 0.32s cubic-bezier(0.32, 0.72, 0, 1),
+              justify-content 0.32s cubic-bezier(0.32, 0.72, 0, 1);
   padding: 12px 14px;
   border-top: 1px solid var(--color-border);
   overflow: hidden;
@@ -317,9 +351,7 @@
   justify-content: center;
   padding: 12px 10px;
 }
-.sidebar--collapsed .sidebar__logout {
-  display: none;
-}
+/* logout sai com AnimatePresence; nada a fazer aqui */
 .sidebar--collapsed .sidebar__logo {
   justify-content: center;
   padding: 20px 10px 36px;

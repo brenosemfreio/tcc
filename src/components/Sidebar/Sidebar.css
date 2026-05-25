@@ -133,10 +133,13 @@
   flex-direction: column;
   gap: 20px;
   padding: 8px 10px;
+  flex: 1;
 }
 
-/* Nav inferior fica logo abaixo da primária — não ocupa toda altura */
-.sidebar__nav--bottom { gap: 8px; }
+.sidebar__nav--bottom {
+  flex: 0;
+  gap: 8px;
+}
 
 /* Items */
 .sidebar__item {
@@ -239,9 +242,8 @@
   justify-content: center;
 }
 
-/* User — sempre na base da sidebar */
+/* User */
 .sidebar__user {
-  margin-top: auto;
   display: flex;
   align-items: center;
   gap: 10px;

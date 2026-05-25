@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column;
   z-index: var(--z-sidebar);
-  overflow: hidden;
+  /* overflow visível pra o botão de toggle (right: -13px) ficar acessível */
   flex-shrink: 0;
 }
 
@@ -41,33 +41,28 @@
 .sidebar__logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   padding: 20px 16px 16px;
-  color: var(--color-primary);
   min-height: 68px;
   flex-shrink: 0;
   overflow: hidden;
 }
 
-.sidebar__logo-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.sidebar__logo-img {
+  height: 32px;
+  width: auto;
+  display: block;
   flex-shrink: 0;
+  object-fit: contain;
+  object-position: left center;
 }
 
-.sidebar__logo-text {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.sidebar__logo-name {
-  font-size: 1rem;
-  font-weight: 800;
-  color: var(--color-primary);
+/* Quando colapsada, mostra só o asterisco do logo */
+.sidebar--collapsed .sidebar__logo-img {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  object-position: 0% center;
 }
 
 .sidebar__plan-badge {
@@ -78,6 +73,8 @@
   border-radius: var(--radius-full);
   padding: 1px 6px;
   letter-spacing: 0.05em;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* Nav */

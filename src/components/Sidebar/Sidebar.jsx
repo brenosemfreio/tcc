@@ -8,6 +8,7 @@ import {
 import { useAuth } from '../../contexts/AuthContext'
 import { useTheme } from '../../contexts/ThemeContext'
 import { getInitials } from '../../utils/string'
+import logoHub from '../../assets/images/logo-hub.png'
 import './Sidebar.css'
 
 const NAV_ITEMS = [
@@ -43,27 +44,22 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost }) {
 
       {/* Logo */}
       <div className="sidebar__logo">
-        <div className="sidebar__logo-icon">
-          <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
-            <path d="M14 3L7 10H11V17H17V10H21L14 3Z" fill="currentColor"/>
-            <path d="M6 13L3 16V14.5H10V18H3V19.5H6L3 22.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-            <path d="M22 13L25 16V14.5H18V18H25V19.5H22L25 22.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-          </svg>
-        </div>
+        <img
+          src={logoHub}
+          alt="HubStudio"
+          className="sidebar__logo-img"
+        />
         <AnimatePresence>
           {!isCollapsed && (
-            <motion.div
-              className="sidebar__logo-text"
-              initial={{ opacity: 0, width: 0 }}
-              animate={{ opacity: 1, width: 'auto' }}
-              exit={{ opacity: 0, width: 0 }}
+            <motion.span
+              className="sidebar__plan-badge"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.2 }}
             >
-              <span className="sidebar__logo-name">
-                <b>hub</b>studio
-              </span>
-              <span className="sidebar__plan-badge">PRO</span>
-            </motion.div>
+              PRO
+            </motion.span>
           )}
         </AnimatePresence>
       </div>

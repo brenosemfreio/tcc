@@ -229,12 +229,13 @@
 }
 
 /* Versão vertical pra quando a sidebar está colapsada */
-.sidebar__theme--collapsed { margin-top: -8px; }
+.sidebar__theme--collapsed { margin-top: -16px; }
 .sidebar__theme-toggle--vertical {
   flex-direction: column;
   width: 36px;
-  margin: 0 auto 0 4px;   /* desloca pra esquerda em vez de centralizado */
+  margin: 0 auto;
   gap: 3px;
+  transform: translateX(-8px);  /* nudge pra esquerda */
 }
 .sidebar__theme-toggle--vertical .sidebar__theme-btn {
   flex: none;

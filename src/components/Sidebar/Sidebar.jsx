@@ -12,13 +12,11 @@ import logoHub from '../../assets/images/logo-hub.png'
 import './Sidebar.css'
 
 const NAV_ITEMS = [
-  { to: '/dashboard',        icon: LuLayoutDashboard, label: 'Dashboard', end: true },
-  { to: '/dashboard/redes',  icon: LuShare2,          label: 'Suas redes' },
+  { to: '/dashboard', icon: LuLayoutDashboard, label: 'Dashboard', end: true },
 ]
 
 const BOTTOM_ITEMS = [
-  { to: '/dashboard/configuracoes', icon: LuSettings,     label: 'Configurações' },
-  { to: '#suporte',                 icon: LuCircleHelp,   label: 'Suporte' },
+  { to: '/dashboard/configuracoes', icon: LuSettings, label: 'Configurações' },
 ]
 
 export default function Sidebar({ isCollapsed, onToggle, onNewPost }) {
@@ -92,7 +90,7 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost }) {
           </NavLink>
         ))}
 
-        {/* Novo post */}
+        {/* Posts (abre o modal de novo post) */}
         <button
           className="sidebar__item sidebar__item--post"
           onClick={onNewPost}
@@ -107,7 +105,7 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost }) {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.15 }}
               >
-                Novo post
+                Posts
               </motion.span>
             )}
           </AnimatePresence>
@@ -143,6 +141,28 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost }) {
             </AnimatePresence>
           </NavLink>
         ))}
+
+        {/* Suporte — botão simples (não rota) pra evitar highlight de "ativo" pelo hash */}
+        <button
+          type="button"
+          className="sidebar__item"
+          onClick={() => { window.location.href = 'mailto:suporte@hubstudio.com' }}
+        >
+          <LuCircleHelp size={20} className="sidebar__item-icon" />
+          <AnimatePresence>
+            {!isCollapsed && (
+              <motion.span
+                className="sidebar__item-label"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+              >
+                Suporte
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </button>
 
         {/* Theme toggle */}
         <div className={`sidebar__theme ${isCollapsed ? 'sidebar__theme--collapsed' : ''}`}>

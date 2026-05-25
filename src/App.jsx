@@ -10,7 +10,6 @@ import Cadastro from './pages/Cadastro/Cadastro'
 import EsqueciSenha from './pages/EsqueciSenha/EsqueciSenha'
 import RedefinirSenha from './pages/RedefinirSenha/RedefinirSenha'
 import DashboardHome from './pages/Dashboard/Home/DashboardHome'
-import Redes from './pages/Dashboard/Redes/Redes'
 import Configuracoes from './pages/Dashboard/Configuracoes/Configuracoes'
 
 export default function App() {
@@ -34,7 +33,6 @@ export default function App() {
               }
             >
               <Route index element={<DashboardHome />} />
-              <Route path="redes" element={<Redes />} />
               <Route path="configuracoes" element={<Configuracoes />} />
             </Route>
 

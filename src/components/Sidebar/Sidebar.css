@@ -81,8 +81,8 @@
 .sidebar__nav {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 4px 10px;
+  gap: 8px;
+  padding: 8px 10px;
   flex: 1;
 }
 

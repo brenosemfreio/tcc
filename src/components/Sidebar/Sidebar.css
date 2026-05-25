@@ -138,7 +138,7 @@
 
 .sidebar__nav--bottom {
   flex: 0;
-  gap: 8px;
+  gap: 20px;
 }
 
 /* Items */
@@ -320,5 +320,5 @@
 }
 .sidebar--collapsed .sidebar__logo {
   justify-content: center;
-  padding: 20px 10px 16px;
+  padding: 20px 10px 36px;
 }

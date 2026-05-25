@@ -1,7 +1,7 @@
 import { NavLink, Link, useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import {
-  LuLayoutDashboard, LuShare2, LuSquarePen,
+  LuLayoutDashboard, LuSquarePen,
   LuSettings, LuCircleHelp, LuSun, LuMoon,
   LuLogOut, LuChevronLeft, LuChevronRight, LuSearch,
 } from 'react-icons/lu'
@@ -20,16 +20,9 @@ const BOTTOM_ITEMS = [
   { to: '/dashboard/configuracoes', icon: LuSettings, label: 'Configurações' },
 ]
 
-// Duração e easing usados em TODAS as transições da sidebar — mantém tudo sincronizado
-const SIDEBAR_DUR = 0.32
-const SIDEBAR_EASE = [0.32, 0.72, 0, 1]
-
-const labelTransition = { duration: SIDEBAR_DUR, ease: SIDEBAR_EASE }
-const labelVariants = {
-  hidden:  { opacity: 0, x: -8, transition: labelTransition },
-  visible: { opacity: 1, x: 0,  transition: labelTransition },
-}
-
+// Os labels e elementos internos ficam SEMPRE no DOM. A visibilidade é
+// controlada por CSS via .sidebar--collapsed — transições suaves de max-width
+// e opacity, sincronizadas com a animação de largura da sidebar.
 export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch }) {
   const { user, logout } = useAuth()
   const { theme, toggleTheme } = useTheme()
@@ -44,40 +37,22 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
     <motion.aside
       className={`sidebar ${isCollapsed ? 'sidebar--collapsed' : ''}`}
       animate={{ width: isCollapsed ? 68 : 240 }}
-      transition={{ duration: SIDEBAR_DUR, ease: SIDEBAR_EASE }}
+      transition={{ duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
     >
       {/* Toggle */}
       <button className="sidebar__toggle" onClick={onToggle} aria-label="Colapsar menu">
-        <motion.span
-          key={isCollapsed ? 'right' : 'left'}
-          initial={{ rotate: 180, opacity: 0 }}
-          animate={{ rotate: 0, opacity: 1 }}
-          transition={{ duration: 0.22 }}
-          style={{ display: 'inline-flex' }}
-        >
-          {isCollapsed ? <LuChevronRight size={16} /> : <LuChevronLeft size={16} />}
-        </motion.span>
+        {isCollapsed ? <LuChevronRight size={16} /> : <LuChevronLeft size={16} />}
       </button>
 
-      {/* Logo — crossfade entre as duas versões */}
+      {/* Logo — duas imagens empilhadas, crossfade via CSS */}
       <Link to="/dashboard" className="sidebar__logo" aria-label="Ir para o Dashboard">
         <div className="sidebar__logo-stage">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.img
-              key={isCollapsed ? 'icon' : 'full'}
-              src={isCollapsed ? logoHubIcon : logoHub}
-              alt="HubStudio"
-              className="sidebar__logo-img"
-              initial={{ opacity: 0, scale: 0.92 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.92 }}
-              transition={{ duration: 0.24, ease: SIDEBAR_EASE }}
-            />
-          </AnimatePresence>
+          <img src={logoHub}     alt="HubStudio" className="sidebar__logo-img sidebar__logo-img--full" />
+          <img src={logoHubIcon} alt=""          className="sidebar__logo-img sidebar__logo-img--icon" aria-hidden="true" />
         </div>
       </Link>
 
-      {/* Search trigger */}
+      {/* Search */}
       <button
         type="button"
         className="sidebar__search"
@@ -86,20 +61,10 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
         data-tooltip="Pesquisar (Ctrl+K)"
       >
         <LuSearch size={16} className="sidebar__search-icon" />
-        <AnimatePresence initial={false}>
-          {!isCollapsed && (
-            <motion.span
-              className="sidebar__search-label"
-              variants={labelVariants}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-            >
-              Pesquisar
-              <kbd>Ctrl K</kbd>
-            </motion.span>
-          )}
-        </AnimatePresence>
+        <span className="sidebar__search-label">
+          Pesquisar
+          <kbd>Ctrl K</kbd>
+        </span>
       </button>
 
       {/* Main nav */}
@@ -115,46 +80,22 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
             }
           >
             <Icon size={20} className="sidebar__item-icon" />
-            <AnimatePresence initial={false}>
-              {!isCollapsed && (
-                <motion.span
-                  className="sidebar__item-label"
-                  variants={labelVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                >
-                  {label}
-                </motion.span>
-              )}
-            </AnimatePresence>
+            <span className="sidebar__item-label">{label}</span>
           </NavLink>
         ))}
 
-        {/* Posts (abre o modal) */}
+        {/* Posts */}
         <button
+          type="button"
           className="sidebar__item sidebar__item--post"
           onClick={onNewPost}
           data-tooltip="Posts"
         >
           <LuSquarePen size={20} className="sidebar__item-icon" />
-          <AnimatePresence initial={false}>
-            {!isCollapsed && (
-              <motion.span
-                className="sidebar__item-label"
-                variants={labelVariants}
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-              >
-                Posts
-              </motion.span>
-            )}
-          </AnimatePresence>
+          <span className="sidebar__item-label">Posts</span>
         </button>
       </nav>
 
-      {/* Divider */}
       <div className="sidebar__divider" />
 
       {/* Bottom nav */}
@@ -169,19 +110,7 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
             }
           >
             <Icon size={20} className="sidebar__item-icon" />
-            <AnimatePresence initial={false}>
-              {!isCollapsed && (
-                <motion.span
-                  className="sidebar__item-label"
-                  variants={labelVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                >
-                  {label}
-                </motion.span>
-              )}
-            </AnimatePresence>
+            <span className="sidebar__item-label">{label}</span>
           </NavLink>
         ))}
 
@@ -193,19 +122,7 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
           data-tooltip="Suporte"
         >
           <LuCircleHelp size={20} className="sidebar__item-icon" />
-          <AnimatePresence initial={false}>
-            {!isCollapsed && (
-              <motion.span
-                className="sidebar__item-label"
-                variants={labelVariants}
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-              >
-                Suporte
-              </motion.span>
-            )}
-          </AnimatePresence>
+          <span className="sidebar__item-label">Suporte</span>
         </button>
 
         {/* Theme toggle */}
@@ -217,19 +134,8 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
               aria-label="Modo claro"
               data-tooltip="Modo claro"
             >
-              <LuSun size={14} />
-              <AnimatePresence initial={false}>
-                {!isCollapsed && (
-                  <motion.span
-                    variants={labelVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="hidden"
-                  >
-                    Claro
-                  </motion.span>
-                )}
-              </AnimatePresence>
+              <LuSun size={14} className="sidebar__theme-icon" />
+              <span className="sidebar__theme-label">Claro</span>
             </button>
             <button
               className={`sidebar__theme-btn ${theme === 'dark' ? 'sidebar__theme-btn--active' : ''}`}
@@ -237,19 +143,8 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
               aria-label="Modo escuro"
               data-tooltip="Modo escuro"
             >
-              <LuMoon size={14} />
-              <AnimatePresence initial={false}>
-                {!isCollapsed && (
-                  <motion.span
-                    variants={labelVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="hidden"
-                  >
-                    Escuro
-                  </motion.span>
-                )}
-              </AnimatePresence>
+              <LuMoon size={14} className="sidebar__theme-icon" />
+              <span className="sidebar__theme-label">Escuro</span>
             </button>
           </div>
         </div>
@@ -257,38 +152,19 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
 
       {/* User */}
       <div className="sidebar__user">
-        <div className="sidebar__avatar">
-          {getInitials(user?.name)}
+        <div className="sidebar__avatar">{getInitials(user?.name)}</div>
+        <div className="sidebar__user-info">
+          <span className="sidebar__user-name">{user?.name}</span>
+          <span className="sidebar__user-email">{user?.email}</span>
         </div>
-        <AnimatePresence initial={false}>
-          {!isCollapsed && (
-            <motion.div
-              className="sidebar__user-info"
-              variants={labelVariants}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-            >
-              <span className="sidebar__user-name">{user?.name}</span>
-              <span className="sidebar__user-email">{user?.email}</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <AnimatePresence initial={false}>
-          {!isCollapsed && (
-            <motion.button
-              className="sidebar__logout"
-              onClick={handleLogout}
-              title="Sair"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={labelTransition}
-            >
-              <LuLogOut size={17} />
-            </motion.button>
-          )}
-        </AnimatePresence>
+        <button
+          className="sidebar__logout"
+          onClick={handleLogout}
+          title="Sair"
+          aria-label="Sair"
+        >
+          <LuLogOut size={17} />
+        </button>
       </div>
     </motion.aside>
   )

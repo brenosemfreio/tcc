@@ -324,3 +324,53 @@
   justify-content: center;
   padding: 20px 10px 36px;
 }
+
+/* ─── Tooltips na sidebar colapsada ───────────────────────────────
+   Elementos com [data-tooltip] mostram uma caixinha com o nome ao
+   passar o mouse, apenas quando a sidebar está fechada.
+   ───────────────────────────────────────────────────────────────── */
+.sidebar--collapsed [data-tooltip] {
+  position: relative;
+}
+.sidebar--collapsed [data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 6px 10px;
+  background: var(--color-text);
+  color: var(--color-card-bg);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease, transform 150ms ease;
+  z-index: 200;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+}
+.sidebar--collapsed [data-tooltip]::before {
+  content: '';
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 6px solid var(--color-text);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+  z-index: 200;
+}
+.sidebar--collapsed [data-tooltip]:hover::after,
+.sidebar--collapsed [data-tooltip]:hover::before {
+  opacity: 1;
+}
+.sidebar--collapsed [data-tooltip]:hover::after {
+  transform: translateY(-50%) translateX(2px);
+}

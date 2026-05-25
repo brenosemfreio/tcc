@@ -56,6 +56,7 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
         className="sidebar__search"
         onClick={onOpenSearch}
         aria-label="Abrir busca"
+        data-tooltip="Pesquisar (Ctrl+K)"
       >
         <LuSearch size={16} />
         <AnimatePresence>
@@ -81,6 +82,7 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
             key={to}
             to={to}
             end={end}
+            data-tooltip={label}
             className={({ isActive }) =>
               `sidebar__item ${isActive ? 'sidebar__item--active' : ''}`
             }
@@ -106,6 +108,7 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
         <button
           className="sidebar__item sidebar__item--post"
           onClick={onNewPost}
+          data-tooltip="Posts"
         >
           <LuSquarePen size={20} className="sidebar__item-icon" />
           <AnimatePresence>
@@ -133,6 +136,7 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
           <NavLink
             key={to}
             to={to}
+            data-tooltip={label}
             className={({ isActive }) =>
               `sidebar__item ${isActive ? 'sidebar__item--active' : ''}`
             }
@@ -159,6 +163,7 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
           type="button"
           className="sidebar__item"
           onClick={() => { window.location.href = 'mailto:suporte@hubstudio.com' }}
+          data-tooltip="Suporte"
         >
           <LuCircleHelp size={20} className="sidebar__item-icon" />
           <AnimatePresence>
@@ -182,8 +187,8 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
             <button
               className={`sidebar__theme-btn ${theme === 'light' ? 'sidebar__theme-btn--active' : ''}`}
               onClick={() => theme !== 'light' && toggleTheme()}
-              title="Modo claro"
               aria-label="Modo claro"
+              data-tooltip="Modo claro"
             >
               <LuSun size={14} />
               {!isCollapsed && <span>Claro</span>}
@@ -191,8 +196,8 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
             <button
               className={`sidebar__theme-btn ${theme === 'dark' ? 'sidebar__theme-btn--active' : ''}`}
               onClick={() => theme !== 'dark' && toggleTheme()}
-              title="Modo escuro"
               aria-label="Modo escuro"
+              data-tooltip="Modo escuro"
             >
               <LuMoon size={14} />
               {!isCollapsed && <span>Escuro</span>}

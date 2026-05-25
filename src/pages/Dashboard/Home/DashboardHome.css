@@ -644,9 +644,15 @@
    Sprint 3 — Novos componentes
    ══════════════════════════════════════════════════════════ */
 
-/* Linhas auxiliares com 2 colunas iguais */
-.dash-home__row { display: grid; gap: 20px; align-items: start; }
+/* Linhas auxiliares com 2 colunas iguais — cards esticam pra mesma altura */
+.dash-home__row { display: grid; gap: 20px; align-items: stretch; }
 .dash-home__row--2 { grid-template-columns: 1fr 1fr; }
+
+/* Cards dentro de uma linha precisam ocupar 100% da altura disponível */
+.dash-home__row > .chart-card,
+.dash-home__row > * > .chart-card { height: 100%; }
+.dash-home__row .chart-card { display: flex; flex-direction: column; }
+.dash-home__row .chart-card > * { width: 100%; }
 
 /* Empty state genérico nos cards */
 .chart-card__empty {
@@ -734,6 +740,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  height: 100%;
 }
 .audience__hint {
   font-size: 0.72rem;
@@ -858,6 +865,7 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+  height: 100%;
 }
 .best-time__header h3 {
   display: inline-flex;
@@ -963,6 +971,7 @@
 }
 
 .best-time__cta {
+  margin-top: auto;       /* empurra o botão pra base do card */
   display: inline-flex;
   align-items: center;
   justify-content: center;

@@ -10,6 +10,8 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Reserva o espaço da scrollbar mesmo quando ela some — evita layout shift ao abrir modais */
+  scrollbar-gutter: stable;
 }
 
 body {

@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LuLayoutDashboard, LuShare2, LuSquarePen,
@@ -40,27 +40,14 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
         {isCollapsed ? <LuChevronRight size={16} /> : <LuChevronLeft size={16} />}
       </button>
 
-      {/* Logo */}
-      <div className="sidebar__logo">
+      {/* Logo — clicável, volta pro dashboard */}
+      <Link to="/dashboard" className="sidebar__logo" aria-label="Ir para o Dashboard">
         <img
           src={logoHub}
           alt="HubStudio"
           className="sidebar__logo-img"
         />
-        <AnimatePresence>
-          {!isCollapsed && (
-            <motion.span
-              className="sidebar__plan-badge"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.2 }}
-            >
-              PRO
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </div>
+      </Link>
 
       {/* Search trigger — abre o modal global de busca (Ctrl+K) */}
       <button

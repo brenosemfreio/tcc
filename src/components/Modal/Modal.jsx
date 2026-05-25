@@ -5,6 +5,8 @@ import './Modal.css'
 
 export default function Modal({ isOpen, onClose, title, children, size = 'md' }) {
   useEffect(() => {
+    // `scrollbar-gutter: stable` no <html> (em global.css) já reserva o espaço
+    // da barra de rolagem, então o overflow:hidden aqui não causa layout shift.
     if (isOpen) {
       document.body.style.overflow = 'hidden'
     } else {

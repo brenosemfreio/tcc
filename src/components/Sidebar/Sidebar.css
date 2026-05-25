@@ -46,7 +46,11 @@
   min-height: 68px;
   flex-shrink: 0;
   overflow: hidden;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
 }
+.sidebar__logo:hover { opacity: 0.85; }
 
 .sidebar__logo-img {
   height: 32px;

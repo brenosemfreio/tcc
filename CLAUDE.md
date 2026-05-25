@@ -59,8 +59,7 @@ substituir apenas o corpo das funções — os contratos de retorno não mudam.
 - `Sidebar` — colapsável, com dark mode toggle e logout. Props: `isCollapsed`, `onToggle`, `onNewPost`.
 - `OAuthIcons` — exporta `GoogleIcon` e `FacebookIcon` (SVGs inline com cores oficiais).
 - `PasswordField` — exporta `AuthPasswordField` (telas auth), `RecoveryPasswordField` (telas recovery) e `StrengthMeter` (medidor de força reutilizável, prefix `auth` ou `recovery`).
-- `Topbar` — barra superior do dashboard com gatilho de busca + sino de notificações (com badge e painel dropdown).
-- `SearchModal` — modal de busca global (Ctrl+K) com resultados categorizados e navegação por teclado.
+- `SearchModal` — modal de busca global (Ctrl+K) com resultados categorizados e navegação por teclado. Acessada pelo botão "Pesquisar" da sidebar.
 - `CalendarModal` — modal grande de calendário (botão "expandir" no `MiniCalendar`).
 - `ShortcutsModal` — lista de atalhos de teclado (abre com `?`).
 - `OnboardingTour` — modal de boas-vindas em 5 passos, exibido só na primeira visita (localStorage).

@@ -371,22 +371,22 @@ export default function Landing() {
                   <span className="l-plan__period">/mês</span>
                 </div>
 
-                {/* Área reservada pra PIX + savings — min-height fixo evita
-                    que a section/cards "pulem" ao trocar mensal/anual.
-                    Os elementos aparecem animados dentro do espaço reservado. */}
-                <div className="l-plan__price-info">
-                  {plan.monthly > 0 && (
-                    <span className={`l-plan__pix${annual ? ' l-plan__pix--visible' : ''}`}>
-                      R$ {formatPrice(plan.annual * 12)} à vista no PIX
-                    </span>
-                  )}
-
-                  <div className={`l-plan__savings-wrap${annual && plan.monthly > 0 ? ' is-visible' : ''}`}>
-                    <div className="l-plan__savings-inner">
-                      <span className="l-plan__savings">
-                        Economize R$ {formatPrice((plan.monthly - plan.annual) * 12)} por ano
+                {/* PIX — anima a altura via grid trick (igual ao savings) */}
+                {plan.monthly > 0 && (
+                  <div className={`l-plan__pix-wrap${annual ? ' is-visible' : ''}`}>
+                    <div className="l-plan__pix-inner">
+                      <span className="l-plan__pix">
+                        R$ {formatPrice(plan.annual * 12)} à vista no PIX
                       </span>
                     </div>
+                  </div>
+                )}
+
+                <div className={`l-plan__savings-wrap${annual && plan.monthly > 0 ? ' is-visible' : ''}`}>
+                  <div className="l-plan__savings-inner">
+                    <span className="l-plan__savings">
+                      Economize R$ {formatPrice((plan.monthly - plan.annual) * 12)} por ano
+                    </span>
                   </div>
                 </div>
                 <p className="l-plan__desc">{plan.desc}</p>

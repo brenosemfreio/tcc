@@ -1262,6 +1262,9 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   align-items: start;
+  /* min-height calculado pro estado anual (cards com PIX + savings).
+     Mantém a section com tamanho estável; cards crescem dentro deste espaço. */
+  min-height: 660px;
 }
 
 .l-plan {
@@ -1387,16 +1390,19 @@
   flex-shrink: 0;
 }
 
-/* Wrapper que reserva o espaço de PIX + savings —
-   evita o card/section "pular" ao trocar mensal/anual */
-.l-plan__price-info {
-  min-height: 70px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+/* Valor à vista no PIX (plano anual) — anima altura suavemente igual ao savings */
+.l-plan__pix-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 320ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-
-/* Valor à vista no PIX (plano anual) — animado com fade + slide */
+.l-plan__pix-wrap.is-visible {
+  grid-template-rows: 1fr;
+}
+.l-plan__pix-inner {
+  overflow: hidden;
+  min-height: 0;
+}
 .l-plan__pix {
   display: block;
   font-size: 0.875rem;
@@ -1408,7 +1414,7 @@
   transform: translateY(-4px);
   transition: opacity 200ms ease, transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.l-plan__pix--visible {
+.l-plan__pix-wrap.is-visible .l-plan__pix {
   opacity: 1;
   transform: translateY(0);
   transition: opacity 280ms ease 60ms,

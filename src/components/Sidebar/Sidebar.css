@@ -55,17 +55,21 @@
 .sidebar__logo {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 20px 16px 36px;
+  justify-content: flex-start;  /* alinhado à esquerda quando aberta */
+  padding: 20px 20px 36px;
   min-height: 68px;
   flex-shrink: 0;
   text-decoration: none;
   cursor: pointer;
   transition: opacity var(--transition-fast),
-              padding var(--sb-dur) var(--sb-ease);
+              padding var(--sb-dur) var(--sb-ease),
+              justify-content var(--sb-dur) var(--sb-ease);
 }
 .sidebar__logo:hover { opacity: 0.85; }
-.sidebar--collapsed .sidebar__logo { padding: 20px 10px 36px; }
+.sidebar--collapsed .sidebar__logo {
+  padding: 20px 10px 36px;
+  justify-content: center;
+}
 
 /* Stage: container relativo onde as duas imagens se sobrepõem */
 .sidebar__logo-stage {
@@ -319,6 +323,17 @@
   padding: 12px 10px;
   justify-content: center;
 }
+.sidebar__avatar-link {
+  display: inline-flex;
+  flex-shrink: 0;
+  border-radius: 50%;
+  text-decoration: none;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+.sidebar__avatar-link:hover {
+  opacity: 0.88;
+  transform: scale(1.04);
+}
 .sidebar__avatar {
   width: 34px;
   height: 34px;
@@ -333,15 +348,20 @@
   flex-shrink: 0;
 }
 .sidebar__user-info {
+  flex: 1;                     /* empurra o logout pra direita */
   min-width: 0;
   overflow: hidden;
   margin-left: 10px;
   max-width: 200px;
   opacity: 1;
+  text-decoration: none;
+  cursor: pointer;
+  display: block;
   transition: max-width var(--sb-dur) var(--sb-ease),
               margin-left var(--sb-dur) var(--sb-ease),
               opacity calc(var(--sb-dur) * 0.6) ease;
 }
+.sidebar__user-info:hover .sidebar__user-name { color: var(--color-primary); }
 .sidebar__user-name {
   display: block;
   font-size: var(--font-size-xs);
@@ -387,6 +407,16 @@
 }
 .sidebar--collapsed .sidebar__logout {
   max-width: 0;
+  width: 0;          /* garante 0px de espaço */
+  margin-left: 0;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.sidebar--collapsed .sidebar__user-info {
+  max-width: 0;
+  width: 0;          /* garante 0px de espaço */
+  flex: 0 0 0;       /* não cresce nem encolhe */
   margin-left: 0;
   opacity: 0;
   pointer-events: none;

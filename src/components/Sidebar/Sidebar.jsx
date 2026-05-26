@@ -150,13 +150,24 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
         </div>
       </nav>
 
-      {/* User */}
+      {/* User — avatar é link pra futura página de perfil */}
       <div className="sidebar__user">
-        <div className="sidebar__avatar">{getInitials(user?.name)}</div>
-        <div className="sidebar__user-info">
+        <Link
+          to="/dashboard/perfil"
+          className="sidebar__avatar-link"
+          aria-label="Ver perfil"
+          data-tooltip="Perfil"
+        >
+          <div className="sidebar__avatar">{getInitials(user?.name)}</div>
+        </Link>
+        <Link
+          to="/dashboard/perfil"
+          className="sidebar__user-info"
+          aria-label="Ver perfil"
+        >
           <span className="sidebar__user-name">{user?.name}</span>
           <span className="sidebar__user-email">{user?.email}</span>
-        </div>
+        </Link>
         <button
           className="sidebar__logout"
           onClick={handleLogout}

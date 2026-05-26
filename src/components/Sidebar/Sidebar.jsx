@@ -13,8 +13,7 @@ import logoHubIcon from '../../assets/images/logo-hub-icon.png'
 import './Sidebar.css'
 
 const NAV_ITEMS = [
-  { to: '/dashboard',         icon: LuLayoutDashboard, label: 'Dashboard', end: true },
-  { to: '/dashboard/equipes', icon: LuUsers,           label: 'Equipes' },
+  { to: '/dashboard', icon: LuLayoutDashboard, label: 'Dashboard', end: true },
 ]
 
 const BOTTOM_ITEMS = [
@@ -95,6 +94,18 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
           <LuSquarePen size={20} className="sidebar__item-icon" />
           <span className="sidebar__item-label">Posts</span>
         </button>
+
+        {/* Equipes — em desenvolvimento */}
+        <NavLink
+          to="/dashboard/equipes"
+          data-tooltip="Equipes"
+          className={({ isActive }) =>
+            `sidebar__item ${isActive ? 'sidebar__item--active' : ''}`
+          }
+        >
+          <LuUsers size={20} className="sidebar__item-icon" />
+          <span className="sidebar__item-label">Equipes</span>
+        </NavLink>
       </nav>
 
       <div className="sidebar__divider" />

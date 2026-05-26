@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
-  LuArrowRight, LuCheck, LuStar, LuChevronRight,
+  LuArrowRight, LuArrowUpRight, LuCheck, LuStar, LuChevronRight,
   LuZap, LuMessageCircle, LuRotateCcw, LuShieldCheck, LuCreditCard,
 } from 'react-icons/lu'
 
@@ -378,7 +378,7 @@ export default function Landing() {
                 <Button
                   variant={plan.highlight ? 'primary' : 'outline'}
                   fullWidth
-                  iconRight={<LuArrowRight />}
+                  iconRight={plan.highlight ? <LuArrowUpRight /> : <LuArrowRight />}
                   onClick={() => navigate('/cadastro')}
                 >
                   {plan.cta}

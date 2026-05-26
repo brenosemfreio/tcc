@@ -32,6 +32,12 @@ const HERO_AVATARS = ['#7C5FE8', '#E84FA5', '#4F35E8', '#B44FE8']
 
 const STEPS_PERKS = ['Grátis para começar', 'Sem cartão de crédito', 'Cancele quando quiser']
 
+// Formata o preço no padrão brasileiro: inteiros sem decimal ("0"), decimais com ","
+const formatPrice = (n) => {
+  if (n === 0) return '0'
+  return n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
+
 export default function Landing() {
   const navigate = useNavigate()
   const [annual, setAnnual] = useState(false)
@@ -355,14 +361,14 @@ export default function Landing() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.25 }}
                   >
-                    {annual ? plan.annual : plan.monthly}
+                    {formatPrice(annual ? plan.annual : plan.monthly)}
                   </motion.span>
                   <span className="l-plan__period">/mês</span>
                 </div>
                 <div className={`l-plan__savings-wrap${annual && plan.monthly > 0 ? ' is-visible' : ''}`}>
                   <div className="l-plan__savings-inner">
                     <span className="l-plan__savings">
-                      Economiza R$ {(plan.monthly - plan.annual) * 12}/ano
+                      Economiza R$ {formatPrice((plan.monthly - plan.annual) * 12)}/ano
                     </span>
                   </div>
                 </div>

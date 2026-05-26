@@ -58,8 +58,8 @@ export const PLANS = [
   {
     name: 'Pro',
     tagline: 'CRIADOR PRO',
-    monthly: 79,
-    annual: 63,
+    monthly: 39.90,
+    annual: 31.90,
     desc: 'Para criadores prontos para dominar o algoritmo.',
     cta: 'Assinar o Pro',
     features: ['Até 10 perfis sociais', 'Posts ilimitados', 'Analytics avançado', 'Agendamento com IA', 'Calendário editorial', 'Sugestões de hashtags', 'Suporte prioritário'],
@@ -68,8 +68,8 @@ export const PLANS = [
   {
     name: 'Elite',
     tagline: 'AGÊNCIAS & TIMES',
-    monthly: 199,
-    annual: 159,
+    monthly: 99.90,
+    annual: 79.90,
     desc: 'Acesso ilimitado para agências e times.',
     cta: 'Assinar o Elite',
     features: ['Perfis ilimitados', 'Posts ilimitados', 'Analytics premium', 'IA completa', 'Calendário avançado', 'Multi-usuário', 'Gerente dedicado', 'Suporte 24/7'],

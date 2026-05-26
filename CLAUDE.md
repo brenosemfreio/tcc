@@ -113,10 +113,9 @@ openPostModal({ text: '...', networks: [...] })  // prefill opcional
 Para evitar inchaço do `Landing.jsx`, os sub-componentes e dados ficam separados:
 
 - `src/pages/Landing/Landing.jsx` — composição da página (apenas JSX das seções).
-- `src/pages/Landing/data.js` — `PLATFORMS`, `FEATURES`, `STEPS`, `PLANS`, `FAQS`, `MOCKUP_BARS`, variants `fadeUp`.
+- `src/pages/Landing/data.js` — `FEATURES`, `STEPS`, `PLANS`, `FAQS`, `MOCKUP_BARS`, variants `fadeUp`.
 - `src/pages/Landing/components/`:
   - `HeroMockup.jsx` — dashboard mockup + badges flutuantes do hero.
-  - `Marquee.jsx` — strip animada de plataformas (controlada por `requestAnimationFrame`).
   - `Counter.jsx` — contador animado dos stats.
   - `FaqItem.jsx` — item de FAQ com accordion.
   - `FeaturePreviews.jsx` — `FeatureCalendarPreview`, `FeatureChartPreview`, `FeatureHashtagsPreview`, `FeaturePlatformsPreview`.

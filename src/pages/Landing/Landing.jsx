@@ -10,7 +10,6 @@ import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import Button from '../../components/Button/Button'
 
-import Marquee from './components/Marquee'
 import Counter from './components/Counter'
 import FaqItem from './components/FaqItem'
 import HeroMockup from './components/HeroMockup'
@@ -19,7 +18,7 @@ import {
   FeatureHashtagsPreview, FeaturePlatformsPreview,
 } from './components/FeaturePreviews'
 
-import { PLATFORMS, FEATURES, STEPS, PLANS, FAQS, fadeUp } from './data'
+import { FEATURES, STEPS, PLANS, FAQS, fadeUp } from './data'
 import './Landing.css'
 
 const PREVIEWS = {
@@ -274,14 +273,6 @@ export default function Landing() {
           </div>
         </div>
       </section>
-
-      {/* ── Marquee plataformas ──────────────────────── */}
-      <div className="l-marquee-strip">
-        <div className="l-marquee-strip__inner">
-          <span className="l-marquee-strip__label">INTEGRA COM AS MAIORES PLATAFORMAS</span>
-          <Marquee items={PLATFORMS} />
-        </div>
-      </div>
 
       {/* ── Pricing ──────────────────────────────────── */}
       <section className="l-pricing" id="precos">

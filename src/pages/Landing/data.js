@@ -2,20 +2,6 @@ import {
   LuCalendarClock, LuChartBar, LuShare2, LuBrain, LuTrendingUp,
   LuRotateCcw, LuUser, LuGift, LuMessageCircle,
 } from 'react-icons/lu'
-import {
-  FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin, FaPinterest,
-} from 'react-icons/fa'
-import { FaXTwitter } from 'react-icons/fa6'
-
-export const PLATFORMS = [
-  { icon: FaPinterest, name: 'Pinterest',  color: '#E60023' },
-  { icon: FaXTwitter,  name: 'X',          color: '#000'    },
-  { icon: FaInstagram, name: 'Instagram',  color: '#E1306C' },
-  { icon: FaTiktok,    name: 'TikTok',     color: '#010101' },
-  { icon: FaYoutube,   name: 'YouTube',    color: '#FF0000' },
-  { icon: FaFacebook,  name: 'Facebook',   color: '#1877F2' },
-  { icon: FaLinkedin,  name: 'LinkedIn',   color: '#0A66C2' },
-]
 
 export const FEATURES = [
   {

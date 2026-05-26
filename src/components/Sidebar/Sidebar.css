@@ -113,9 +113,9 @@
   font-size: var(--font-size-sm);
   font-family: var(--font-family);
   cursor: pointer;
-  overflow: hidden;
   white-space: nowrap;
   position: relative;
+  /* sem overflow: hidden — pra não cortar o tooltip. label interna clipa sozinha */
   transition: border-color var(--transition-fast),
               color var(--transition-fast),
               padding var(--sb-dur) var(--sb-ease),
@@ -194,8 +194,8 @@
   border: none;
   background: none;
   font-family: var(--font-family);
-  overflow: hidden;
   position: relative;
+  /* sem overflow: hidden — labels internas clipam sozinhas e tooltip precisa escapar */
   transition: background var(--transition-fast),
               color var(--transition-fast),
               padding var(--sb-dur) var(--sb-ease);
@@ -274,8 +274,9 @@
   color: var(--color-text-secondary);
   cursor: pointer;
   white-space: nowrap;
-  overflow: hidden;
   font-family: var(--font-family);
+  position: relative;
+  /* sem overflow: hidden — pra tooltip não ser cortado */
   transition: background var(--transition-fast),
               color var(--transition-fast),
               padding var(--sb-dur) var(--sb-ease);
@@ -314,8 +315,8 @@
   align-items: center;
   padding: 12px 14px;
   border-top: 1px solid var(--color-border);
-  overflow: hidden;
   flex-shrink: 0;
+  /* sem overflow: hidden — pra não cortar o tooltip do avatar */
   transition: padding var(--sb-dur) var(--sb-ease),
               justify-content var(--sb-dur) var(--sb-ease);
 }

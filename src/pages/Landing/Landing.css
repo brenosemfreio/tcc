@@ -1394,10 +1394,13 @@
 .l-plan__pix-wrap {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: -18px;       /* anula o gap do flex quando colapsado */
+  transition: grid-template-rows 320ms cubic-bezier(0.16, 1, 0.3, 1),
+              margin-top 320ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .l-plan__pix-wrap.is-visible {
   grid-template-rows: 1fr;
+  margin-top: -10px;       /* aproxima do preço quando visível */
 }
 .l-plan__pix-inner {
   overflow: hidden;
@@ -1408,7 +1411,6 @@
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--color-text-secondary);
-  margin-top: -8px;
   margin-left: 18px;
   opacity: 0;
   transform: translateY(-4px);
@@ -1425,11 +1427,14 @@
 .l-plan__savings-wrap {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: -18px;       /* anula o gap do flex quando colapsado */
+  transition: grid-template-rows 320ms cubic-bezier(0.16, 1, 0.3, 1),
+              margin-top 320ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .l-plan__savings-wrap.is-visible {
   grid-template-rows: 1fr;
+  margin-top: 0;
 }
 
 .l-plan__savings-inner {

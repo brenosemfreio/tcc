@@ -1,7 +1,7 @@
 import { NavLink, Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
-  LuLayoutDashboard, LuSquarePen,
+  LuLayoutDashboard, LuSquarePen, LuUsers,
   LuSettings, LuCircleHelp, LuSun, LuMoon,
   LuLogOut, LuChevronLeft, LuChevronRight, LuSearch,
 } from 'react-icons/lu'
@@ -13,7 +13,8 @@ import logoHubIcon from '../../assets/images/logo-hub-icon.png'
 import './Sidebar.css'
 
 const NAV_ITEMS = [
-  { to: '/dashboard', icon: LuLayoutDashboard, label: 'Dashboard', end: true },
+  { to: '/dashboard',         icon: LuLayoutDashboard, label: 'Dashboard', end: true },
+  { to: '/dashboard/equipes', icon: LuUsers,           label: 'Equipes' },
 ]
 
 const BOTTOM_ITEMS = [

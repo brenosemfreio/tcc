@@ -35,6 +35,7 @@ npm run preview    # preview do build
 | `/entrar` | Login | não |
 | `/cadastro` | Cadastro | não |
 | `/dashboard` | DashboardHome | sim |
+| `/dashboard/equipes` | Equipes (placeholder em construção) | sim |
 | `/dashboard/configuracoes` | Configuracoes | sim |
 
 ### Contextos globais

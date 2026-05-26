@@ -354,21 +354,34 @@ export default function Landing() {
                 </div>
                 <div className="l-plan__price">
                   <span className="l-plan__currency">R$</span>
-                  <motion.span
-                    className="l-plan__amount"
-                    key={annual ? 'a' : 'm'}
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.25 }}
-                  >
-                    {formatPrice(annual ? plan.annual : plan.monthly)}
-                  </motion.span>
+                  {plan.monthly === 0 ? (
+                    // Plano gratuito — sem animação, evita "tremor" ao trocar mensal/anual
+                    <span className="l-plan__amount">0</span>
+                  ) : (
+                    <motion.span
+                      className="l-plan__amount"
+                      key={annual ? 'a' : 'm'}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.25 }}
+                    >
+                      {formatPrice(annual ? plan.annual : plan.monthly)}
+                    </motion.span>
+                  )}
                   <span className="l-plan__period">/mês</span>
                 </div>
+
+                {/* Valor à vista no PIX — só aparece no plano anual (com preço > 0) */}
+                {annual && plan.monthly > 0 && (
+                  <span className="l-plan__pix">
+                    R$ {formatPrice(plan.annual * 12)} à vista no PIX
+                  </span>
+                )}
+
                 <div className={`l-plan__savings-wrap${annual && plan.monthly > 0 ? ' is-visible' : ''}`}>
                   <div className="l-plan__savings-inner">
                     <span className="l-plan__savings">
-                      Economiza R$ {formatPrice((plan.monthly - plan.annual) * 12)}/ano
+                      Economize R$ {formatPrice((plan.monthly - plan.annual) * 12)} por ano
                     </span>
                   </div>
                 </div>

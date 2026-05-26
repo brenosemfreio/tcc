@@ -1387,14 +1387,32 @@
   flex-shrink: 0;
 }
 
-/* Valor à vista no PIX (plano anual) */
+/* Wrapper que reserva o espaço de PIX + savings —
+   evita o card/section "pular" ao trocar mensal/anual */
+.l-plan__price-info {
+  min-height: 70px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Valor à vista no PIX (plano anual) — animado com fade + slide */
 .l-plan__pix {
   display: block;
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--color-text-secondary);
-  margin-top: -8px;          /* sobe pra ficar mais próximo do preço */
-  margin-left: 18px;         /* leve deslocamento à direita */
+  margin-top: -8px;
+  margin-left: 18px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 200ms ease, transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.l-plan__pix--visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 280ms ease 60ms,
+              transform 320ms cubic-bezier(0.16, 1, 0.3, 1) 60ms;
 }
 
 /* Economia anual — wrap com grid trick para animação suave */

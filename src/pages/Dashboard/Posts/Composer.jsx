@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import {
-  LuArrowLeft, LuSave, LuSend, LuCalendarClock,
+  LuArrowLeft, LuSave, LuSend, LuCalendarClock, LuImage,
 } from 'react-icons/lu'
 import { FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin } from 'react-icons/fa'
 import {
@@ -9,6 +9,8 @@ import {
 } from '../../../services/posts'
 import { useAuth } from '../../../contexts/AuthContext'
 import PhonePreview from './components/PhonePreview'
+import MediaUploader from './components/MediaUploader'
+import DateTimePicker from './components/DateTimePicker'
 import './Composer.css'
 
 const NETWORK_ICONS = {
@@ -24,15 +26,21 @@ const NETWORK_IDS = ['instagram', 'tiktok', 'youtube', 'facebook', 'linkedin']
 export default function Composer() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { user } = useAuth()
   const isEditing = Boolean(id)
+
+  // Suporta pré-agendamento via querystring (?date=YYYY-MM-DDTHH:MM)
+  // usado quando o usuário clica num dia vazio na view de calendário
+  const initialDate = searchParams.get('date') || ''
 
   const [form, setForm] = useState({
     title: '',
     content: '',
     networks: [],
     typesByNetwork: {},     // { instagram: 'feed', tiktok: 'video' }
-    scheduledFor: '',
+    scheduledFor: initialDate,
+    media: [],              // [{ id, file, name, type, url }]
   })
   const [loading, setLoading] = useState(false)
   const [feedback, setFeedback] = useState('')
@@ -254,22 +262,38 @@ export default function Composer() {
             </div>
           )}
 
-          {/* PASSO 4 — Agendamento */}
+          {/* PASSO 4 — Mídia */}
           {hasNetworks && (
             <div className="composer__step">
               <div className="composer__step-head">
                 <span className="composer__step-num">4</span>
+                <h3>Mídia</h3>
+                <span className="composer__step-hint">
+                  <LuImage size={12} /> Imagens ou vídeos pra acompanhar o post
+                </span>
+              </div>
+              <MediaUploader
+                media={form.media}
+                onChange={(media) => updateField('media', media)}
+              />
+            </div>
+          )}
+
+          {/* PASSO 5 — Agendamento */}
+          {hasNetworks && (
+            <div className="composer__step">
+              <div className="composer__step-head">
+                <span className="composer__step-num">5</span>
                 <h3>Quando publicar?</h3>
               </div>
               <div className="composer__field">
-                <label htmlFor="schedule">
+                <label>
                   <LuCalendarClock size={14} /> Data e hora
                 </label>
-                <input
-                  id="schedule"
-                  type="datetime-local"
+                <DateTimePicker
                   value={form.scheduledFor}
-                  onChange={e => updateField('scheduledFor', e.target.value)}
+                  onChange={(v) => updateField('scheduledFor', v)}
+                  placeholder="Escolha quando publicar"
                 />
                 <span className="composer__hint">
                   Deixe vazio pra salvar como rascunho sem agendar.

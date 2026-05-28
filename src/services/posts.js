@@ -181,3 +181,82 @@ export const STATUS_META = {
   failed:    { label: 'Falhou',                color: '#EF4444' },
   rejected:  { label: 'Rejeitado',             color: '#EF4444' },
 }
+
+/**
+ * Metadados das redes sociais para o composer.
+ * Cada rede tem seus próprios tipos de conteúdo (formatos), limite de caracteres
+ * e campos extras necessários (ex: YouTube exige título).
+ */
+export const NETWORK_META = {
+  instagram: {
+    label: 'Instagram',
+    color: '#E1306C',
+    types: [
+      { id: 'feed',     label: 'Post',      orientation: 'square'   },
+      { id: 'reel',     label: 'Reel',      orientation: 'vertical' },
+      { id: 'story',    label: 'Story',     orientation: 'vertical' },
+      { id: 'carousel', label: 'Carrossel', orientation: 'square'   },
+    ],
+    maxChars: 2200,
+    needsTitle: false,
+  },
+  tiktok: {
+    label: 'TikTok',
+    color: '#010101',
+    types: [
+      { id: 'video', label: 'Vídeo', orientation: 'vertical' },
+      { id: 'photo', label: 'Foto',  orientation: 'vertical' },
+    ],
+    maxChars: 2200,
+    needsTitle: false,
+  },
+  youtube: {
+    label: 'YouTube',
+    color: '#FF0000',
+    types: [
+      { id: 'video',  label: 'Vídeo',  orientation: 'horizontal' },
+      { id: 'shorts', label: 'Shorts', orientation: 'vertical'   },
+    ],
+    maxChars: 5000,
+    needsTitle: true,  // YouTube sempre exige título
+    needsThumbnail: true,
+  },
+  facebook: {
+    label: 'Facebook',
+    color: '#1877F2',
+    types: [
+      { id: 'post', label: 'Post', orientation: 'square'   },
+      { id: 'reel', label: 'Reel', orientation: 'vertical' },
+    ],
+    maxChars: 5000,
+    needsTitle: false,
+  },
+  linkedin: {
+    label: 'LinkedIn',
+    color: '#0A66C2',
+    types: [
+      { id: 'post',    label: 'Post',   orientation: 'square'     },
+      { id: 'article', label: 'Artigo', orientation: 'horizontal', needsTitle: true },
+    ],
+    maxChars: 3000,
+    needsTitle: false,
+  },
+}
+
+// Helper — retorna o maior limite entre as redes selecionadas (regra: cabe em todas)
+export const minMaxChars = (networks) => {
+  if (!networks.length) return 5000
+  return Math.min(...networks.map(n => NETWORK_META[n]?.maxChars || 5000))
+}
+
+// Helper — true se alguma rede/tipo selecionado exige título
+export const needsTitle = (networks, typesByNetwork) => {
+  return networks.some(n => {
+    const meta = NETWORK_META[n]
+    if (!meta) return false
+    if (meta.needsTitle) return true
+    const typeId = typesByNetwork[n]
+    const typeMeta = meta.types.find(t => t.id === typeId)
+    return typeMeta?.needsTitle === true
+  })
+}

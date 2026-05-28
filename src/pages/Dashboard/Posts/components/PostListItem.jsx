@@ -35,7 +35,7 @@ function relativeDate(iso, status) {
   return `${date} · ${time}`
 }
 
-export default function PostListItem({ post, onAction }) {
+export default function PostListItem({ post, onAction, onReview }) {
   const navigate = useNavigate()
   const TypeIcon = TYPE_ICONS[post.type] || LuFileText
 
@@ -45,7 +45,11 @@ export default function PostListItem({ post, onAction }) {
     post.status === 'failed'    ? post.scheduledFor :
                                   post.scheduledFor
 
-  const handleEdit = () => navigate(`/dashboard/posts/${post.id}/editar`)
+  // Clicar no título: pendente → abre drawer de revisão; outros → editar
+  const handleTitleClick = () => {
+    if (onReview) onReview()
+    else navigate(`/dashboard/posts/${post.id}/editar`)
+  }
 
   return (
     <div className={`post-row post-row--${post.status}`}>
@@ -57,7 +61,7 @@ export default function PostListItem({ post, onAction }) {
       {/* Body */}
       <div className="post-row__body">
         <div className="post-row__head">
-          <h3 className="post-row__title" onClick={handleEdit}>{post.title}</h3>
+          <h3 className="post-row__title" onClick={handleTitleClick}>{post.title}</h3>
           <StatusBadge status={post.status} />
         </div>
         <p className="post-row__content">{post.content}</p>
@@ -90,8 +94,17 @@ export default function PostListItem({ post, onAction }) {
         )}
       </div>
 
-      {/* Menu */}
+      {/* Menu + botão de revisar (pra posts pending) */}
       <div className="post-row__actions">
+        {onReview && (
+          <button
+            type="button"
+            className="post-row__review-btn"
+            onClick={onReview}
+          >
+            Revisar
+          </button>
+        )}
         <PostMenu
           post={post}
           onEdit={() => onAction('edit', post)}

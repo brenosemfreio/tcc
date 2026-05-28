@@ -6,12 +6,14 @@ import { dashFadeUp as fadeUp } from '../../../styles/animations'
 import PostsHeader from './components/PostsHeader'
 import StatusTabs from './components/StatusTabs'
 import PostListItem from './components/PostListItem'
+import ApprovalDrawer from './components/ApprovalDrawer'
 import './Posts.css'
 
 export default function Posts() {
   const [posts, setPosts] = useState([])
   const [activeTab, setActiveTab] = useState('all')
   const [query, setQuery] = useState('')
+  const [reviewingPost, setReviewingPost] = useState(null)  // post sendo revisado no drawer
 
   useEffect(() => {
     getAllPosts().then(setPosts)
@@ -52,19 +54,26 @@ export default function Posts() {
         ? { ...p, status: 'pending', submittedAt: new Date().toISOString() }
         : p
       ))
-    } else if (action === 'approve') {
-      setPosts(prev => prev.map(p => p.id === post.id
-        ? { ...p, status: 'scheduled', approvedAt: new Date().toISOString() }
+    } else if (action === 'approve' || action === 'reject') {
+      // Abre o drawer de aprovação pra revisar com calma + comentários
+      setReviewingPost(post)
+    }
+    // 'edit' é tratado direto no PostListItem via navigate
+  }
+
+  // Decisão final tomada dentro do ApprovalDrawer
+  const handleApprovalDecision = (decision, updatedPost) => {
+    if (decision === 'approve') {
+      setPosts(prev => prev.map(p => p.id === updatedPost.id
+        ? { ...p, status: 'scheduled', approvedAt: new Date().toISOString(), comments: updatedPost.comments }
         : p
       ))
-    } else if (action === 'reject') {
-      const reason = window.prompt('Motivo da rejeição (opcional):') || ''
-      setPosts(prev => prev.map(p => p.id === post.id
-        ? { ...p, status: 'rejected', rejectedAt: new Date().toISOString(), comments: [...p.comments, { id: Date.now(), author: 'Você', text: reason, createdAt: new Date().toISOString() }] }
+    } else if (decision === 'reject') {
+      setPosts(prev => prev.map(p => p.id === updatedPost.id
+        ? { ...p, status: 'rejected', rejectedAt: new Date().toISOString(), comments: updatedPost.comments }
         : p
       ))
     }
-    // 'edit' é tratado direto no PostListItem via navigate
   }
 
   return (
@@ -100,11 +109,22 @@ export default function Posts() {
               key={post.id}
               variants={fadeUp} initial="hidden" animate="visible" custom={i}
             >
-              <PostListItem post={post} onAction={handleAction} />
+              <PostListItem
+                post={post}
+                onAction={handleAction}
+                onReview={post.status === 'pending' ? () => setReviewingPost(post) : null}
+              />
             </motion.div>
           ))
         )}
       </div>
+
+      <ApprovalDrawer
+        post={reviewingPost}
+        isOpen={Boolean(reviewingPost)}
+        onClose={() => setReviewingPost(null)}
+        onAction={handleApprovalDecision}
+      />
     </div>
   )
 }

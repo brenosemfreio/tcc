@@ -1,30 +1,25 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   LuArrowLeft, LuSave, LuSend, LuCalendarClock,
-  LuImage, LuVideo, LuLayoutGrid, LuFileText,
 } from 'react-icons/lu'
-import { getPostById } from '../../../services/posts'
+import { FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin } from 'react-icons/fa'
+import {
+  getPostById, NETWORK_META, minMaxChars, needsTitle as needsTitleFn,
+} from '../../../services/posts'
 import { useAuth } from '../../../contexts/AuthContext'
-import NetworkPills from './components/NetworkPills'
+import PhonePreview from './components/PhonePreview'
 import './Composer.css'
 
-const NETWORK_OPTIONS = [
-  { value: 'instagram', label: 'Instagram' },
-  { value: 'tiktok',    label: 'TikTok' },
-  { value: 'youtube',   label: 'YouTube' },
-  { value: 'facebook',  label: 'Facebook' },
-  { value: 'linkedin',  label: 'LinkedIn' },
-]
+const NETWORK_ICONS = {
+  instagram: FaInstagram,
+  tiktok:    FaTiktok,
+  youtube:   FaYoutube,
+  facebook:  FaFacebook,
+  linkedin:  FaLinkedin,
+}
 
-const TYPE_OPTIONS = [
-  { value: 'post',     label: 'Post',      icon: LuFileText },
-  { value: 'reel',     label: 'Reel',      icon: LuVideo },
-  { value: 'carousel', label: 'Carrossel', icon: LuLayoutGrid },
-  { value: 'image',    label: 'Imagem',    icon: LuImage },
-]
-
-const MAX_CHARS = 2200
+const NETWORK_IDS = ['instagram', 'tiktok', 'youtube', 'facebook', 'linkedin']
 
 export default function Composer() {
   const { id } = useParams()
@@ -36,7 +31,7 @@ export default function Composer() {
     title: '',
     content: '',
     networks: [],
-    type: 'post',
+    typesByNetwork: {},     // { instagram: 'feed', tiktok: 'video' }
     scheduledFor: '',
   })
   const [loading, setLoading] = useState(false)
@@ -47,11 +42,22 @@ export default function Composer() {
     if (!id) return
     getPostById(id).then(post => {
       if (post) {
+        // Mapeia o `type` antigo (string única) pra `typesByNetwork` por rede.
+        // No mock antigo o tipo era global — atribui ele a cada rede selecionada.
+        const typesByNetwork = {}
+        ;(post.networks || []).forEach(n => {
+          const meta = NETWORK_META[n]
+          if (meta) {
+            const matched = meta.types.find(t => t.id === post.type)
+            typesByNetwork[n] = matched ? matched.id : meta.types[0].id
+          }
+        })
+
         setForm({
           title: post.title || '',
           content: post.content || '',
           networks: post.networks || [],
-          type: post.type || 'post',
+          typesByNetwork,
           scheduledFor: post.scheduledFor ? post.scheduledFor.slice(0, 16) : '',
         })
       }
@@ -60,16 +66,47 @@ export default function Composer() {
 
   const updateField = (key, value) => setForm(f => ({ ...f, [key]: value }))
 
-  const toggleNetwork = (value) => {
+  // Toggle de rede: ao adicionar, escolhe o primeiro tipo por padrão. Ao remover,
+  // limpa o tipo daquela rede.
+  const toggleNetwork = (networkId) => {
+    setForm(f => {
+      const isSelected = f.networks.includes(networkId)
+      if (isSelected) {
+        const { [networkId]: _omit, ...rest } = f.typesByNetwork
+        return {
+          ...f,
+          networks: f.networks.filter(n => n !== networkId),
+          typesByNetwork: rest,
+        }
+      }
+      const meta = NETWORK_META[networkId]
+      const defaultType = meta?.types[0]?.id
+      return {
+        ...f,
+        networks: [...f.networks, networkId],
+        typesByNetwork: { ...f.typesByNetwork, [networkId]: defaultType },
+      }
+    })
+  }
+
+  const setTypeForNetwork = (networkId, typeId) => {
     setForm(f => ({
       ...f,
-      networks: f.networks.includes(value)
-        ? f.networks.filter(n => n !== value)
-        : [...f.networks, value],
+      typesByNetwork: { ...f.typesByNetwork, [networkId]: typeId },
     }))
   }
 
-  const canSubmit = form.content.trim().length > 0 && form.networks.length > 0
+  // Caracteres permitidos = menor maxChars entre as redes selecionadas
+  const maxChars = useMemo(() => minMaxChars(form.networks), [form.networks])
+  const titleRequired = useMemo(
+    () => needsTitleFn(form.networks, form.typesByNetwork),
+    [form.networks, form.typesByNetwork],
+  )
+
+  const hasContent = form.content.trim().length > 0
+  const hasTitle = !titleRequired || form.title.trim().length > 0
+  const hasNetworks = form.networks.length > 0
+  const canSubmit = hasContent && hasTitle && hasNetworks
 
   // Salva o post (mock — futuramente bate no backend)
   const handleSave = async (status) => {
@@ -103,108 +140,154 @@ export default function Composer() {
       <div className="composer__layout">
         {/* Coluna esquerda — formulário */}
         <div className="composer__form">
-          <div className="composer__field">
-            <label htmlFor="title">Título interno (não é publicado)</label>
-            <input
-              id="title"
-              type="text"
-              placeholder="Ex: Promo Black Friday"
-              value={form.title}
-              onChange={e => updateField('title', e.target.value)}
-            />
-          </div>
 
-          <div className="composer__field">
-            <label htmlFor="content">Texto da publicação</label>
-            <textarea
-              id="content"
-              placeholder="Escreva sua legenda aqui... use quebras de linha, emojis, hashtags."
-              value={form.content}
-              onChange={e => updateField('content', e.target.value.slice(0, MAX_CHARS))}
-              rows={10}
-            />
-            <span className="composer__counter">
-              {form.content.length} / {MAX_CHARS}
-            </span>
-          </div>
-
-          <div className="composer__field">
-            <label>Tipo de conteúdo</label>
-            <div className="composer__types">
-              {TYPE_OPTIONS.map(opt => {
-                const Icon = opt.icon
+          {/* PASSO 1 — Redes */}
+          <div className="composer__step">
+            <div className="composer__step-head">
+              <span className="composer__step-num">1</span>
+              <h3>Em quais redes você quer publicar?</h3>
+            </div>
+            <div className="composer__networks">
+              {NETWORK_IDS.map(id => {
+                const meta = NETWORK_META[id]
+                const Icon = NETWORK_ICONS[id]
+                const selected = form.networks.includes(id)
                 return (
                   <button
-                    key={opt.value}
+                    key={id}
                     type="button"
-                    className={`composer__type${form.type === opt.value ? ' composer__type--active' : ''}`}
-                    onClick={() => updateField('type', opt.value)}
+                    className={`composer__network-pill${selected ? ' composer__network-pill--active' : ''}`}
+                    style={selected ? { borderColor: meta.color, color: meta.color } : {}}
+                    onClick={() => toggleNetwork(id)}
                   >
                     <Icon size={18} />
-                    {opt.label}
+                    {meta.label}
                   </button>
                 )
               })}
             </div>
           </div>
 
-          <div className="composer__field">
-            <label>Redes onde publicar</label>
-            <div className="composer__networks">
-              {NETWORK_OPTIONS.map(opt => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  className={`composer__network${form.networks.includes(opt.value) ? ' composer__network--active' : ''}`}
-                  onClick={() => toggleNetwork(opt.value)}
-                >
-                  {opt.label}
-                </button>
-              ))}
+          {/* PASSO 2 — Tipo de conteúdo por rede (só aparece após escolher rede) */}
+          {hasNetworks && (
+            <div className="composer__step">
+              <div className="composer__step-head">
+                <span className="composer__step-num">2</span>
+                <h3>Que tipo de conteúdo em cada rede?</h3>
+              </div>
+              <div className="composer__type-groups">
+                {form.networks.map(networkId => {
+                  const meta = NETWORK_META[networkId]
+                  const Icon = NETWORK_ICONS[networkId]
+                  const selectedType = form.typesByNetwork[networkId]
+                  return (
+                    <div key={networkId} className="composer__type-group">
+                      <span className="composer__type-group-label">
+                        <Icon size={14} style={{ color: meta.color }} />
+                        {meta.label}
+                      </span>
+                      <div className="composer__type-pills">
+                        {meta.types.map(t => (
+                          <button
+                            key={t.id}
+                            type="button"
+                            className={`composer__type-pill${selectedType === t.id ? ' composer__type-pill--active' : ''}`}
+                            style={selectedType === t.id ? { borderColor: meta.color, color: meta.color, background: `${meta.color}10` } : {}}
+                            onClick={() => setTypeForNetwork(networkId, t.id)}
+                          >
+                            {t.label}
+                            <span className="composer__type-pill-orient">
+                              {t.orientation === 'vertical' && '9:16'}
+                              {t.orientation === 'square' && '1:1'}
+                              {t.orientation === 'horizontal' && '16:9'}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
             </div>
-          </div>
+          )}
 
-          <div className="composer__field">
-            <label htmlFor="schedule">
-              <LuCalendarClock size={14} /> Quando publicar
-            </label>
-            <input
-              id="schedule"
-              type="datetime-local"
-              value={form.scheduledFor}
-              onChange={e => updateField('scheduledFor', e.target.value)}
-            />
-            <span className="composer__hint">
-              Deixe vazio pra salvar como rascunho sem data.
-            </span>
-          </div>
+          {/* PASSO 3 — Conteúdo (título + texto) */}
+          {hasNetworks && (
+            <div className="composer__step">
+              <div className="composer__step-head">
+                <span className="composer__step-num">3</span>
+                <h3>Conteúdo da publicação</h3>
+              </div>
+
+              {titleRequired && (
+                <div className="composer__field">
+                  <label htmlFor="title">
+                    Título <span className="composer__required">obrigatório pro YouTube/Artigo</span>
+                  </label>
+                  <input
+                    id="title"
+                    type="text"
+                    placeholder="Ex: Como crescer no Instagram em 2026"
+                    value={form.title}
+                    onChange={e => updateField('title', e.target.value.slice(0, 100))}
+                  />
+                  <span className="composer__counter">{form.title.length} / 100</span>
+                </div>
+              )}
+
+              <div className="composer__field">
+                <label htmlFor="content">
+                  {titleRequired ? 'Descrição' : 'Legenda'}
+                </label>
+                <textarea
+                  id="content"
+                  placeholder="Escreva aqui... pode usar emojis, hashtags e quebras de linha"
+                  value={form.content}
+                  onChange={e => updateField('content', e.target.value.slice(0, maxChars))}
+                  rows={8}
+                />
+                <span className="composer__counter">
+                  {form.content.length} / {maxChars}
+                  {form.networks.length > 1 && ' (limite da rede mais restrita)'}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* PASSO 4 — Agendamento */}
+          {hasNetworks && (
+            <div className="composer__step">
+              <div className="composer__step-head">
+                <span className="composer__step-num">4</span>
+                <h3>Quando publicar?</h3>
+              </div>
+              <div className="composer__field">
+                <label htmlFor="schedule">
+                  <LuCalendarClock size={14} /> Data e hora
+                </label>
+                <input
+                  id="schedule"
+                  type="datetime-local"
+                  value={form.scheduledFor}
+                  onChange={e => updateField('scheduledFor', e.target.value)}
+                />
+                <span className="composer__hint">
+                  Deixe vazio pra salvar como rascunho sem agendar.
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Coluna direita — preview */}
-        <aside className="composer__preview">
-          <div className="composer__preview-card">
-            <div className="composer__preview-head">
-              <div className="composer__preview-avatar">
-                {user?.name?.[0]?.toUpperCase() || 'U'}
-              </div>
-              <div>
-                <strong>{user?.name || 'Você'}</strong>
-                <span>Pré-visualização</span>
-              </div>
-            </div>
-            <div className="composer__preview-body">
-              {form.content
-                ? form.content.split('\n').map((line, i) => <p key={i}>{line || ' '}</p>)
-                : <p className="composer__preview-empty">Sua legenda vai aparecer aqui...</p>
-              }
-            </div>
-            {form.networks.length > 0 && (
-              <div className="composer__preview-footer">
-                <span>Publicará em:</span>
-                <NetworkPills networks={form.networks} size={16} />
-              </div>
-            )}
-          </div>
+        <aside className="composer__preview-wrap">
+          <PhonePreview
+            networks={form.networks}
+            typesByNetwork={form.typesByNetwork}
+            title={form.title}
+            content={form.content}
+            user={user}
+          />
         </aside>
       </div>
 
@@ -216,7 +299,7 @@ export default function Composer() {
           type="button"
           className="composer__btn composer__btn--ghost"
           onClick={() => handleSave('draft')}
-          disabled={loading || !form.content.trim()}
+          disabled={loading || !hasContent}
         >
           <LuSave size={15} /> Salvar rascunho
         </button>

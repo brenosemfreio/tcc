@@ -225,7 +225,25 @@
   color: var(--color-error);
 }
 
-.post-row__actions { display: flex; align-items: flex-start; }
+.post-row__actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.post-row__review-btn {
+  background: var(--color-warning);
+  color: #fff;
+  border: none;
+  padding: 7px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: filter var(--transition-fast);
+}
+.post-row__review-btn:hover { filter: brightness(1.1); }
 
 /* ── Network pills ── */
 .net-pills {

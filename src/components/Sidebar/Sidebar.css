@@ -463,3 +463,98 @@
 .sidebar--collapsed [data-tooltip]:hover::after,
 .sidebar--collapsed [data-tooltip]:hover::before { opacity: 1; }
 .sidebar--collapsed [data-tooltip]:hover::after { transform: translateY(-50%) translateX(2px); }
+
+@media (max-width: 768px) {
+  .sidebar,
+  .sidebar--collapsed {
+    top: auto;
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    width: auto !important;
+    height: 62px;
+    border: 1px solid color-mix(in srgb, var(--color-border) 82%, transparent);
+    border-radius: 18px;
+    box-shadow: 0 18px 48px rgba(15, 23, 42, 0.16);
+    background: color-mix(in srgb, var(--color-sidebar-bg) 88%, transparent);
+    backdrop-filter: blur(18px);
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+  }
+
+  .sidebar__toggle,
+  .sidebar__logo,
+  .sidebar__search,
+  .sidebar__divider,
+  .sidebar__theme,
+  .sidebar__user,
+  .sidebar__nav--bottom button.sidebar__item {
+    display: none;
+  }
+
+  .sidebar__nav,
+  .sidebar__nav--bottom {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    gap: 8px;
+    flex: 0 1 auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sidebar__nav {
+    flex: 0 1 auto;
+    width: auto;
+  }
+
+  .sidebar__nav--bottom {
+    flex: 0 0 auto;
+    width: auto;
+  }
+
+  .sidebar__item,
+  .sidebar--collapsed .sidebar__item {
+    width: 48px;
+    height: 46px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 14px;
+  }
+
+  .sidebar__item-label,
+  .sidebar--collapsed .sidebar__item-label {
+    max-width: 0;
+    margin-left: 0;
+    opacity: 0;
+  }
+
+  .sidebar--collapsed [data-tooltip]::before,
+  .sidebar--collapsed [data-tooltip]::after {
+    display: none;
+  }
+}
+
+@media (max-width: 390px) {
+  .sidebar,
+  .sidebar--collapsed {
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+    height: 58px;
+    padding: 7px;
+  }
+
+  .sidebar__nav {
+    gap: 6px;
+  }
+
+  .sidebar__item,
+  .sidebar--collapsed .sidebar__item {
+    width: 44px;
+    height: 42px;
+  }
+}

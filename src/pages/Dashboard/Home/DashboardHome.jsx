@@ -157,13 +157,13 @@ export default function DashboardHome() {
           {/* Audience + Best Time lado a lado */}
           <div className="dash-home__row dash-home__row--2">
             <motion.div
-              className="chart-card"
+              className="chart-card chart-card--audience"
               variants={fadeUp} initial="hidden" animate="visible" custom={4}
             >
               <AudienceCard data={audience} />
             </motion.div>
             <motion.div
-              className="chart-card"
+              className="chart-card chart-card--best-time"
               variants={fadeUp} initial="hidden" animate="visible" custom={5}
             >
               <BestTimeCard onSchedule={(slot) => openPostModal({ text: '', schedule: slot })} />
@@ -185,7 +185,7 @@ export default function DashboardHome() {
         {/* Right column */}
         <div className="dash-home__right">
           <motion.div
-            className="chart-card"
+            className="chart-card chart-card--calendar"
             variants={fadeUp} initial="hidden" animate="visible" custom={1}
           >
             <h3>Calendário de publicações</h3>
@@ -196,7 +196,7 @@ export default function DashboardHome() {
           </motion.div>
 
           <motion.div
-            className="chart-card"
+            className="chart-card chart-card--goals"
             variants={fadeUp} initial="hidden" animate="visible" custom={2}
           >
             <GoalsCard />

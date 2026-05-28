@@ -17,8 +17,23 @@
 }
 
 @media (max-width: 768px) {
+  .dashboard-layout {
+    display: block;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
   .dashboard-main {
-    margin-left: 0;
-    padding: 16px;
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0 !important;
+    margin-right: auto;
+    padding: 16px 12px 88px;
+  }
+}
+
+@media (max-width: 390px) {
+  .dashboard-main {
+    padding-inline: 8px;
   }
 }

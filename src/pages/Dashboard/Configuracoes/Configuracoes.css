@@ -35,11 +35,37 @@
 }
 .config-tab:hover { background: var(--color-bg-tertiary); color: var(--color-text); }
 .config-tab--active { background: var(--color-primary); color: #fff; font-weight: 600; }
-.config-tab--active:hover { background: var(--color-primary-hover); }
+.config-tab--active:hover { background: var(--color-primary-hover); color: #fff; }
+
+[data-theme='dark'] .config-tab {
+  color: var(--color-text-secondary);
+}
+
+[data-theme='dark'] .config-tab:hover {
+  background: color-mix(in srgb, var(--color-primary) 14%, var(--color-bg-tertiary));
+  color: #F8FAFC;
+}
+
+[data-theme='dark'] .config-tab--active,
+[data-theme='dark'] .config-tab--active:hover {
+  background: var(--color-primary) !important;
+  color: #fff !important;
+}
+
+[data-theme='dark'] .config-tabs .config-tab.config-tab--active:hover,
+[data-theme='dark'] .config-tabs .config-tab.config-tab--active:focus-visible {
+  background: var(--color-primary-hover) !important;
+  color: #fff !important;
+}
+
+[data-theme='dark'] .config-tabs .config-tab.config-tab--active:hover svg,
+[data-theme='dark'] .config-tabs .config-tab.config-tab--active:focus-visible svg {
+  color: #fff !important;
+  stroke: currentColor;
+}
 
 /* Content */
 .config-content { min-width: 0; }
-.config-section {}
 .config-section h2 {
   font-size: var(--font-size-lg);
   font-weight: 700;

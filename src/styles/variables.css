@@ -85,16 +85,16 @@
 
 /* ── Dark mode ── */
 [data-theme='dark'] {
-  --color-bg: #0D0A1A;
-  --color-bg-secondary: #13102B;
-  --color-bg-tertiary: #1C1835;
-  --color-text: #F9FAFB;
-  --color-text-secondary: #C4B5FD;
-  --color-text-muted: #7C6FAE;
-  --color-border: #2D2547;
-  --color-border-light: #1C1835;
-  --color-card-bg: #13102B;
-  --color-sidebar-bg: #0D0A1A;
+  --color-bg: #0B1020;
+  --color-bg-secondary: #111827;
+  --color-bg-tertiary: #1F2937;
+  --color-text: #F8FAFC;
+  --color-text-secondary: #CBD5E1;
+  --color-text-muted: #94A3B8;
+  --color-border: rgba(148, 163, 184, 0.16);
+  --color-border-light: rgba(148, 163, 184, 0.10);
+  --color-card-bg: #151B2E;
+  --color-sidebar-bg: #0B1020;
   --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2);
   --shadow-card-hover: 0 4px 12px rgba(79, 53, 232, 0.25), 0 8px 32px rgba(0, 0, 0, 0.3);
   --color-primary-light: rgba(79, 53, 232, 0.2);

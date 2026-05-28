@@ -35,6 +35,9 @@ npm run preview    # preview do build
 | `/entrar` | Login | não |
 | `/cadastro` | Cadastro | não |
 | `/dashboard` | DashboardHome | sim |
+| `/dashboard/posts` | Posts (lista + filtros + ações) | sim |
+| `/dashboard/posts/novo` | Composer (criar post) | sim |
+| `/dashboard/posts/:id/editar` | Composer (editar post) | sim |
 | `/dashboard/equipes` | Equipes (placeholder em construção) | sim |
 | `/dashboard/configuracoes` | Configuracoes | sim |
 

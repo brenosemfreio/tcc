@@ -10,6 +10,8 @@ import Cadastro from './pages/Cadastro/Cadastro'
 import EsqueciSenha from './pages/EsqueciSenha/EsqueciSenha'
 import RedefinirSenha from './pages/RedefinirSenha/RedefinirSenha'
 import DashboardHome from './pages/Dashboard/Home/DashboardHome'
+import Posts from './pages/Dashboard/Posts/Posts'
+import Composer from './pages/Dashboard/Posts/Composer'
 import Equipes from './pages/Dashboard/Equipes/Equipes'
 import Configuracoes from './pages/Dashboard/Configuracoes/Configuracoes'
 
@@ -34,6 +36,9 @@ export default function App() {
               }
             >
               <Route index element={<DashboardHome />} />
+              <Route path="posts" element={<Posts />} />
+              <Route path="posts/novo" element={<Composer />} />
+              <Route path="posts/:id/editar" element={<Composer />} />
               <Route path="equipes" element={<Equipes />} />
               <Route path="configuracoes" element={<Configuracoes />} />
             </Route>

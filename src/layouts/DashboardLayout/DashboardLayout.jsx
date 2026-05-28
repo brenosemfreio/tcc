@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import Sidebar from '../../components/Sidebar/Sidebar'
-import PostModal from '../../components/PostModal/PostModal'
 import SearchModal from '../../components/SearchModal/SearchModal'
 import ShortcutsModal from '../../components/ShortcutsModal/ShortcutsModal'
 import OnboardingTour from '../../components/OnboardingTour/OnboardingTour'
@@ -9,22 +8,18 @@ import useKeyboardShortcuts from '../../hooks/useKeyboardShortcuts'
 import './DashboardLayout.css'
 
 export default function DashboardLayout() {
+  const navigate = useNavigate()
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const [showPostModal, setShowPostModal] = useState(false)
-  const [postModalPrefill, setPostModalPrefill] = useState(null)
   const [showSearch, setShowSearch] = useState(false)
   const [showShortcuts, setShowShortcuts] = useState(false)
 
-  const openPostModal = (prefill = null) => {
-    setPostModalPrefill(prefill)
-    setShowPostModal(true)
-  }
+  // Substituiu o antigo PostModal por navegação pra página de composição
+  const openComposer = () => navigate('/dashboard/posts/novo')
 
-  // Atalhos globais
   useKeyboardShortcuts({
     'mod+k': () => setShowSearch(true),
     '/':     () => setShowSearch(true),
-    'n':     () => openPostModal(),
+    'n':     openComposer,
     '?':     () => setShowShortcuts(true),
   })
 
@@ -33,23 +28,17 @@ export default function DashboardLayout() {
       <Sidebar
         isCollapsed={isCollapsed}
         onToggle={() => setIsCollapsed(c => !c)}
-        onNewPost={() => openPostModal()}
+        onNewPost={openComposer}
         onOpenSearch={() => setShowSearch(true)}
       />
       <main className="dashboard-main">
-        <Outlet context={{ openPostModal }} />
+        <Outlet />
       </main>
-
-      <PostModal
-        isOpen={showPostModal}
-        onClose={() => setShowPostModal(false)}
-        prefill={postModalPrefill}
-      />
 
       <SearchModal
         isOpen={showSearch}
         onClose={() => setShowSearch(false)}
-        onNewPost={() => openPostModal()}
+        onNewPost={openComposer}
       />
 
       <ShortcutsModal

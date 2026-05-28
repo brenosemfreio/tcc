@@ -84,16 +84,17 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
           </NavLink>
         ))}
 
-        {/* Posts */}
-        <button
-          type="button"
-          className="sidebar__item sidebar__item--post"
-          onClick={onNewPost}
+        {/* Posts — navega pra página dedicada */}
+        <NavLink
+          to="/dashboard/posts"
           data-tooltip="Posts"
+          className={({ isActive }) =>
+            `sidebar__item ${isActive ? 'sidebar__item--active' : ''}`
+          }
         >
           <LuSquarePen size={20} className="sidebar__item-icon" />
           <span className="sidebar__item-label">Posts</span>
-        </button>
+        </NavLink>
 
         {/* Equipes — em desenvolvimento */}
         <NavLink

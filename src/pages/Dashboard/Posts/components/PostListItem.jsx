@@ -35,7 +35,7 @@ function relativeDate(iso, status) {
   return `${date} · ${time}`
 }
 
-export default function PostListItem({ post, onAction, onReview }) {
+export default function PostListItem({ post, onAction, onReview, selected, onToggleSelect }) {
   const navigate = useNavigate()
   const TypeIcon = TYPE_ICONS[post.type] || LuFileText
 
@@ -52,7 +52,18 @@ export default function PostListItem({ post, onAction, onReview }) {
   }
 
   return (
-    <div className={`post-row post-row--${post.status}`}>
+    <div className={`post-row post-row--${post.status}${selected ? ' post-row--selected' : ''}`}>
+      {/* Checkbox de seleção (bulk) */}
+      {onToggleSelect && (
+        <label className="post-row__select" onClick={e => e.stopPropagation()}>
+          <input
+            type="checkbox"
+            checked={selected}
+            onChange={onToggleSelect}
+          />
+        </label>
+      )}
+
       {/* Thumb / placeholder */}
       <div className="post-row__thumb">
         <TypeIcon size={22} />

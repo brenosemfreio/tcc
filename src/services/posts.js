@@ -241,6 +241,16 @@ export const NETWORK_META = {
     maxChars: 3000,
     needsTitle: false,
   },
+  twitter: {
+    label: 'X (Twitter)',
+    color: '#000000',
+    types: [
+      { id: 'tweet',  label: 'Tweet',  orientation: 'square' },
+      { id: 'thread', label: 'Thread', orientation: 'square' },
+    ],
+    maxChars: 280,
+    needsTitle: false,
+  },
 }
 
 // Helper — retorna o maior limite entre as redes selecionadas (regra: cabe em todas)

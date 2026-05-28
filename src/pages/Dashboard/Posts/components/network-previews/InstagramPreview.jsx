@@ -2,11 +2,20 @@ import { LuHeart, LuMessageCircle, LuSend, LuBookmark, LuPlay, LuImage } from 'r
 
 const handle = (user) => (user?.name || 'voce').toLowerCase().replace(/\s+/g, '_')
 
-export default function InstagramPreview({ type = 'feed', content, user }) {
+// Renderiza a mídia (image/video) ou um placeholder
+function MediaSlot({ media, placeholderIcon }) {
+  const first = media?.[0]
+  if (!first) return placeholderIcon
+  if (first.type === 'video') return <video src={first.url} muted playsInline />
+  return <img src={first.url} alt="" />
+}
+
+export default function InstagramPreview({ type = 'feed', content, user, media = [] }) {
   const username = handle(user)
   const isVertical = type === 'reel' || type === 'story'
   const isStory = type === 'story'
   const isCarousel = type === 'carousel'
+  const firstMedia = media[0]
 
   // Story tem layout diferente — quase fullscreen, texto sobreposto
   if (isStory) {
@@ -19,7 +28,7 @@ export default function InstagramPreview({ type = 'feed', content, user }) {
         </div>
         <div className="np-ig__story-bar"><span /></div>
         <div className="np-ig__story-media">
-          <LuImage size={48} />
+          <MediaSlot media={media} placeholderIcon={<LuImage size={48} />} />
         </div>
         {content && (
           <div className="np-ig__story-text">{content.split('\n')[0]}</div>
@@ -41,10 +50,14 @@ export default function InstagramPreview({ type = 'feed', content, user }) {
       </div>
 
       {/* Mídia */}
-      <div className={`np-ig__media np-ig__media--${isVertical ? 'vert' : 'square'}`}>
-        {type === 'reel' && <LuPlay size={36} className="np-ig__play" />}
-        {!isVertical && <LuImage size={36} />}
-        {isCarousel && <span className="np-ig__indicator">1/3</span>}
+      <div className={`np-ig__media np-ig__media--${isVertical ? 'vert' : 'square'}${firstMedia ? ' np-ig__media--filled' : ''}`}>
+        <MediaSlot
+          media={media}
+          placeholderIcon={!isVertical ? <LuImage size={36} /> : null}
+        />
+        {type === 'reel' && !firstMedia && <LuPlay size={36} className="np-ig__play" />}
+        {type === 'reel' && firstMedia?.type === 'video' && <LuPlay size={28} className="np-ig__play" />}
+        {isCarousel && <span className="np-ig__indicator">1/{Math.max(media.length, 3)}</span>}
       </div>
 
       {/* Ações */}

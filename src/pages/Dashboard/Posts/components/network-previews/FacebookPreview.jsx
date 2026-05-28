@@ -1,8 +1,9 @@
 import { LuThumbsUp, LuMessageCircle, LuShare2, LuImage, LuPlay, LuEarth } from 'react-icons/lu'
 
-export default function FacebookPreview({ type = 'post', content, user }) {
+export default function FacebookPreview({ type = 'post', content, user, media = [] }) {
   const name = user?.name || 'Você'
   const isReel = type === 'reel'
+  const firstMedia = media[0]
 
   return (
     <div className={`np-fb${isReel ? ' np-fb--reel' : ''}`}>
@@ -23,8 +24,14 @@ export default function FacebookPreview({ type = 'post', content, user }) {
       )}
 
       {/* Mídia */}
-      <div className={`np-fb__media np-fb__media--${isReel ? 'vert' : 'square'}`}>
-        {isReel ? <LuPlay size={36} /> : <LuImage size={36} />}
+      <div className={`np-fb__media np-fb__media--${isReel ? 'vert' : 'square'}${firstMedia ? ' np-fb__media--filled' : ''}`}>
+        {firstMedia ? (
+          firstMedia.type === 'video'
+            ? <video src={firstMedia.url} muted playsInline />
+            : <img src={firstMedia.url} alt="" />
+        ) : (
+          isReel ? <LuPlay size={36} /> : <LuImage size={36} />
+        )}
       </div>
 
       {/* Contadores */}

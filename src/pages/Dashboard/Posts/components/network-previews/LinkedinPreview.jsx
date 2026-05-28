@@ -1,15 +1,22 @@
 import { LuThumbsUp, LuMessageCircle, LuRepeat, LuSend, LuImage } from 'react-icons/lu'
 
-export default function LinkedinPreview({ type = 'post', title, content, user }) {
+export default function LinkedinPreview({ type = 'post', title, content, user, media = [] }) {
   const name = user?.name || 'Você'
   const isArticle = type === 'article'
+  const firstMedia = media[0]
 
   // Artigo tem layout diferente — destaque pro título e thumbnail horizontal
   if (isArticle) {
     return (
       <div className="np-li np-li--article">
-        <div className="np-li__article-cover">
-          <LuImage size={36} />
+        <div className={`np-li__article-cover${firstMedia ? ' np-li__article-cover--filled' : ''}`}>
+          {firstMedia ? (
+            firstMedia.type === 'video'
+              ? <video src={firstMedia.url} muted playsInline />
+              : <img src={firstMedia.url} alt="" />
+          ) : (
+            <LuImage size={36} />
+          )}
         </div>
         <div className="np-li__article-body">
           <span className="np-li__article-tag">Artigo</span>
@@ -41,8 +48,14 @@ export default function LinkedinPreview({ type = 'post', title, content, user })
         </div>
       )}
 
-      <div className="np-li__media">
-        <LuImage size={36} />
+      <div className={`np-li__media${firstMedia ? ' np-li__media--filled' : ''}`}>
+        {firstMedia ? (
+          firstMedia.type === 'video'
+            ? <video src={firstMedia.url} muted playsInline />
+            : <img src={firstMedia.url} alt="" />
+        ) : (
+          <LuImage size={36} />
+        )}
       </div>
 
       <div className="np-li__counts">

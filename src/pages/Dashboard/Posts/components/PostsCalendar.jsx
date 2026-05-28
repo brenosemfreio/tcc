@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { LuChevronLeft, LuChevronRight, LuPlus } from 'react-icons/lu'
+import { LuChevronLeft, LuChevronRight, LuChevronsLeft, LuChevronsRight } from 'react-icons/lu'
 import { STATUS_META } from '../../../../services/posts'
 
 const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
@@ -16,6 +16,20 @@ export default function PostsCalendar({ posts, onReview }) {
   const navigate = useNavigate()
   const today = new Date()
   const [view, setView] = useState({ year: today.getFullYear(), month: today.getMonth() })
+  const [showYearPicker, setShowYearPicker] = useState(false)
+  const yearWrapRef = useRef(null)
+
+  // Fecha o year picker ao clicar fora
+  useEffect(() => {
+    if (!showYearPicker) return
+    const h = (e) => {
+      if (yearWrapRef.current && !yearWrapRef.current.contains(e.target)) {
+        setShowYearPicker(false)
+      }
+    }
+    document.addEventListener('mousedown', h)
+    return () => document.removeEventListener('mousedown', h)
+  }, [showYearPicker])
 
   // Agrupa posts pelo dia (chave: YYYY-MM-DD)
   const postsByDay = useMemo(() => {
@@ -56,7 +70,10 @@ export default function PostsCalendar({ posts, onReview }) {
     const m = v.month + 1
     return m > 11 ? { year: v.year + 1, month: 0 } : { ...v, month: m }
   })
+  const goPrevYear = () => setView(v => ({ ...v, year: v.year - 1 }))
+  const goNextYear = () => setView(v => ({ ...v, year: v.year + 1 }))
   const goToday = () => setView({ year: today.getFullYear(), month: today.getMonth() })
+  const setYear = (y) => { setView(v => ({ ...v, year: y })); setShowYearPicker(false) }
 
   const handlePostClick = (post, e) => {
     e.stopPropagation()
@@ -76,12 +93,54 @@ export default function PostsCalendar({ posts, onReview }) {
       {/* Header */}
       <div className="cal-view__head">
         <div className="cal-view__nav">
-          <button type="button" onClick={goPrev} aria-label="Mês anterior">
+          <button type="button" onClick={goPrevYear} aria-label="Ano anterior" title="Ano anterior">
+            <LuChevronsLeft size={18} />
+          </button>
+          <button type="button" onClick={goPrev} aria-label="Mês anterior" title="Mês anterior">
             <LuChevronLeft size={18} />
           </button>
-          <h2>{MONTHS[view.month]} {view.year}</h2>
-          <button type="button" onClick={goNext} aria-label="Próximo mês">
+
+          <div className="cal-view__title-wrap" ref={yearWrapRef}>
+            <button
+              type="button"
+              className="cal-view__title-btn"
+              onClick={() => setShowYearPicker(s => !s)}
+              title="Trocar ano"
+            >
+              <h2>{MONTHS[view.month]} <span className="cal-view__year">{view.year}</span></h2>
+            </button>
+            {showYearPicker && (
+              <div className="cal-view__years">
+                <div className="cal-view__years-nav">
+                  <button type="button" onClick={() => setView(v => ({ ...v, year: v.year - 12 }))}>
+                    <LuChevronLeft size={14} />
+                  </button>
+                  <span>{view.year - 6} – {view.year + 5}</span>
+                  <button type="button" onClick={() => setView(v => ({ ...v, year: v.year + 12 }))}>
+                    <LuChevronRight size={14} />
+                  </button>
+                </div>
+                <div className="cal-view__years-grid">
+                  {Array.from({ length: 12 }, (_, i) => view.year - 6 + i).map(y => (
+                    <button
+                      key={y}
+                      type="button"
+                      className={`cal-view__year-btn${y === view.year ? ' cal-view__year-btn--active' : ''}`}
+                      onClick={() => setYear(y)}
+                    >
+                      {y}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <button type="button" onClick={goNext} aria-label="Próximo mês" title="Próximo mês">
             <LuChevronRight size={18} />
+          </button>
+          <button type="button" onClick={goNextYear} aria-label="Próximo ano" title="Próximo ano">
+            <LuChevronsRight size={18} />
           </button>
         </div>
         <button type="button" className="cal-view__today" onClick={goToday}>

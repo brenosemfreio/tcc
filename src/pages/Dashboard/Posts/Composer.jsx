@@ -4,9 +4,8 @@ import {
   LuArrowLeft, LuSave, LuSend, LuCalendarClock, LuImage,
 } from 'react-icons/lu'
 import { FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin } from 'react-icons/fa'
-import {
-  getPostById, NETWORK_META, minMaxChars, needsTitle as needsTitleFn,
-} from '../../../services/posts'
+import { FaXTwitter } from 'react-icons/fa6'
+import { getPostById, NETWORK_META } from '../../../services/posts'
 import { useAuth } from '../../../contexts/AuthContext'
 import PhonePreview from './components/PhonePreview'
 import MediaUploader from './components/MediaUploader'
@@ -19,9 +18,22 @@ const NETWORK_ICONS = {
   youtube:   FaYoutube,
   facebook:  FaFacebook,
   linkedin:  FaLinkedin,
+  twitter:   FaXTwitter,
 }
 
-const NETWORK_IDS = ['instagram', 'tiktok', 'youtube', 'facebook', 'linkedin']
+const NETWORK_IDS = ['instagram', 'tiktok', 'youtube', 'facebook', 'linkedin', 'twitter']
+
+// Estrutura padrão pra conteúdo de uma rede
+const emptyNetworkContent = () => ({ title: '', content: '', media: [] })
+
+// Verifica se a rede/tipo selecionado exige título
+function typeNeedsTitle(networkId, typeId) {
+  const meta = NETWORK_META[networkId]
+  if (!meta) return false
+  if (meta.needsTitle) return true
+  const typeMeta = meta.types.find(t => t.id === typeId)
+  return typeMeta?.needsTitle === true
+}
 
 export default function Composer() {
   const { id } = useParams()
@@ -30,18 +42,18 @@ export default function Composer() {
   const { user } = useAuth()
   const isEditing = Boolean(id)
 
-  // Suporta pré-agendamento via querystring (?date=YYYY-MM-DDTHH:MM)
-  // usado quando o usuário clica num dia vazio na view de calendário
   const initialDate = searchParams.get('date') || ''
 
   const [form, setForm] = useState({
-    title: '',
-    content: '',
     networks: [],
-    typesByNetwork: {},     // { instagram: 'feed', tiktok: 'video' }
+    typesByNetwork: {},
+    contentByNetwork: {},  // { instagram: { title, content, media }, ... }
     scheduledFor: initialDate,
-    media: [],              // [{ id, file, name, type, url }]
   })
+
+  // Rede atualmente sendo editada (sincronizada com o preview)
+  const [activeNetwork, setActiveNetwork] = useState(null)
+
   const [loading, setLoading] = useState(false)
   const [feedback, setFeedback] = useState('')
 
@@ -50,49 +62,54 @@ export default function Composer() {
     if (!id) return
     getPostById(id).then(post => {
       if (post) {
-        // Mapeia o `type` antigo (string única) pra `typesByNetwork` por rede.
-        // No mock antigo o tipo era global — atribui ele a cada rede selecionada.
         const typesByNetwork = {}
+        const contentByNetwork = {}
         ;(post.networks || []).forEach(n => {
           const meta = NETWORK_META[n]
-          if (meta) {
-            const matched = meta.types.find(t => t.id === post.type)
-            typesByNetwork[n] = matched ? matched.id : meta.types[0].id
+          if (!meta) return
+          const matched = meta.types.find(t => t.id === post.type)
+          typesByNetwork[n] = matched ? matched.id : meta.types[0].id
+          contentByNetwork[n] = {
+            title: post.title || '',
+            content: post.content || '',
+            media: [],
           }
         })
-
         setForm({
-          title: post.title || '',
-          content: post.content || '',
           networks: post.networks || [],
           typesByNetwork,
+          contentByNetwork,
           scheduledFor: post.scheduledFor ? post.scheduledFor.slice(0, 16) : '',
         })
+        if (post.networks?.[0]) setActiveNetwork(post.networks[0])
       }
     })
   }, [id])
 
-  const updateField = (key, value) => setForm(f => ({ ...f, [key]: value }))
-
-  // Toggle de rede: ao adicionar, escolhe o primeiro tipo por padrão. Ao remover,
-  // limpa o tipo daquela rede.
+  // Toggle de rede: ao adicionar, inicia tipo + content vazio. Ao remover, limpa tudo.
   const toggleNetwork = (networkId) => {
     setForm(f => {
       const isSelected = f.networks.includes(networkId)
       if (isSelected) {
-        const { [networkId]: _omit, ...rest } = f.typesByNetwork
+        const { [networkId]: _omitType, ...restTypes } = f.typesByNetwork
+        const { [networkId]: _omitContent, ...restContent } = f.contentByNetwork
         return {
           ...f,
           networks: f.networks.filter(n => n !== networkId),
-          typesByNetwork: rest,
+          typesByNetwork: restTypes,
+          contentByNetwork: restContent,
         }
       }
       const meta = NETWORK_META[networkId]
       const defaultType = meta?.types[0]?.id
+      const newNetworks = [...f.networks, networkId]
+      // Define rede ativa se for a primeira
+      if (newNetworks.length === 1) setActiveNetwork(networkId)
       return {
         ...f,
-        networks: [...f.networks, networkId],
+        networks: newNetworks,
         typesByNetwork: { ...f.typesByNetwork, [networkId]: defaultType },
+        contentByNetwork: { ...f.contentByNetwork, [networkId]: emptyNetworkContent() },
       }
     })
   }
@@ -104,25 +121,67 @@ export default function Composer() {
     }))
   }
 
-  // Caracteres permitidos = menor maxChars entre as redes selecionadas
-  const maxChars = useMemo(() => minMaxChars(form.networks), [form.networks])
-  const titleRequired = useMemo(
-    () => needsTitleFn(form.networks, form.typesByNetwork),
-    [form.networks, form.typesByNetwork],
-  )
+  // Atualiza um campo do conteúdo de uma rede específica
+  const updateNetworkField = (networkId, key, value) => {
+    setForm(f => ({
+      ...f,
+      contentByNetwork: {
+        ...f.contentByNetwork,
+        [networkId]: {
+          ...(f.contentByNetwork[networkId] || emptyNetworkContent()),
+          [key]: value,
+        },
+      },
+    }))
+  }
 
-  const hasContent = form.content.trim().length > 0
-  const hasTitle = !titleRequired || form.title.trim().length > 0
+  // Copia o conteúdo da rede ativa pra todas as outras (atalho útil)
+  const copyToAllNetworks = () => {
+    if (!activeNetwork) return
+    const source = form.contentByNetwork[activeNetwork]
+    if (!source) return
+    setForm(f => {
+      const next = { ...f.contentByNetwork }
+      f.networks.forEach(n => {
+        if (n !== activeNetwork) {
+          next[n] = {
+            title: source.title,
+            content: source.content.slice(0, NETWORK_META[n]?.maxChars || 5000),
+            media: source.media,
+          }
+        }
+      })
+      return { ...f, contentByNetwork: next }
+    })
+    setFeedback('Conteúdo copiado pra todas as redes!')
+    setTimeout(() => setFeedback(''), 1800)
+  }
+
+  // Validação: todas as redes precisam ter conteúdo e título (se exigido)
   const hasNetworks = form.networks.length > 0
-  const canSubmit = hasContent && hasTitle && hasNetworks
+  const validationByNetwork = useMemo(() => {
+    return form.networks.map(n => {
+      const c = form.contentByNetwork[n] || emptyNetworkContent()
+      const t = form.typesByNetwork[n]
+      const needsT = typeNeedsTitle(n, t)
+      return {
+        network: n,
+        hasContent: c.content.trim().length > 0,
+        hasTitle: !needsT || c.title.trim().length > 0,
+        needsTitle: needsT,
+      }
+    })
+  }, [form.networks, form.contentByNetwork, form.typesByNetwork])
 
-  // Salva o post (mock — futuramente bate no backend)
+  const canSubmit = hasNetworks && validationByNetwork.every(v => v.hasContent && v.hasTitle)
+  const hasAnyContent = validationByNetwork.some(v => v.hasContent)
+
+  // Salva o post (mock)
   const handleSave = async (status) => {
     setLoading(true)
     setFeedback('')
     await new Promise(r => setTimeout(r, 600))
     setLoading(false)
-
     const msg = {
       draft:     'Rascunho salvo!',
       scheduled: 'Post agendado!',
@@ -131,6 +190,14 @@ export default function Composer() {
     setFeedback(msg)
     setTimeout(() => navigate('/dashboard/posts'), 700)
   }
+
+  // Dados do conteúdo ativo (pra renderizar o form)
+  const activeContent = activeNetwork
+    ? (form.contentByNetwork[activeNetwork] || emptyNetworkContent())
+    : null
+  const activeType = activeNetwork ? form.typesByNetwork[activeNetwork] : null
+  const activeMeta = activeNetwork ? NETWORK_META[activeNetwork] : null
+  const activeNeedsTitle = activeNetwork ? typeNeedsTitle(activeNetwork, activeType) : false
 
   return (
     <div className="composer">
@@ -176,7 +243,7 @@ export default function Composer() {
             </div>
           </div>
 
-          {/* PASSO 2 — Tipo de conteúdo por rede (só aparece após escolher rede) */}
+          {/* PASSO 2 — Tipo por rede */}
           {hasNetworks && (
             <div className="composer__step">
               <div className="composer__step-head">
@@ -219,71 +286,104 @@ export default function Composer() {
             </div>
           )}
 
-          {/* PASSO 3 — Conteúdo (título + texto) */}
-          {hasNetworks && (
+          {/* PASSO 3 — Conteúdo (com tabs per-network) */}
+          {hasNetworks && activeContent && (
             <div className="composer__step">
               <div className="composer__step-head">
                 <span className="composer__step-num">3</span>
                 <h3>Conteúdo da publicação</h3>
+                {form.networks.length > 1 && (
+                  <button
+                    type="button"
+                    className="composer__copy-all"
+                    onClick={copyToAllNetworks}
+                    title="Copia o conteúdo da rede atual pra todas as outras"
+                  >
+                    Aplicar a todas
+                  </button>
+                )}
               </div>
 
-              {titleRequired && (
-                <div className="composer__field">
-                  <label htmlFor="title">
-                    Título <span className="composer__required">obrigatório pro YouTube/Artigo</span>
-                  </label>
-                  <input
-                    id="title"
-                    type="text"
-                    placeholder="Ex: Como crescer no Instagram em 2026"
-                    value={form.title}
-                    onChange={e => updateField('title', e.target.value.slice(0, 100))}
-                  />
-                  <span className="composer__counter">{form.title.length} / 100</span>
+              {/* Tabs por rede (só com 2+) */}
+              {form.networks.length > 1 && (
+                <div className="composer__net-tabs">
+                  {form.networks.map(n => {
+                    const meta = NETWORK_META[n]
+                    const Icon = NETWORK_ICONS[n]
+                    const isActive = n === activeNetwork
+                    return (
+                      <button
+                        key={n}
+                        type="button"
+                        className={`composer__net-tab${isActive ? ' composer__net-tab--active' : ''}`}
+                        style={isActive ? { color: meta.color, borderColor: meta.color } : {}}
+                        onClick={() => setActiveNetwork(n)}
+                      >
+                        <Icon size={14} />
+                        {meta.label}
+                      </button>
+                    )
+                  })}
                 </div>
               )}
 
-              <div className="composer__field">
-                <label htmlFor="content">
-                  {titleRequired ? 'Descrição' : 'Legenda'}
-                </label>
-                <textarea
-                  id="content"
-                  placeholder="Escreva aqui... pode usar emojis, hashtags e quebras de linha"
-                  value={form.content}
-                  onChange={e => updateField('content', e.target.value.slice(0, maxChars))}
-                  rows={8}
-                />
-                <span className="composer__counter">
-                  {form.content.length} / {maxChars}
-                  {form.networks.length > 1 && ' (limite da rede mais restrita)'}
-                </span>
+              {/* Formulário da rede ativa */}
+              <div className="composer__net-form" style={{ borderColor: form.networks.length > 1 ? activeMeta?.color : undefined }}>
+                {activeNeedsTitle && (
+                  <div className="composer__field">
+                    <label htmlFor="title">
+                      Título <span className="composer__required">obrigatório no {activeMeta?.label}</span>
+                    </label>
+                    <input
+                      id="title"
+                      type="text"
+                      placeholder={`Título pro ${activeMeta?.label}...`}
+                      value={activeContent.title}
+                      onChange={e => updateNetworkField(activeNetwork, 'title', e.target.value.slice(0, 100))}
+                    />
+                    <span className="composer__counter">{activeContent.title.length} / 100</span>
+                  </div>
+                )}
+
+                <div className="composer__field">
+                  <label htmlFor="content">
+                    {activeNeedsTitle ? 'Descrição' : 'Legenda'} pro {activeMeta?.label}
+                  </label>
+                  <textarea
+                    id="content"
+                    placeholder={`Escreva o conteúdo pro ${activeMeta?.label}...`}
+                    value={activeContent.content}
+                    onChange={e => updateNetworkField(
+                      activeNetwork,
+                      'content',
+                      e.target.value.slice(0, activeMeta?.maxChars || 5000)
+                    )}
+                    rows={7}
+                  />
+                  <span className="composer__counter">
+                    {activeContent.content.length} / {activeMeta?.maxChars}
+                  </span>
+                </div>
+
+                {/* Mídia por rede */}
+                <div className="composer__field">
+                  <label>
+                    <LuImage size={14} /> Mídia pro {activeMeta?.label}
+                  </label>
+                  <MediaUploader
+                    media={activeContent.media}
+                    onChange={(media) => updateNetworkField(activeNetwork, 'media', media)}
+                  />
+                </div>
               </div>
             </div>
           )}
 
-          {/* PASSO 4 — Mídia */}
+          {/* PASSO 4 — Agendamento (global) */}
           {hasNetworks && (
             <div className="composer__step">
               <div className="composer__step-head">
                 <span className="composer__step-num">4</span>
-                <h3>Mídia</h3>
-                <span className="composer__step-hint">
-                  <LuImage size={12} /> Imagens ou vídeos pra acompanhar o post
-                </span>
-              </div>
-              <MediaUploader
-                media={form.media}
-                onChange={(media) => updateField('media', media)}
-              />
-            </div>
-          )}
-
-          {/* PASSO 5 — Agendamento */}
-          {hasNetworks && (
-            <div className="composer__step">
-              <div className="composer__step-head">
-                <span className="composer__step-num">5</span>
                 <h3>Quando publicar?</h3>
               </div>
               <div className="composer__field">
@@ -292,11 +392,12 @@ export default function Composer() {
                 </label>
                 <DateTimePicker
                   value={form.scheduledFor}
-                  onChange={(v) => updateField('scheduledFor', v)}
+                  onChange={(v) => setForm(f => ({ ...f, scheduledFor: v }))}
                   placeholder="Escolha quando publicar"
+                  openUpward
                 />
                 <span className="composer__hint">
-                  Deixe vazio pra salvar como rascunho sem agendar.
+                  Deixe vazio pra salvar como rascunho sem agendar. Vale pra todas as redes.
                 </span>
               </div>
             </div>
@@ -308,9 +409,10 @@ export default function Composer() {
           <PhonePreview
             networks={form.networks}
             typesByNetwork={form.typesByNetwork}
-            title={form.title}
-            content={form.content}
+            contentByNetwork={form.contentByNetwork}
             user={user}
+            activeNetwork={activeNetwork}
+            onActiveNetworkChange={setActiveNetwork}
           />
         </aside>
       </div>
@@ -323,7 +425,7 @@ export default function Composer() {
           type="button"
           className="composer__btn composer__btn--ghost"
           onClick={() => handleSave('draft')}
-          disabled={loading || !hasContent}
+          disabled={loading || !hasAnyContent}
         >
           <LuSave size={15} /> Salvar rascunho
         </button>

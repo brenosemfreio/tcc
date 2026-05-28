@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
-import { motion } from 'framer-motion'
-import { LuInbox } from 'react-icons/lu'
+import { motion, AnimatePresence } from 'framer-motion'
+import { LuInbox, LuTrash2, LuCopy, LuSend, LuX, LuSquareCheck } from 'react-icons/lu'
 import { getAllPosts } from '../../../services/posts'
 import { dashFadeUp as fadeUp } from '../../../styles/animations'
 import PostsHeader from './components/PostsHeader'
@@ -45,6 +45,7 @@ export default function Posts() {
   const [period, setPeriod] = useState('all')
   const [view, setView] = useState('list')          // 'list' | 'calendar'
   const [reviewingPost, setReviewingPost] = useState(null)
+  const [selectedIds, setSelectedIds] = useState([])  // bulk select
 
   useEffect(() => {
     getAllPosts().then(setPosts)
@@ -102,6 +103,49 @@ export default function Posts() {
       setReviewingPost(post)
     }
   }
+
+  // ── Bulk operations ──
+  const toggleSelect = (id) => {
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    )
+  }
+  const selectAll = () => setSelectedIds(filtered.map(p => p.id))
+  const clearSelection = () => setSelectedIds([])
+
+  const bulkDelete = () => {
+    if (!window.confirm(`Excluir ${selectedIds.length} ${selectedIds.length > 1 ? 'posts' : 'post'}?`)) return
+    setPosts(prev => prev.filter(p => !selectedIds.includes(p.id)))
+    setSelectedIds([])
+  }
+  const bulkDuplicate = () => {
+    setPosts(prev => {
+      const copies = prev
+        .filter(p => selectedIds.includes(p.id))
+        .map(p => ({
+          ...p,
+          id: `${p.id}-copy-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
+          title: `${p.title} (cópia)`,
+          status: 'draft',
+        }))
+      return [...copies, ...prev]
+    })
+    setSelectedIds([])
+  }
+  const bulkSubmit = () => {
+    setPosts(prev => prev.map(p =>
+      selectedIds.includes(p.id) && p.status === 'draft'
+        ? { ...p, status: 'pending', submittedAt: new Date().toISOString() }
+        : p
+    ))
+    setSelectedIds([])
+  }
+
+  // Posts selecionados que ainda estão na lista filtrada (depois de filter)
+  const selectionInView = useMemo(
+    () => filtered.filter(p => selectedIds.includes(p.id)).length,
+    [filtered, selectedIds]
+  )
 
   const handleApprovalDecision = (decision, updatedPost) => {
     if (decision === 'approve') {
@@ -169,6 +213,8 @@ export default function Posts() {
                   post={post}
                   onAction={handleAction}
                   onReview={post.status === 'pending' ? () => setReviewingPost(post) : null}
+                  selected={selectedIds.includes(post.id)}
+                  onToggleSelect={() => toggleSelect(post.id)}
                 />
               </motion.div>
             ))
@@ -182,6 +228,47 @@ export default function Posts() {
         onClose={() => setReviewingPost(null)}
         onAction={handleApprovalDecision}
       />
+
+      {/* Bulk action bar — aparece quando há posts selecionados */}
+      <AnimatePresence>
+        {selectedIds.length > 0 && (
+          <motion.div
+            className="bulk-bar"
+            initial={{ y: 80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 80, opacity: 0 }}
+            transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
+          >
+            <div className="bulk-bar__info">
+              <button type="button" className="bulk-bar__close" onClick={clearSelection} aria-label="Limpar seleção">
+                <LuX size={16} />
+              </button>
+              <strong>{selectedIds.length}</strong>
+              <span>selecionado{selectedIds.length > 1 ? 's' : ''}</span>
+              {selectionInView < selectedIds.length && (
+                <span className="bulk-bar__hidden">
+                  ({selectedIds.length - selectionInView} fora do filtro atual)
+                </span>
+              )}
+            </div>
+
+            <div className="bulk-bar__divider" />
+
+            <button type="button" className="bulk-bar__btn" onClick={selectAll}>
+              <LuSquareCheck size={14} /> Selecionar tudo
+            </button>
+            <button type="button" className="bulk-bar__btn" onClick={bulkDuplicate}>
+              <LuCopy size={14} /> Duplicar
+            </button>
+            <button type="button" className="bulk-bar__btn" onClick={bulkSubmit}>
+              <LuSend size={14} /> Submeter
+            </button>
+            <button type="button" className="bulk-bar__btn bulk-bar__btn--danger" onClick={bulkDelete}>
+              <LuTrash2 size={14} /> Excluir
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

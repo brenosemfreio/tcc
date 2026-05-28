@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin } from 'react-icons/fa'
+import { FaXTwitter } from 'react-icons/fa6'
 import { NETWORK_META } from '../../../../services/posts'
 import InstagramPreview from './network-previews/InstagramPreview'
 import TiktokPreview from './network-previews/TiktokPreview'
 import YoutubePreview from './network-previews/YoutubePreview'
 import FacebookPreview from './network-previews/FacebookPreview'
 import LinkedinPreview from './network-previews/LinkedinPreview'
+import TwitterPreview from './network-previews/TwitterPreview'
 import './network-previews/styles.css'
 
 const ICONS = {
@@ -14,6 +16,7 @@ const ICONS = {
   youtube:   FaYoutube,
   facebook:  FaFacebook,
   linkedin:  FaLinkedin,
+  twitter:   FaXTwitter,
 }
 
 const PREVIEWS = {
@@ -22,17 +25,46 @@ const PREVIEWS = {
   youtube:   YoutubePreview,
   facebook:  FacebookPreview,
   linkedin:  LinkedinPreview,
+  twitter:   TwitterPreview,
 }
 
-export default function PhonePreview({ networks, typesByNetwork, title, content, user }) {
-  const [activeIdx, setActiveIdx] = useState(0)
+/**
+ * Preview de celular com tabs entre redes.
+ * Suporta duas formas de receber conteúdo:
+ *   - contentByNetwork: { [networkId]: { title, content, media } } — preferido
+ *   - title/content/media globais — fallback (modo legado)
+ *
+ * `activeNetwork` (opcional): força qual rede está sendo exibida (sincroniza
+ * com tabs do composer). Se não passado, gerencia state interno.
+ */
+export default function PhonePreview({
+  networks, typesByNetwork,
+  // Modo per-network (novo)
+  contentByNetwork,
+  // Modo global (fallback)
+  title, content, media,
+  user,
+  activeNetwork, onActiveNetworkChange,
+}) {
+  const [internalActive, setInternalActive] = useState(networks[0])
+  const active = activeNetwork || internalActive
 
-  // Se a rede ativa for removida, volta pra primeira disponível
+  // Mantém a rede ativa válida quando a lista de networks muda
   useEffect(() => {
-    if (activeIdx >= networks.length) setActiveIdx(0)
-  }, [networks, activeIdx])
+    if (networks.length === 0) return
+    if (!networks.includes(internalActive)) {
+      const next = networks[0]
+      setInternalActive(next)
+      onActiveNetworkChange?.(next)
+    }
+  }, [networks, internalActive, onActiveNetworkChange])
 
-  // Estado vazio — nenhuma rede selecionada
+  const setActive = (n) => {
+    setInternalActive(n)
+    onActiveNetworkChange?.(n)
+  }
+
+  // Estado vazio
   if (networks.length === 0) {
     return (
       <div className="phone-preview">
@@ -48,26 +80,32 @@ export default function PhonePreview({ networks, typesByNetwork, title, content,
     )
   }
 
-  const activeNetwork = networks[activeIdx]
-  const activeType = typesByNetwork[activeNetwork]
-  const Preview = PREVIEWS[activeNetwork]
-  const meta = NETWORK_META[activeNetwork]
+  const activeType = typesByNetwork[active]
+  const Preview = PREVIEWS[active]
+  const meta = NETWORK_META[active]
+
+  // Resolve qual conteúdo passar pro preview (per-network ou fallback global)
+  const localContent = contentByNetwork?.[active]
+  const resolvedTitle   = localContent?.title   ?? title
+  const resolvedContent = localContent?.content ?? content
+  const resolvedMedia   = localContent?.media   ?? media ?? []
 
   return (
     <div className="phone-preview">
-      {/* Tabs das redes selecionadas */}
+      {/* Tabs das redes — aparece com 2+ */}
       {networks.length > 1 && (
         <div className="phone-preview__tabs">
-          {networks.map((n, i) => {
+          {networks.map(n => {
             const Icon = ICONS[n]
             const m = NETWORK_META[n]
+            const isActive = n === active
             return (
               <button
                 key={n}
                 type="button"
-                className={`phone-preview__tab${i === activeIdx ? ' phone-preview__tab--active' : ''}`}
-                onClick={() => setActiveIdx(i)}
-                style={i === activeIdx ? { color: m?.color } : {}}
+                className={`phone-preview__tab${isActive ? ' phone-preview__tab--active' : ''}`}
+                onClick={() => setActive(n)}
+                style={isActive ? { color: m?.color } : {}}
                 title={m?.label}
               >
                 <Icon size={16} />
@@ -84,15 +122,16 @@ export default function PhonePreview({ networks, typesByNetwork, title, content,
           {Preview && (
             <Preview
               type={activeType}
-              title={title}
-              content={content}
+              title={resolvedTitle}
+              content={resolvedContent}
+              media={resolvedMedia}
               user={user}
             />
           )}
         </div>
       </div>
 
-      {/* Rótulo embaixo */}
+      {/* Rótulo */}
       <span className="phone-preview__label" style={{ color: meta?.color }}>
         {meta?.label} · {meta?.types.find(t => t.id === activeType)?.label || ''}
       </span>

@@ -718,3 +718,108 @@
 .np-li__article-author span { color: #666; }
 .np-li__article-author strong { color: #000; }
 .np-li__article-author .np-li__avatar { width: 28px; height: 28px; font-size: 12px; }
+
+/* ════════════════════════════════════════════════════════════
+   Mídia real dentro dos previews — img/video preenche o slot
+   ════════════════════════════════════════════════════════════ */
+.np-ig__media img, .np-ig__media video,
+.np-ig__story-media img, .np-ig__story-media video,
+.np-tt__media img, .np-tt__media video,
+.np-yt__player img, .np-yt__player video,
+.np-yt__shorts-media img, .np-yt__shorts-media video,
+.np-fb__media img, .np-fb__media video,
+.np-li__media img, .np-li__media video,
+.np-li__article-cover img, .np-li__article-cover video,
+.np-tw__media img, .np-tw__media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* Quando tem mídia preenchida, esconde o placeholder de ícone */
+.np-ig__media--filled,
+.np-tt__media--filled,
+.np-yt__player--filled,
+.np-yt__shorts-media--filled,
+.np-fb__media--filled,
+.np-li__media--filled,
+.np-li__article-cover--filled {
+  background: #000;
+}
+
+/* ════════════════════════════════════════════════════════════
+   X (Twitter)
+   ════════════════════════════════════════════════════════════ */
+.np-tw {
+  background: #fff;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.np-tw__header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #eff3f4;
+  color: #0f1419;
+  display: flex;
+  justify-content: center;
+}
+.np-tw__post {
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px;
+}
+.np-tw__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #0f1419;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.np-tw__body {
+  flex: 1;
+  min-width: 0;
+}
+.np-tw__user {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+}
+.np-tw__user strong { font-weight: 700; color: #0f1419; }
+.np-tw__user span { color: #536471; font-size: 12px; }
+.np-tw__text {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #0f1419;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+.np-tw__media {
+  margin-top: 10px;
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #1d9bf0, #0f1419);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.7);
+}
+.np-tw__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  color: #536471;
+  font-size: 11px;
+}
+.np-tw__actions span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}

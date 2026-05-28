@@ -1,15 +1,22 @@
 import { LuPlay, LuThumbsUp, LuShare2, LuDownload, LuBell } from 'react-icons/lu'
 
-export default function YoutubePreview({ type = 'video', title, content, user }) {
+export default function YoutubePreview({ type = 'video', title, content, user, media = [] }) {
   const isShorts = type === 'shorts'
   const channelName = user?.name || 'Seu Canal'
+  const firstMedia = media[0]
 
   // YouTube Shorts é um formato vertical similar a TikTok/Reels
   if (isShorts) {
     return (
       <div className="np-yt np-yt--shorts">
-        <div className="np-yt__shorts-media">
-          <LuPlay size={48} />
+        <div className={`np-yt__shorts-media${firstMedia ? ' np-yt__shorts-media--filled' : ''}`}>
+          {firstMedia ? (
+            firstMedia.type === 'video'
+              ? <video src={firstMedia.url} muted playsInline />
+              : <img src={firstMedia.url} alt="" />
+          ) : (
+            <LuPlay size={48} />
+          )}
         </div>
         <div className="np-yt__shorts-bottom">
           <strong>@{channelName.toLowerCase().replace(/\s+/g, '')}</strong>
@@ -28,8 +35,14 @@ export default function YoutubePreview({ type = 'video', title, content, user })
   return (
     <div className="np-yt">
       {/* Thumbnail/player horizontal */}
-      <div className="np-yt__player">
-        <LuPlay size={36} />
+      <div className={`np-yt__player${firstMedia ? ' np-yt__player--filled' : ''}`}>
+        {firstMedia ? (
+          firstMedia.type === 'video'
+            ? <video src={firstMedia.url} muted playsInline />
+            : <img src={firstMedia.url} alt="" />
+        ) : (
+          <LuPlay size={36} />
+        )}
         <span className="np-yt__duration">12:34</span>
       </div>
 

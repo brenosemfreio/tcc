@@ -307,6 +307,64 @@
   gap: 4px;
 }
 
+/* Botão "Aplicar a todas" */
+.composer__copy-all {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-primary);
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: all var(--transition-fast);
+}
+.composer__copy-all:hover {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+/* Tabs por rede no composer */
+.composer__net-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.composer__net-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  color: var(--color-text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: color var(--transition-fast);
+}
+.composer__net-tab:hover { color: var(--color-text); }
+.composer__net-tab--active { font-weight: 700; }
+
+/* Container do formulário per-network (com borda colorida da rede ativa) */
+.composer__net-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast);
+}
+
 /* ════════════════════════════════════════════════════════════
    MediaUploader
    ════════════════════════════════════════════════════════════ */
@@ -506,9 +564,94 @@
   padding: 14px;
   animation: dtPopIn 180ms cubic-bezier(0.32, 0.72, 0, 1);
 }
+.dtpicker__popover--up {
+  top: auto;
+  bottom: calc(100% + 8px);
+  animation: dtPopInUp 180ms cubic-bezier(0.32, 0.72, 0, 1);
+}
 @keyframes dtPopIn {
   from { opacity: 0; transform: translateY(-6px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes dtPopInUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Year picker — clicável no título do header */
+.dtpicker__head-title {
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-family);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+.dtpicker__head-title:hover { background: var(--color-bg-tertiary); }
+.dtpicker__head-year {
+  color: var(--color-primary);
+  font-size: 0.78rem;
+}
+
+.dtpicker__years {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dtpicker__years-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+.dtpicker__years-nav span {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+}
+.dtpicker__years-nav button {
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.dtpicker__years-nav button:hover { background: var(--color-bg-tertiary); color: var(--color-text); }
+
+.dtpicker__years-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+.dtpicker__year {
+  padding: 10px 8px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: background var(--transition-fast);
+}
+.dtpicker__year:hover { background: var(--color-bg-tertiary); }
+.dtpicker__year--active {
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
 }
 
 .dtpicker__head {

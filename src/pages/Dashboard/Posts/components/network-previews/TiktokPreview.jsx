@@ -2,13 +2,20 @@ import { LuHeart, LuMessageCircle, LuShare2, LuMusic, LuPlay, LuImage } from 're
 
 const handle = (user) => (user?.name || 'voce').toLowerCase().replace(/\s+/g, '_')
 
-export default function TiktokPreview({ type = 'video', content, user }) {
+export default function TiktokPreview({ type = 'video', content, user, media = [] }) {
   const username = handle(user)
+  const firstMedia = media[0]
   return (
     <div className="np-tt">
       {/* Mídia full-screen vertical */}
-      <div className="np-tt__media">
-        {type === 'video' ? <LuPlay size={48} /> : <LuImage size={48} />}
+      <div className={`np-tt__media${firstMedia ? ' np-tt__media--filled' : ''}`}>
+        {firstMedia ? (
+          firstMedia.type === 'video'
+            ? <video src={firstMedia.url} muted playsInline />
+            : <img src={firstMedia.url} alt="" />
+        ) : (
+          type === 'video' ? <LuPlay size={48} /> : <LuImage size={48} />
+        )}
       </div>
 
       {/* Side actions */}

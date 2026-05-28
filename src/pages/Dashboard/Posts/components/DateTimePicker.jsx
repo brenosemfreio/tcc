@@ -37,9 +37,13 @@ function formatDisplay(d) {
   })
 }
 
-export default function DateTimePicker({ value, onChange, placeholder = 'Selecionar data e hora' }) {
+export default function DateTimePicker({
+  value, onChange, placeholder = 'Selecionar data e hora',
+  openUpward = false,   // se true, popover abre pra cima (útil quando o picker está no fim da página)
+}) {
   const wrapRef = useRef(null)
   const [open, setOpen] = useState(false)
+  const [showYears, setShowYears] = useState(false)
   const selected = useMemo(() => parseLocal(value), [value])
 
   // View do calendário (mês/ano que estão sendo mostrados)
@@ -154,41 +158,88 @@ export default function DateTimePicker({ value, onChange, placeholder = 'Selecio
       </button>
 
       {open && (
-        <div className="dtpicker__popover">
+        <div className={`dtpicker__popover${openUpward ? ' dtpicker__popover--up' : ''}`}>
           {/* Cabeçalho com navegação de mês */}
           <div className="dtpicker__head">
             <button type="button" onClick={goPrev} aria-label="Mês anterior">
               <LuChevronLeft size={16} />
             </button>
-            <strong>{MONTHS[view.month]} {view.year}</strong>
+            <button
+              type="button"
+              className="dtpicker__head-title"
+              onClick={() => setShowYears(s => !s)}
+            >
+              {MONTHS[view.month]} <span className="dtpicker__head-year">{view.year} ▾</span>
+            </button>
             <button type="button" onClick={goNext} aria-label="Próximo mês">
               <LuChevronRight size={16} />
             </button>
           </div>
 
-          {/* Weekdays */}
-          <div className="dtpicker__weekdays">
-            {WEEKDAYS.map((d, i) => <span key={i}>{d}</span>)}
-          </div>
+          {/* Year picker (overlay sobre o calendário) */}
+          {showYears && (
+            <div className="dtpicker__years">
+              <div className="dtpicker__years-nav">
+                <button
+                  type="button"
+                  onClick={() => setView(v => ({ ...v, year: v.year - 12 }))}
+                  aria-label="12 anos antes"
+                >
+                  <LuChevronLeft size={14} />
+                </button>
+                <span>
+                  {view.year - 6} – {view.year + 5}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setView(v => ({ ...v, year: v.year + 12 }))}
+                  aria-label="12 anos depois"
+                >
+                  <LuChevronRight size={14} />
+                </button>
+              </div>
+              <div className="dtpicker__years-grid">
+                {Array.from({ length: 12 }, (_, i) => view.year - 6 + i).map(y => (
+                  <button
+                    key={y}
+                    type="button"
+                    className={`dtpicker__year${y === view.year ? ' dtpicker__year--active' : ''}`}
+                    onClick={() => { setView(v => ({ ...v, year: y })); setShowYears(false) }}
+                  >
+                    {y}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
-          {/* Grid */}
-          <div className="dtpicker__grid">
-            {cells.map((day, i) => (
-              <button
-                key={i}
-                type="button"
-                disabled={!day}
-                className={`dtpicker__day
-                  ${isToday(day) ? 'dtpicker__day--today' : ''}
-                  ${isSelected(day) ? 'dtpicker__day--selected' : ''}
-                  ${!day ? 'dtpicker__day--empty' : ''}
-                `}
-                onClick={() => day && applyDate(day)}
-              >
-                {day || ''}
-              </button>
-            ))}
-          </div>
+          {/* Weekdays */}
+          {!showYears && (
+            <>
+              <div className="dtpicker__weekdays">
+                {WEEKDAYS.map((d, i) => <span key={i}>{d}</span>)}
+              </div>
+
+              {/* Grid */}
+              <div className="dtpicker__grid">
+                {cells.map((day, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    disabled={!day}
+                    className={`dtpicker__day
+                      ${isToday(day) ? 'dtpicker__day--today' : ''}
+                      ${isSelected(day) ? 'dtpicker__day--selected' : ''}
+                      ${!day ? 'dtpicker__day--empty' : ''}
+                    `}
+                    onClick={() => day && applyDate(day)}
+                  >
+                    {day || ''}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
 
           {/* Time picker */}
           <div className="dtpicker__time">

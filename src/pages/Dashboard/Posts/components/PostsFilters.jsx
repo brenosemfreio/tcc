@@ -1,13 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
 import { LuListFilter, LuX, LuCalendar, LuLayoutGrid, LuList } from 'react-icons/lu'
 import { FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin } from 'react-icons/fa'
+import { FaXTwitter } from 'react-icons/fa6'
 
 const NETWORKS = [
-  { id: 'instagram', label: 'Instagram', Icon: FaInstagram, color: '#E1306C' },
-  { id: 'tiktok',    label: 'TikTok',    Icon: FaTiktok,    color: '#010101' },
-  { id: 'youtube',   label: 'YouTube',   Icon: FaYoutube,   color: '#FF0000' },
-  { id: 'facebook',  label: 'Facebook',  Icon: FaFacebook,  color: '#1877F2' },
-  { id: 'linkedin',  label: 'LinkedIn',  Icon: FaLinkedin,  color: '#0A66C2' },
+  { id: 'instagram', label: 'Instagram',   Icon: FaInstagram, color: '#E1306C' },
+  { id: 'tiktok',    label: 'TikTok',      Icon: FaTiktok,    color: '#010101' },
+  { id: 'youtube',   label: 'YouTube',     Icon: FaYoutube,   color: '#FF0000' },
+  { id: 'facebook',  label: 'Facebook',    Icon: FaFacebook,  color: '#1877F2' },
+  { id: 'linkedin',  label: 'LinkedIn',    Icon: FaLinkedin,  color: '#0A66C2' },
+  { id: 'twitter',   label: 'X (Twitter)', Icon: FaXTwitter,  color: '#000000' },
 ]
 
 const PERIODS = [

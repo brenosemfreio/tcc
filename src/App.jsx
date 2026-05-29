@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
 import { ThemeProvider } from './contexts/ThemeContext'
+import { TeamProvider } from './contexts/TeamContext'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 import DashboardLayout from './layouts/DashboardLayout/DashboardLayout'
 
@@ -19,6 +20,7 @@ export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
+        <TeamProvider>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Landing />} />
@@ -46,6 +48,7 @@ export default function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>
+        </TeamProvider>
       </AuthProvider>
     </ThemeProvider>
   )

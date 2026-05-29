@@ -1,7 +1,8 @@
 import { LuUsers, LuMail, LuClock, LuCrown } from 'react-icons/lu'
 import { PLAN_LIMITS } from '../../../../services/team'
+import TeamSwitcher from './TeamSwitcher'
 
-export default function EquipesHeader({ team, members, invites, pendingPosts }) {
+export default function EquipesHeader({ team, members, invites, pendingPosts, onCreateTeam }) {
   if (!team) return null
 
   const planMeta = PLAN_LIMITS[team.plan]
@@ -12,17 +13,12 @@ export default function EquipesHeader({ team, members, invites, pendingPosts }) 
     <div className="eq-header">
       <div className="eq-header__top">
         <div className="eq-header__title">
-          <div className="eq-header__avatar">
-            <LuUsers size={26} />
-          </div>
-          <div>
-            <h1>{team.name}</h1>
-            <span className="eq-header__plan">
-              <LuCrown size={13} />
-              Plano {planMeta.label}
-            </span>
-          </div>
+          <TeamSwitcher onCreateClick={onCreateTeam} />
         </div>
+        <span className="eq-header__plan">
+          <LuCrown size={13} />
+          Plano {planMeta.label}
+        </span>
       </div>
 
       {/* Stats em pílulas */}
@@ -58,7 +54,7 @@ export default function EquipesHeader({ team, members, invites, pendingPosts }) 
         </div>
       </div>
 
-      {/* Banner de limite (só se não unlimited e tem 2/3 ou mais ocupado) */}
+      {/* Banner de limite */}
       {!isUnlimited && usedSlots / planMeta.maxUsers >= 0.66 && (
         <div className="eq-header__limit">
           <strong>

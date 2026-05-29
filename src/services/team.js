@@ -123,14 +123,71 @@ const APPROVAL_CONFIG = {
 
 export const getApprovalConfig = () => Promise.resolve(APPROVAL_CONFIG)
 
-// ── Time / informações gerais ──
-export const getTeamInfo = () => Promise.resolve({
-  name: 'HubStudio Team',
-  plan: 'elite',           // 'lite' | 'pro' | 'elite'
-  totalMembers: MEMBERS.length,
-  pendingInvites: INVITES.length,
-  pendingPosts: 1,         // posts aguardando aprovação (vem do posts service)
-})
+// ── Cores disponíveis pros avatares de times ──
+export const TEAM_COLORS = [
+  { id: 'purple', value: '#4F35E8' },
+  { id: 'pink',   value: '#E1306C' },
+  { id: 'blue',   value: '#0A66C2' },
+  { id: 'green',  value: '#10B981' },
+  { id: 'orange', value: '#F59E0B' },
+  { id: 'red',    value: '#EF4444' },
+]
+
+// Tipos de time
+export const TEAM_TYPES = [
+  { id: 'personal', label: 'Pessoal', icon: '👤', desc: 'Só eu uso, sem outros membros.' },
+  { id: 'agency',   label: 'Agência', icon: '🏢', desc: 'Gerencio várias marcas e clientes.' },
+  { id: 'brand',    label: 'Marca',   icon: '🏪', desc: 'Uma empresa, vários funcionários.' },
+]
+
+// ── Times que o usuário atual faz parte ──
+// (em produção viria de getUserTeams() bateando no backend)
+const USER_TEAMS = [
+  {
+    id: 't1',
+    name: 'HubStudio Team',
+    type: 'agency',
+    color: '#4F35E8',
+    plan: 'elite',
+    role: 'admin',          // papel DO USUÁRIO neste time
+    totalMembers: 7,
+    pendingPosts: 1,
+  },
+  {
+    id: 't2',
+    name: 'Marketing Studio',
+    type: 'agency',
+    color: '#E1306C',
+    plan: 'pro',
+    role: 'manager',
+    totalMembers: 4,
+    pendingPosts: 3,
+  },
+  {
+    id: 't3',
+    name: 'Personal Brand',
+    type: 'personal',
+    color: '#10B981',
+    plan: 'lite',
+    role: 'admin',
+    totalMembers: 1,
+    pendingPosts: 0,
+  },
+]
+
+export const getUserTeams = () => Promise.resolve(USER_TEAMS)
+
+// ── Time atual (informações detalhadas) ──
+// Em produção, recebe team ID e retorna informações daquele time.
+// Por enquanto, ignora o id e usa o mock atual.
+export const getTeamInfo = (teamId) => {
+  const found = USER_TEAMS.find(t => t.id === teamId) || USER_TEAMS[0]
+  return Promise.resolve({
+    ...found,
+    totalMembers: MEMBERS.length,
+    pendingInvites: INVITES.length,
+  })
+}
 
 // ── Feed de atividade ──
 const ACTIVITY = [

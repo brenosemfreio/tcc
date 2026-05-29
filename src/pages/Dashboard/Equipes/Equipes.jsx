@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import {
   getTeamMembers, getPendingInvites, getApprovalConfig,
-  getTeamInfo, getTeamActivity,
+  getTeamActivity,
 } from '../../../services/team'
 import { useAuth } from '../../../contexts/AuthContext'
+import { useTeam } from '../../../contexts/TeamContext'
 import EquipesHeader from './components/EquipesHeader'
 import EquipesTabs from './components/EquipesTabs'
 import MembrosTab from './components/MembrosTab'
@@ -12,12 +13,13 @@ import PapeisTab from './components/PapeisTab'
 import AprovacaoTab from './components/AprovacaoTab'
 import AtividadeTab from './components/AtividadeTab'
 import InviteModal from './components/InviteModal'
+import CreateTeamModal from './components/CreateTeamModal'
 import './Equipes.css'
 
 export default function Equipes() {
   const { user } = useAuth()
+  const { currentTeam, createTeam } = useTeam()
 
-  const [team, setTeam] = useState(null)
   const [members, setMembers] = useState([])
   const [invites, setInvites] = useState([])
   const [config, setConfig] = useState(null)
@@ -25,23 +27,24 @@ export default function Equipes() {
 
   const [activeTab, setActiveTab] = useState('membros')
   const [showInvite, setShowInvite] = useState(false)
+  const [showCreateTeam, setShowCreateTeam] = useState(false)
   const [flash, setFlash] = useState('')
 
+  // Recarrega dados quando o time atual muda
   useEffect(() => {
+    if (!currentTeam) return
     Promise.all([
-      getTeamInfo(),
-      getTeamMembers(),
-      getPendingInvites(),
-      getApprovalConfig(),
-      getTeamActivity(),
-    ]).then(([t, m, i, c, a]) => {
-      setTeam(t)
+      getTeamMembers(currentTeam.id),
+      getPendingInvites(currentTeam.id),
+      getApprovalConfig(currentTeam.id),
+      getTeamActivity(currentTeam.id),
+    ]).then(([m, i, c, a]) => {
       setMembers(m)
       setInvites(i)
       setConfig(c)
       setActivity(a)
     })
-  }, [])
+  }, [currentTeam?.id])
 
   const flashMsg = (msg, ms = 2200) => {
     setFlash(msg)
@@ -97,7 +100,12 @@ export default function Equipes() {
     flashMsg('Aprovador removido.')
   }
 
-  if (!team) {
+  const handleCreateTeam = (data) => {
+    const newTeam = createTeam(data)
+    flashMsg(`Bem-vindo ao ${newTeam.name}! 🎉`)
+  }
+
+  if (!currentTeam) {
     return (
       <div className="eq-loading">
         <p>Carregando equipe...</p>
@@ -108,16 +116,18 @@ export default function Equipes() {
   return (
     <div className="eq-page">
       <EquipesHeader
-        team={team}
+        team={currentTeam}
         members={members}
         invites={invites}
-        pendingPosts={team.pendingPosts}
+        pendingPosts={currentTeam.pendingPosts}
+        onCreateTeam={() => setShowCreateTeam(true)}
       />
 
       <EquipesTabs
         active={activeTab}
         onChange={setActiveTab}
         counts={{ invites: invites.length }}
+        key={currentTeam.id}
       />
 
       <div className="eq-content">
@@ -148,7 +158,7 @@ export default function Equipes() {
             members={members}
             onToggle={handleToggleConfig}
             onRemoveApprover={handleRemoveApprover}
-            pendingCount={team.pendingPosts}
+            pendingCount={currentTeam.pendingPosts}
           />
         )}
 
@@ -159,6 +169,12 @@ export default function Equipes() {
         isOpen={showInvite}
         onClose={() => setShowInvite(false)}
         onInvite={handleInvite}
+      />
+
+      <CreateTeamModal
+        isOpen={showCreateTeam}
+        onClose={() => setShowCreateTeam(false)}
+        onCreate={handleCreateTeam}
       />
 
       {/* Toast de feedback */}

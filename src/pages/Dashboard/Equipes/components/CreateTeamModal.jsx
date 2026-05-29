@@ -1,7 +1,12 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { LuX, LuArrowLeft, LuArrowRight, LuCheck } from 'react-icons/lu'
+import {
+  LuX, LuArrowLeft, LuArrowRight, LuCheck,
+  LuUser, LuBuilding2, LuStore,
+} from 'react-icons/lu'
 import { TEAM_TYPES, TEAM_COLORS } from '../../../../services/team'
+
+const TYPE_ICONS = { personal: LuUser, agency: LuBuilding2, brand: LuStore }
 
 const initial = (name) => name.charAt(0).toUpperCase() || '?'
 
@@ -111,20 +116,25 @@ export default function CreateTeamModal({ isOpen, onClose, onCreate }) {
                   <h3>Qual o tipo da equipe?</h3>
                   <p>Isso ajuda a gente a sugerir as configurações certas. Pode mudar depois.</p>
                   <div className="create-team__types">
-                    {TEAM_TYPES.map(t => (
-                      <button
-                        key={t.id}
-                        type="button"
-                        className={`create-team__type${form.type === t.id ? ' create-team__type--active' : ''}`}
-                        onClick={() => setForm(f => ({ ...f, type: t.id }))}
-                      >
-                        <span className="create-team__type-icon">{t.icon}</span>
-                        <div>
-                          <strong>{t.label}</strong>
-                          <span>{t.desc}</span>
-                        </div>
-                      </button>
-                    ))}
+                    {TEAM_TYPES.map(t => {
+                      const Icon = TYPE_ICONS[t.id]
+                      return (
+                        <button
+                          key={t.id}
+                          type="button"
+                          className={`create-team__type${form.type === t.id ? ' create-team__type--active' : ''}`}
+                          onClick={() => setForm(f => ({ ...f, type: t.id }))}
+                        >
+                          <span className="create-team__type-icon">
+                            {Icon && <Icon size={20} />}
+                          </span>
+                          <div>
+                            <strong>{t.label}</strong>
+                            <span>{t.desc}</span>
+                          </div>
+                        </button>
+                      )
+                    })}
                   </div>
                 </div>
               )}

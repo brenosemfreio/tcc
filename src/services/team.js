@@ -78,11 +78,11 @@ export const TEAM_COLORS = [
   { id: 'red',    value: '#EF4444' },
 ]
 
-// Tipos de time
+// Tipos de time — o componente decide qual ícone renderizar a partir do id.
 export const TEAM_TYPES = [
-  { id: 'personal', label: 'Pessoal', icon: '👤', desc: 'Só eu uso, sem outros membros.' },
-  { id: 'agency',   label: 'Agência', icon: '🏢', desc: 'Gerencio várias marcas e clientes.' },
-  { id: 'brand',    label: 'Marca',   icon: '🏪', desc: 'Uma empresa, vários funcionários.' },
+  { id: 'personal', label: 'Pessoal', desc: 'Só eu uso, sem outros membros.' },
+  { id: 'agency',   label: 'Agência', desc: 'Gerencio várias marcas e clientes.' },
+  { id: 'brand',    label: 'Marca',   desc: 'Uma empresa, vários funcionários.' },
 ]
 
 // ── Times que o usuário atual faz parte ──

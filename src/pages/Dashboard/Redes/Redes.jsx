@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import {
   LuInstagram, LuTwitter, LuYoutube, LuShieldCheck,
   LuCircleCheck, LuCircleAlert, LuWifiOff, LuPlus,
-  LuCheck,
+  LuCheck, LuLock,
 } from 'react-icons/lu'
 import { FaTiktok, FaFacebook, FaPinterest } from 'react-icons/fa'
 import Button from '../../../components/Button/Button'
@@ -128,7 +128,7 @@ export default function Redes() {
                 <p>{desc}</p>
               </div>
               <div className={`permissions-item__check ${done ? 'permissions-item__check--done' : 'permissions-item__check--lock'}`}>
-                {done ? <LuCheck size={16} /> : '🔒'}
+                {done ? <LuCheck size={16} /> : <LuLock size={14} />}
               </div>
             </div>
           ))}

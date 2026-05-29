@@ -1,4 +1,4 @@
-import { LuThumbsUp, LuMessageCircle, LuShare2, LuImage, LuPlay, LuEarth } from 'react-icons/lu'
+import { LuThumbsUp, LuMessageCircle, LuShare2, LuImage, LuPlay, LuEarth, LuHeart } from 'react-icons/lu'
 
 export default function FacebookPreview({ type = 'post', content, user, media = [] }) {
   const name = user?.name || 'Você'
@@ -36,7 +36,11 @@ export default function FacebookPreview({ type = 'post', content, user, media = 
 
       {/* Contadores */}
       <div className="np-fb__counts">
-        <span>👍❤️ 234</span>
+        <span className="np-fb__reactions">
+          <span className="np-fb__reaction np-fb__reaction--like"><LuThumbsUp size={9} /></span>
+          <span className="np-fb__reaction np-fb__reaction--love"><LuHeart size={9} /></span>
+          234
+        </span>
         <span>12 comentários · 5 compartilhamentos</span>
       </div>
 

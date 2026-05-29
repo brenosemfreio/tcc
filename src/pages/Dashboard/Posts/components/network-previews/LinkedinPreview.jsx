@@ -1,4 +1,4 @@
-import { LuThumbsUp, LuMessageCircle, LuRepeat, LuSend, LuImage } from 'react-icons/lu'
+import { LuThumbsUp, LuMessageCircle, LuRepeat, LuSend, LuImage, LuGlobe, LuLightbulb, LuTarget } from 'react-icons/lu'
 
 export default function LinkedinPreview({ type = 'post', title, content, user, media = [] }) {
   const name = user?.name || 'Você'
@@ -38,7 +38,7 @@ export default function LinkedinPreview({ type = 'post', title, content, user, m
         <div className="np-li__user">
           <strong>{name}</strong>
           <span>Profissional · 1º</span>
-          <span className="np-li__time">agora · 🌐</span>
+          <span className="np-li__time">agora · <LuGlobe size={10} /></span>
         </div>
       </div>
 
@@ -59,7 +59,12 @@ export default function LinkedinPreview({ type = 'post', title, content, user, m
       </div>
 
       <div className="np-li__counts">
-        <span>👍🎯💡 234 · 56 comentários</span>
+        <span className="np-li__reactions">
+          <span className="np-li__reaction np-li__reaction--like"><LuThumbsUp size={9} /></span>
+          <span className="np-li__reaction np-li__reaction--celebrate"><LuTarget size={9} /></span>
+          <span className="np-li__reaction np-li__reaction--insight"><LuLightbulb size={9} /></span>
+          234 · 56 comentários
+        </span>
       </div>
 
       <div className="np-li__actions">

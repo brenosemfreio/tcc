@@ -104,7 +104,7 @@ export default function Equipes() {
   // ── Time ──
   const handleCreateTeam = (data) => {
     const newTeam = createTeam(data)
-    flashMsg(`Bem-vindo ao ${newTeam.name}! 🎉`)
+    flashMsg(`Bem-vindo ao ${newTeam.name}!`)
   }
   const handleUpdateTeam = (updates) => {
     updateTeam(currentTeam.id, updates)

@@ -564,11 +564,31 @@
 .np-fb__counts {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 8px 12px;
   font-size: 11px;
   color: #65676B;
   border-bottom: 1px solid #e4e6eb;
 }
+.np-fb__reactions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.np-fb__reaction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  color: #fff;
+  margin-left: -4px;
+  border: 1.5px solid #fff;
+}
+.np-fb__reaction:first-of-type { margin-left: 0; }
+.np-fb__reaction--like { background: #1877F2; }
+.np-fb__reaction--love { background: #F33E58; }
 .np-fb__actions {
   display: flex;
   padding: 4px 6px;
@@ -648,6 +668,26 @@
   color: #666;
   border-bottom: 1px solid #e4e6eb;
 }
+.np-li__reactions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.np-li__reaction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  color: #fff;
+  margin-left: -4px;
+  border: 1.5px solid #fff;
+}
+.np-li__reaction:first-of-type { margin-left: 0; }
+.np-li__reaction--like      { background: #0A66C2; }
+.np-li__reaction--celebrate { background: #F5BB5C; color: #fff; }
+.np-li__reaction--insight   { background: #F5987E; color: #fff; }
 .np-li__actions {
   display: flex;
   padding: 4px 6px;

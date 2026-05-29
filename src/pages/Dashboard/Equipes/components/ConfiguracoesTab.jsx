@@ -2,8 +2,11 @@ import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
   LuCamera, LuTrash2, LuLogOut, LuCheck, LuTriangleAlert, LuLock,
+  LuUser, LuBuilding2, LuStore,
 } from 'react-icons/lu'
 import { TEAM_COLORS, TEAM_TYPES, PERMISSION_MATRIX } from '../../../../services/team'
+
+const TYPE_ICONS = { personal: LuUser, agency: LuBuilding2, brand: LuStore }
 
 const initial = (name) => name?.charAt(0).toUpperCase() || '?'
 
@@ -186,18 +189,23 @@ export default function ConfiguracoesTab({ team, currentRole, onUpdate, onDelete
           <p>Não muda permissões — só ajuda a gente a sugerir o que faz sentido.</p>
         </header>
         <div className="config-types">
-          {TEAM_TYPES.map(t => (
-            <button
-              key={t.id}
-              type="button"
-              className={`config-type${form.type === t.id ? ' config-type--active' : ''}`}
-              onClick={() => canEdit && setForm(f => ({ ...f, type: t.id }))}
-              disabled={!canEdit}
-            >
-              <span className="config-type__icon">{t.icon}</span>
-              <strong>{t.label}</strong>
-            </button>
-          ))}
+          {TEAM_TYPES.map(t => {
+            const Icon = TYPE_ICONS[t.id]
+            return (
+              <button
+                key={t.id}
+                type="button"
+                className={`config-type${form.type === t.id ? ' config-type--active' : ''}`}
+                onClick={() => canEdit && setForm(f => ({ ...f, type: t.id }))}
+                disabled={!canEdit}
+              >
+                <span className="config-type__icon">
+                  {Icon && <Icon size={22} />}
+                </span>
+                <strong>{t.label}</strong>
+              </button>
+            )
+          })}
         </div>
       </section>
 

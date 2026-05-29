@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { LuUser, LuBell, LuCreditCard, LuCamera } from 'react-icons/lu'
+import { LuUser, LuBell, LuCreditCard, LuCamera, LuCheck } from 'react-icons/lu'
 import { useAuth } from '../../../contexts/AuthContext'
 import Button from '../../../components/Button/Button'
 import './Configuracoes.css'
@@ -116,8 +116,8 @@ export default function Configuracoes() {
                     </div>
                   </div>
                   <div className="config-form-actions">
-                    <Button type="submit" loading={false}>
-                      {saved ? '✓ Salvo!' : 'Salvar alterações'}
+                    <Button type="submit" loading={false} icon={saved ? <LuCheck size={16} /> : null}>
+                      {saved ? 'Salvo!' : 'Salvar alterações'}
                     </Button>
                   </div>
                 </form>

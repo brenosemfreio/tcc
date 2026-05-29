@@ -2384,8 +2384,8 @@
    Garante que o hero preencha viewport e que o mockup não fique estreito.
    Cobre exatamente o intervalo onde o zoom 125% colapsa o layout:
    - 1366 @ 125% → ~1093px (fora, pega só ≤1024)
-   - 1440 @ 125% → ~1152px ✓
-   - 1600 @ 125% → ~1280px ✓
+   - 1440 @ 125% → ~1152px (OK)
+   - 1600 @ 125% → ~1280px (OK)
    - 1920 @ 125% → ~1536px (coberto pelo 1281-1600 já corrigido)
    ══════════════════════════════════════════════════════════ */
 @media (min-width: 1152px) and (max-width: 1280px) {

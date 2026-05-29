@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  LuArrowLeft, LuMail, LuMailCheck, LuCircleAlert, LuExternalLink,
+  LuArrowLeft, LuMail, LuMailCheck, LuCircleAlert, LuExternalLink, LuCheck,
 } from 'react-icons/lu'
 import logoHub from '../../assets/images/logo-hub.png'
 import './EsqueciSenha.css'
@@ -187,7 +187,9 @@ export default function EsqueciSenha() {
                       </button>
                     </>
                   ) : (
-                    <span className="recovery__resend-success">Reenviado ✓</span>
+                    <span className="recovery__resend-success">
+                      Reenviado <LuCheck size={14} />
+                    </span>
                   )}
                 </p>
 

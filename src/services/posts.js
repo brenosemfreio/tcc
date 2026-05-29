@@ -42,7 +42,7 @@ const ALL_POSTS = [
   {
     id: 'p1',
     title: '5 dicas para aumentar seu engajamento',
-    content: 'Quer turbinar seu engajamento? Aqui vão 5 dicas práticas que aplicamos no nosso perfil este mês 🚀\n\n1) Poste consistentemente\n2) Use carrosséis\n3) Hooks fortes nos primeiros 3 segundos\n4) Responda todos os comentários\n5) Faça lives mensais',
+    content: 'Quer turbinar seu engajamento? Aqui vão 5 dicas práticas que aplicamos no nosso perfil este mês.\n\n1) Poste consistentemente\n2) Use carrosséis\n3) Hooks fortes nos primeiros 3 segundos\n4) Responda todos os comentários\n5) Faça lives mensais',
     networks: ['instagram', 'tiktok'],
     type: 'carousel',
     status: 'published',

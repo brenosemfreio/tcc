@@ -1,9 +1,9 @@
+import { motion } from 'framer-motion'
 import {
   LuCheck, LuX, LuPencil, LuSend, LuUserPlus, LuShield,
-  LuSettings, LuCheckCheck, LuCalendarClock,
+  LuSettings, LuCheckCheck, LuCalendarClock, LuSparkles,
 } from 'react-icons/lu'
 
-// Mapa de tipo de atividade pra estilo + texto formatado
 const EVENT_META = {
   'post-created':    { Icon: LuPencil,        color: '#0EA5E9', verb: 'criou rascunho' },
   'post-submitted':  { Icon: LuSend,          color: '#F59E0B', verb: 'submeteu pra aprovação' },
@@ -15,6 +15,7 @@ const EVENT_META = {
   'member-removed':  { Icon: LuX,             color: '#EF4444', verb: 'removeu' },
   'role-changed':    { Icon: LuShield,        color: '#7C5FE8', verb: 'mudou o papel de' },
   'config-changed':  { Icon: LuSettings,      color: '#6B7280', verb: 'alterou' },
+  'team-created':    { Icon: LuSparkles,      color: '#4F35E8', verb: 'criou' },
 }
 
 function timeAgo(iso) {
@@ -52,36 +53,51 @@ export default function AtividadeTab({ events }) {
         <p>Tudo o que aconteceu no time — útil pra auditoria e contexto.</p>
       </div>
 
-      <div className="atividade-tab__feed">
-        {events.map(event => {
-          const meta = EVENT_META[event.type]
-          if (!meta) return null
-          const Icon = meta.Icon
-          return (
-            <div key={event.id} className="atividade-item">
-              <div
-                className="atividade-item__icon"
-                style={{
-                  background: `color-mix(in srgb, ${meta.color} 12%, transparent)`,
-                  color: meta.color,
-                }}
+      {events.length === 0 ? (
+        <motion.div
+          className="atividade-tab__empty"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <p>Nenhuma atividade por aqui ainda. Quando o time começar a se mexer, aparece tudo nessa timeline.</p>
+        </motion.div>
+      ) : (
+        <div className="atividade-tab__feed">
+          {events.map((event, i) => {
+            const meta = EVENT_META[event.type]
+            if (!meta) return null
+            const Icon = meta.Icon
+            return (
+              <motion.div
+                key={event.id}
+                className="atividade-item"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0, transition: { delay: Math.min(i * 0.05, 0.4), duration: 0.3 } }}
               >
-                <Icon size={15} />
-              </div>
-              <div className="atividade-item__body">
-                <p>{renderText(event)}</p>
-                {event.extra?.reason && (
-                  <span className="atividade-item__reason">"{event.extra.reason}"</span>
-                )}
-                {event.extra?.detail && (
-                  <span className="atividade-item__detail">{event.extra.detail}</span>
-                )}
-                <span className="atividade-item__time">{timeAgo(event.at)}</span>
-              </div>
-            </div>
-          )
-        })}
-      </div>
+                <div
+                  className="atividade-item__icon"
+                  style={{
+                    background: `color-mix(in srgb, ${meta.color} 12%, transparent)`,
+                    color: meta.color,
+                  }}
+                >
+                  <Icon size={15} />
+                </div>
+                <div className="atividade-item__body">
+                  <p>{renderText(event)}</p>
+                  {event.extra?.reason && (
+                    <span className="atividade-item__reason">"{event.extra.reason}"</span>
+                  )}
+                  {event.extra?.detail && (
+                    <span className="atividade-item__detail">{event.extra.detail}</span>
+                  )}
+                  <span className="atividade-item__time">{timeAgo(event.at)}</span>
+                </div>
+              </motion.div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

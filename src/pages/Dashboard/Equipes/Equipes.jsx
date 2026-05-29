@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   getTeamMembers, getPendingInvites, getApprovalConfig,
   getTeamActivity,
@@ -12,13 +13,14 @@ import ConvitesTab from './components/ConvitesTab'
 import PapeisTab from './components/PapeisTab'
 import AprovacaoTab from './components/AprovacaoTab'
 import AtividadeTab from './components/AtividadeTab'
+import ConfiguracoesTab from './components/ConfiguracoesTab'
 import InviteModal from './components/InviteModal'
 import CreateTeamModal from './components/CreateTeamModal'
 import './Equipes.css'
 
 export default function Equipes() {
   const { user } = useAuth()
-  const { currentTeam, createTeam } = useTeam()
+  const { currentTeam, createTeam, updateTeam, deleteTeam } = useTeam()
 
   const [members, setMembers] = useState([])
   const [invites, setInvites] = useState([])
@@ -30,7 +32,6 @@ export default function Equipes() {
   const [showCreateTeam, setShowCreateTeam] = useState(false)
   const [flash, setFlash] = useState('')
 
-  // Recarrega dados quando o time atual muda
   useEffect(() => {
     if (!currentTeam) return
     Promise.all([
@@ -51,7 +52,7 @@ export default function Equipes() {
     setTimeout(() => setFlash(''), ms)
   }
 
-  // ── Ações de membros ──
+  // ── Membros ──
   const handleRoleChange = (memberId, newRole) => {
     setMembers(prev => prev.map(m => m.id === memberId ? { ...m, role: newRole } : m))
     flashMsg('Papel atualizado!')
@@ -87,7 +88,7 @@ export default function Equipes() {
     flashMsg('Convite cancelado.')
   }
 
-  // ── Configuração de aprovação ──
+  // ── Aprovação ──
   const handleToggleConfig = (key) => {
     setConfig(prev => ({ ...prev, [key]: !prev[key] }))
     flashMsg('Configuração salva.')
@@ -100,9 +101,26 @@ export default function Equipes() {
     flashMsg('Aprovador removido.')
   }
 
+  // ── Time ──
   const handleCreateTeam = (data) => {
     const newTeam = createTeam(data)
     flashMsg(`Bem-vindo ao ${newTeam.name}! 🎉`)
+  }
+  const handleUpdateTeam = (updates) => {
+    updateTeam(currentTeam.id, updates)
+    flashMsg('Equipe atualizada!')
+  }
+  const handleDeleteTeam = () => {
+    const name = currentTeam.name
+    deleteTeam(currentTeam.id)
+    setActiveTab('membros')
+    flashMsg(`Equipe "${name}" excluída.`)
+  }
+  const handleLeaveTeam = () => {
+    const name = currentTeam.name
+    deleteTeam(currentTeam.id)
+    setActiveTab('membros')
+    flashMsg(`Você saiu de "${name}".`)
   }
 
   if (!currentTeam) {
@@ -114,7 +132,12 @@ export default function Equipes() {
   }
 
   return (
-    <div className="eq-page">
+    <motion.div
+      className="eq-page"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
       <EquipesHeader
         team={currentTeam}
         members={members}
@@ -127,42 +150,62 @@ export default function Equipes() {
         active={activeTab}
         onChange={setActiveTab}
         counts={{ invites: invites.length }}
-        key={currentTeam.id}
+        currentRole={currentTeam.role}
       />
 
       <div className="eq-content">
-        {activeTab === 'membros' && (
-          <MembrosTab
-            members={members}
-            currentUserId={'u1'}                   // mock: usuário atual
-            onRoleChange={handleRoleChange}
-            onRemove={handleRemove}
-            onInviteClick={() => setShowInvite(true)}
-          />
-        )}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`${currentTeam.id}-${activeTab}`}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.22 }}
+          >
+            {activeTab === 'membros' && (
+              <MembrosTab
+                members={members}
+                currentUserId={'u1'}
+                onRoleChange={handleRoleChange}
+                onRemove={handleRemove}
+                onInviteClick={() => setShowInvite(true)}
+              />
+            )}
 
-        {activeTab === 'convites' && (
-          <ConvitesTab
-            invites={invites}
-            onResend={handleResend}
-            onCancel={handleCancelInvite}
-            onInviteClick={() => setShowInvite(true)}
-          />
-        )}
+            {activeTab === 'convites' && (
+              <ConvitesTab
+                invites={invites}
+                onResend={handleResend}
+                onCancel={handleCancelInvite}
+                onInviteClick={() => setShowInvite(true)}
+              />
+            )}
 
-        {activeTab === 'papeis' && <PapeisTab />}
+            {activeTab === 'papeis' && <PapeisTab />}
 
-        {activeTab === 'aprovacao' && (
-          <AprovacaoTab
-            config={config}
-            members={members}
-            onToggle={handleToggleConfig}
-            onRemoveApprover={handleRemoveApprover}
-            pendingCount={currentTeam.pendingPosts}
-          />
-        )}
+            {activeTab === 'aprovacao' && (
+              <AprovacaoTab
+                config={config}
+                members={members}
+                onToggle={handleToggleConfig}
+                onRemoveApprover={handleRemoveApprover}
+                pendingCount={currentTeam.pendingPosts}
+              />
+            )}
 
-        {activeTab === 'atividade' && <AtividadeTab events={activity} />}
+            {activeTab === 'atividade' && <AtividadeTab events={activity} />}
+
+            {activeTab === 'configuracoes' && (
+              <ConfiguracoesTab
+                team={currentTeam}
+                currentRole={currentTeam.role}
+                onUpdate={handleUpdateTeam}
+                onDelete={handleDeleteTeam}
+                onLeave={handleLeaveTeam}
+              />
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       <InviteModal
@@ -177,10 +220,19 @@ export default function Equipes() {
         onCreate={handleCreateTeam}
       />
 
-      {/* Toast de feedback */}
-      {flash && (
-        <div className="eq-toast">{flash}</div>
-      )}
-    </div>
+      <AnimatePresence>
+        {flash && (
+          <motion.div
+            className="eq-toast"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 24 }}
+            transition={{ duration: 0.25 }}
+          >
+            {flash}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   )
 }

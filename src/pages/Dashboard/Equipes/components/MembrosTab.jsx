@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { LuSearch, LuUserPlus } from 'react-icons/lu'
 import { ROLES, ROLE_ORDER } from '../../../../services/team'
 import MemberRow from './MemberRow'
@@ -50,21 +51,45 @@ export default function MembrosTab({ members, currentUserId, onRoleChange, onRem
       </div>
 
       <div className="membros-tab__list">
-        {filtered.length === 0 ? (
-          <div className="membros-tab__empty">
-            <p>Nenhum membro encontrado{query ? ` para "${query}"` : ''}.</p>
-          </div>
-        ) : (
-          filtered.map(m => (
-            <MemberRow
-              key={m.id}
-              member={m}
-              isMe={m.id === currentUserId}
-              onRoleChange={onRoleChange}
-              onRemove={onRemove}
-            />
-          ))
-        )}
+        <AnimatePresence mode="popLayout">
+          {filtered.length === 0 ? (
+            <motion.div
+              key="empty"
+              className="membros-tab__empty"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+            >
+              <p>
+                {members.length === 0
+                  ? 'Ainda não tem ninguém aqui. Bora convidar a galera?'
+                  : `Nenhum membro encontrado${query ? ` para "${query}"` : ''}.`}
+              </p>
+              {members.length === 0 && (
+                <button type="button" className="membros-tab__empty-cta" onClick={onInviteClick}>
+                  <LuUserPlus size={14} /> Convidar primeiro membro
+                </button>
+              )}
+            </motion.div>
+          ) : (
+            filtered.map((m, i) => (
+              <motion.div
+                key={m.id}
+                layout
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0, transition: { delay: Math.min(i * 0.04, 0.3), duration: 0.3 } }}
+                exit={{ opacity: 0, x: -20, transition: { duration: 0.2 } }}
+              >
+                <MemberRow
+                  member={m}
+                  isMe={m.id === currentUserId}
+                  onRoleChange={onRoleChange}
+                  onRemove={onRemove}
+                />
+              </motion.div>
+            ))
+          )}
+        </AnimatePresence>
       </div>
     </div>
   )

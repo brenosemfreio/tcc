@@ -78,6 +78,14 @@
   font-weight: 800;
   font-size: 1.1rem;
   flex-shrink: 0;
+  overflow: hidden;
+  transition: transform var(--transition-fast);
+}
+.team-switcher__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 .team-switcher__avatar--sm {
   width: 32px;
@@ -273,29 +281,37 @@
   flex-wrap: wrap;
 }
 .eq-tabs__tab {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 7px;
   padding: 10px 16px;
   background: transparent;
   border: none;
-  border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
   font-weight: 500;
   cursor: pointer;
   font-family: var(--font-family);
-  transition: color var(--transition-fast), border-color var(--transition-fast);
+  transition: color var(--transition-fast);
 }
 .eq-tabs__tab:hover { color: var(--color-text); }
 .eq-tabs__tab--active {
   color: var(--color-primary);
-  border-bottom-color: var(--color-primary);
   font-weight: 700;
 }
+.eq-tabs__underline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--color-primary);
+  border-radius: 2px 2px 0 0;
+}
 .eq-tabs__tab--warn { color: var(--color-warning); }
-.eq-tabs__tab--warn.eq-tabs__tab--active { border-bottom-color: var(--color-warning); }
+.eq-tabs__tab--warn.eq-tabs__tab--active .eq-tabs__underline { background: var(--color-warning); }
 .eq-tabs__count {
   display: inline-flex;
   align-items: center;
@@ -1222,6 +1238,365 @@
   font-size: 0.7rem;
   color: var(--color-text-muted);
 }
+.atividade-tab__empty {
+  padding: 28px;
+  text-align: center;
+  background: var(--color-bg);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+/* Empty state com CTA — Membros */
+.membros-tab__empty-cta {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-family);
+}
+.membros-tab__empty-cta:hover { background: var(--color-primary-hover); }
+
+/* ════════════════════════════════════════════════════════════
+   ConfiguracoesTab
+   ════════════════════════════════════════════════════════════ */
+.config-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-bottom: 90px; /* espaço para save bar */
+}
+
+.config-tab__locked {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: color-mix(in srgb, var(--color-warning) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-warning) 30%, transparent);
+  border-radius: var(--radius-md);
+  color: var(--color-warning);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.config-card {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.config-card header h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.config-card header p {
+  margin-top: 2px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* Identidade: avatar + nome/desc */
+.config-identity {
+  display: flex;
+  gap: 22px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.config-identity__avatar-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.config-identity__avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 2.5rem;
+  overflow: hidden;
+  transition: background var(--transition-fast);
+}
+.config-identity__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.config-identity__photo-btn {
+  position: absolute;
+  bottom: 28px;
+  right: -4px;
+  width: 30px;
+  height: 30px;
+  background: var(--color-primary);
+  color: #fff;
+  border: 3px solid var(--color-card-bg);
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-fast);
+}
+.config-identity__photo-btn:hover { transform: scale(1.08); }
+.config-identity__photo-remove {
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: 0.72rem;
+  cursor: pointer;
+  text-decoration: underline;
+  font-family: var(--font-family);
+}
+.config-identity__photo-remove:hover { color: var(--color-error, #EF4444); }
+
+.config-identity__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+  min-width: 240px;
+}
+.config-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.config-field > span {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+.config-field input,
+.config-field textarea {
+  padding: 10px 14px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  resize: vertical;
+}
+.config-field input:focus,
+.config-field textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+.config-field input:disabled,
+.config-field textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.config-field small {
+  align-self: flex-end;
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+}
+
+/* Cores */
+.config-colors {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.config-color {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 3px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+.config-color:hover:not(:disabled) { transform: scale(1.08); }
+.config-color:disabled { cursor: not-allowed; opacity: 0.6; }
+.config-color--active {
+  border-color: var(--color-text);
+  transform: scale(1.05);
+}
+
+/* Tipos */
+.config-types {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+.config-type {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px;
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: var(--font-family);
+  color: var(--color-text);
+  transition: all var(--transition-fast);
+}
+.config-type:hover:not(:disabled) { border-color: var(--color-text-muted); }
+.config-type:disabled { cursor: not-allowed; opacity: 0.6; }
+.config-type--active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+.config-type__icon { font-size: 1.5rem; }
+.config-type strong { font-size: var(--font-size-sm); }
+
+/* Save bar flutuante */
+.config-savebar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  background: var(--color-text);
+  color: var(--color-card-bg);
+  border-radius: 999px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
+  z-index: 80;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+.config-savebar__cancel,
+.config-savebar__save {
+  padding: 7px 14px;
+  border: none;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-family);
+}
+.config-savebar__cancel {
+  background: transparent;
+  color: var(--color-card-bg);
+  opacity: 0.8;
+}
+.config-savebar__cancel:hover { opacity: 1; }
+.config-savebar__save {
+  background: var(--color-primary);
+  color: #fff;
+}
+.config-savebar__save:hover:not(:disabled) { background: var(--color-primary-hover); }
+.config-savebar__save:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Zona de perigo */
+.config-danger {
+  border-color: color-mix(in srgb, var(--color-error, #EF4444) 30%, var(--color-border));
+}
+.config-danger header h3 {
+  color: var(--color-error, #EF4444);
+}
+.config-danger__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.config-danger__btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--color-text);
+  font-family: var(--font-family);
+  text-align: left;
+  transition: all var(--transition-fast);
+}
+.config-danger__btn:hover {
+  background: color-mix(in srgb, var(--color-error, #EF4444) 8%, var(--color-bg));
+  border-color: var(--color-error, #EF4444);
+  color: var(--color-error, #EF4444);
+}
+.config-danger__btn div { display: flex; flex-direction: column; gap: 2px; }
+.config-danger__btn strong { font-size: var(--font-size-sm); font-weight: 700; }
+.config-danger__btn span { font-size: 0.75rem; color: var(--color-text-secondary); }
+.config-danger__btn:hover span { color: var(--color-error, #EF4444); }
+
+.config-danger__confirm {
+  padding: 14px;
+  background: color-mix(in srgb, var(--color-error, #EF4444) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-error, #EF4444) 40%, transparent);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.config-danger__confirm p {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+}
+.config-danger__confirm-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.config-danger__confirm-row input {
+  flex: 1;
+  min-width: 180px;
+  padding: 9px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-card-bg);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+}
+.config-danger__confirm-row input:focus {
+  outline: none;
+  border-color: var(--color-error, #EF4444);
+}
+.config-danger__confirm-row button {
+  padding: 9px 16px;
+  border: 1px solid var(--color-border);
+  background: var(--color-card-bg);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-family);
+  color: var(--color-text);
+}
+.config-danger__confirm-go {
+  background: var(--color-error, #EF4444) !important;
+  color: #fff !important;
+  border-color: var(--color-error, #EF4444) !important;
+}
+.config-danger__confirm-go:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* ════════════════════════════════════════════════════════════
    CreateTeamModal

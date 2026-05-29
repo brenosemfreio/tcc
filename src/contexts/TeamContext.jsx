@@ -1,10 +1,12 @@
 import { createContext, useContext, useState, useEffect } from 'react'
-import { getUserTeams } from '../services/team'
+import { getUserTeams, initTeamData } from '../services/team'
+import { useAuth } from './AuthContext'
 
 const TeamContext = createContext(null)
 const STORAGE_KEY = 'hs-current-team'
 
 export function TeamProvider({ children }) {
+  const { user } = useAuth()
   const [teams, setTeams] = useState([])
   const [currentTeamId, setCurrentTeamId] = useState(() => localStorage.getItem(STORAGE_KEY))
   const [loading, setLoading] = useState(true)
@@ -12,7 +14,6 @@ export function TeamProvider({ children }) {
   useEffect(() => {
     getUserTeams().then(list => {
       setTeams(list)
-      // Se não tem time salvo, usa o primeiro como default
       if (!currentTeamId || !list.find(t => t.id === currentTeamId)) {
         const firstId = list[0]?.id
         if (firstId) {
@@ -36,15 +37,46 @@ export function TeamProvider({ children }) {
       name,
       type,
       color,
-      plan: 'lite',          // novos times começam no Lite
+      plan: 'lite',
       role: 'admin',
       totalMembers: 1,
       pendingPosts: 0,
+      photo: null,
+      description: '',
     }
+
+    // Semeia a equipe com o usuário atual como único membro
+    const founder = {
+      id: 'u1',
+      name: user?.name || 'Você',
+      email: user?.email || 'voce@hubstudio.com',
+      role: 'admin',
+      joinedAt: new Date().toISOString(),
+      lastActive: 'agora',
+    }
+    initTeamData(newTeam.id, founder)
+
     setTeams(prev => [...prev, newTeam])
     setCurrentTeamId(newTeam.id)
     localStorage.setItem(STORAGE_KEY, newTeam.id)
     return newTeam
+  }
+
+  /** Atualiza dados editáveis da equipe atual (nome, cor, foto, descrição). */
+  const updateTeam = (teamId, updates) => {
+    setTeams(prev => prev.map(t => t.id === teamId ? { ...t, ...updates } : t))
+  }
+
+  /** Remove uma equipe da lista do usuário. */
+  const deleteTeam = (teamId) => {
+    setTeams(prev => {
+      const next = prev.filter(t => t.id !== teamId)
+      if (currentTeamId === teamId && next.length) {
+        setCurrentTeamId(next[0].id)
+        localStorage.setItem(STORAGE_KEY, next[0].id)
+      }
+      return next
+    })
   }
 
   const currentTeam = teams.find(t => t.id === currentTeamId) || teams[0] || null
@@ -52,7 +84,7 @@ export function TeamProvider({ children }) {
   return (
     <TeamContext.Provider value={{
       teams, currentTeam, loading,
-      switchTeam, createTeam,
+      switchTeam, createTeam, updateTeam, deleteTeam,
     }}>
       {children}
     </TeamContext.Provider>

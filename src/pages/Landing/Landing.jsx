@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   LuArrowRight, LuArrowUpRight, LuCheck, LuStar, LuChevronRight,
-  LuZap, LuMessageCircle, LuRotateCcw, LuShieldCheck, LuCreditCard,
+  LuMessageCircle, LuRotateCcw, LuShieldCheck, LuCreditCard,
 } from 'react-icons/lu'
 
 import Navbar from '../../components/Navbar/Navbar'
@@ -109,7 +109,6 @@ export default function Landing() {
             viewport={{ once: true, margin: '-80px' }}
             variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
           >
-            <motion.span variants={fadeUp} className="l-badge l-badge--primary">Funcionalidades</motion.span>
             <motion.h2 variants={fadeUp}>
               Tudo que você precisa,<br /><span className="l-gradient-text">em um só lugar</span>
             </motion.h2>
@@ -168,9 +167,6 @@ export default function Landing() {
             viewport={{ once: true, margin: '-80px' }}
             variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
           >
-            <motion.span variants={fadeUp} className="l-badge l-badge--primary">
-              <LuZap size={12} style={{ marginRight: 6 }} />Como funciona
-            </motion.span>
             <motion.h2 variants={fadeUp}>
               Em <span className="l-gradient-text">3 passos simples</span><br />você já está no ar
             </motion.h2>
@@ -227,7 +223,6 @@ export default function Landing() {
               variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
             >
               <div className="l-section-head l-section-head--left">
-                <motion.span variants={fadeUp} className="l-badge l-badge--primary">Dúvidas</motion.span>
                 <motion.h2 variants={fadeUp}>
                   Perguntas<br /><span className="l-gradient-text">frequentes</span>
                 </motion.h2>
@@ -290,7 +285,6 @@ export default function Landing() {
             viewport={{ once: true, margin: '-80px' }}
             variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
           >
-            <motion.span variants={fadeUp} className="l-badge l-badge--primary">Planos</motion.span>
             <motion.h2 variants={fadeUp}>
               Projetado para<br /><span className="l-gradient-text">cada etapa</span>
             </motion.h2>
@@ -417,14 +411,6 @@ export default function Landing() {
         <div className="l-cta__glow l-cta__glow--1" />
         <div className="l-cta__glow l-cta__glow--2" />
         <div className="container l-cta__inner">
-          <motion.span
-            className="l-badge l-badge--glass"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <LuZap /> Comece hoje mesmo
-          </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}

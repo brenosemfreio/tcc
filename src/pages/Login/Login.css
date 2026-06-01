@@ -39,16 +39,12 @@
   filter: blur(3px);
   pointer-events: none;
   user-select: none;
-  /* scaleX(-1) fica aqui como transform estático;
-     a flutuação usa translate/rotate individualmente
-     para não sobrescrever este flip. */
-  transform: scaleX(-1);
   animation: decoFloat 6s ease-in-out infinite;
 }
 
 @keyframes decoFloat {
   0%   { translate: 0 0px;   rotate: 0deg; }
-  50%  { translate: 0 -24px; rotate: -4deg; }
+  50%  { translate: 0 -24px; rotate: 4deg; }
   100% { translate: 0 0px;   rotate: 0deg; }
 }
 

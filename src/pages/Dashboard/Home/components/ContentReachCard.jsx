@@ -16,7 +16,7 @@ export default function ContentReachCard({ data }) {
           {data.map(({ type, value, color }) => (
             <div key={type} className="reach-bar">
               <div className="reach-bar__meta">
-                <span style={{ color }}>{type}</span>
+                <span style={{ color: 'var(--color-text)' }}>{type}</span>
                 <span>{value}%</span>
               </div>
               <div className="reach-bar__track">

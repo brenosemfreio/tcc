@@ -43,9 +43,9 @@
 }
 
 @keyframes decoFloat {
-  0%   { transform: translateY(0)     rotate(0deg); }
-  50%  { transform: translateY(-24px) rotate(4deg); }
-  100% { transform: translateY(0)     rotate(0deg); }
+  0%   { transform: scaleX(-1) translateY(0)     rotate(0deg); }
+  50%  { transform: scaleX(-1) translateY(-24px) rotate(-4deg); }
+  100% { transform: scaleX(-1) translateY(0)     rotate(0deg); }
 }
 
 /* Entrada do Login: a logo "viaja" subindo de baixo,

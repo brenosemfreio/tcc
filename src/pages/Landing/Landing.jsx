@@ -102,20 +102,24 @@ export default function Landing() {
       {/* ── Features ─────────────────────────────────── */}
       <section className="l-features" id="funcionalidades">
         <div className="container">
-          <motion.div
-            className="l-section-head"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
-            variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-          >
-            <motion.h2 variants={fadeUp}>
+          <div className="l-section-head">
+            <motion.h2
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
               Tudo que você precisa,<br /><span className="l-gradient-text">em um só lugar</span>
             </motion.h2>
-            <motion.p variants={fadeUp}>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
               Do planejamento à análise, o HubStudio centraliza toda a sua gestão de redes sociais.
             </motion.p>
-          </motion.div>
+          </div>
 
           <div className="l-bento">
             {FEATURES.map((f, i) => {
@@ -160,17 +164,16 @@ export default function Landing() {
       {/* ── How it works ─────────────────────────────── */}
       <section className="l-steps" id="sobre">
         <div className="container">
-          <motion.div
-            className="l-section-head"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
-            variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-          >
-            <motion.h2 variants={fadeUp}>
+          <div className="l-section-head">
+            <motion.h2
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
               Em <span className="l-gradient-text">3 passos simples</span><br />você já está no ar
             </motion.h2>
-          </motion.div>
+          </div>
 
           <motion.div
             className="l-steps__perks"
@@ -215,22 +218,26 @@ export default function Landing() {
         <div className="l-faq__bg" aria-hidden="true" />
         <div className="container">
           <div className="l-faq__layout">
-            <motion.div
-              className="l-faq__head-col"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-80px' }}
-              variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-            >
+            <div className="l-faq__head-col">
               <div className="l-section-head l-section-head--left">
-                <motion.h2 variants={fadeUp}>
+                <motion.h2
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                >
                   Perguntas<br /><span className="l-gradient-text">frequentes</span>
                 </motion.h2>
-                <motion.p variants={fadeUp}>
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                >
                   Tudo que você precisa saber antes de começar.
                 </motion.p>
               </div>
-            </motion.div>
+            </div>
 
             <div className="l-faq__list-col">
               <div className="l-faq__list">
@@ -278,17 +285,16 @@ export default function Landing() {
       {/* ── Pricing ──────────────────────────────────── */}
       <section className="l-pricing" id="precos">
         <div className="container">
-          <motion.div
-            className="l-section-head"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
-            variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-          >
-            <motion.h2 variants={fadeUp}>
+          <div className="l-section-head">
+            <motion.h2
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
               Projetado para<br /><span className="l-gradient-text">cada etapa</span>
             </motion.h2>
-          </motion.div>
+          </div>
 
           <motion.div
             className="l-toggle"

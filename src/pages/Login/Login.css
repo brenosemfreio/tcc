@@ -39,13 +39,17 @@
   filter: blur(3px);
   pointer-events: none;
   user-select: none;
+  /* scaleX(-1) fica aqui como transform estático;
+     a flutuação usa translate/rotate individualmente
+     para não sobrescrever este flip. */
+  transform: scaleX(-1);
   animation: decoFloat 6s ease-in-out infinite;
 }
 
 @keyframes decoFloat {
-  0%   { transform: scaleX(-1) translateY(0)     rotate(0deg); }
-  50%  { transform: scaleX(-1) translateY(-24px) rotate(-4deg); }
-  100% { transform: scaleX(-1) translateY(0)     rotate(0deg); }
+  0%   { translate: 0 0px;   rotate: 0deg; }
+  50%  { translate: 0 -24px; rotate: -4deg; }
+  100% { translate: 0 0px;   rotate: 0deg; }
 }
 
 /* Entrada do Login: a logo "viaja" subindo de baixo,

@@ -14,7 +14,7 @@
 .cadastro-deco-wrap {
   position: absolute;
   bottom: -80px;
-  left: -120px;
+  left: -200px;
   top: auto;
   right: auto;
   z-index: 0;
@@ -40,10 +40,13 @@
   animation: decoFloat 6s ease-in-out infinite;
 }
 
+/* Espelhada horizontalmente (scaleX(-1)) — a flutuação inclui o
+   espelhamento direto nos keyframes pra não conflitar com o
+   transform de entrada do wrapper. */
 @keyframes decoFloat {
-  0%   { transform: translateY(0)     rotate(0deg); }
-  50%  { transform: translateY(-24px) rotate(4deg); }
-  100% { transform: translateY(0)     rotate(0deg); }
+  0%   { transform: scaleX(-1) translateY(0)     rotate(0deg); }
+  50%  { transform: scaleX(-1) translateY(-24px) rotate(-4deg); }
+  100% { transform: scaleX(-1) translateY(0)     rotate(0deg); }
 }
 
 /* Entrada do Cadastro: a logo "viaja" descendo do topo,

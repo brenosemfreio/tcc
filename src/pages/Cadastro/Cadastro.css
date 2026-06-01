@@ -1,0 +1,54 @@
+/* ─────────────────────────────────────────────────────────
+   Cadastro — logo decorativa flutuante no lado esquerdo
+   ───────────────────────────────────────────────────────── */
+
+/* Garante que a headline e a logo do topo fiquem POR CIMA
+   da decoração (que tem z-index: 0). */
+.auth__left-logo,
+.auth__left-headline {
+  z-index: 2;
+}
+
+/* Wrapper: cuida da POSIÇÃO e da animação de ENTRADA.
+   Posição: canto inferior esquerdo, vazando pela esquerda. */
+.cadastro-deco-wrap {
+  position: absolute;
+  bottom: -80px;
+  left: -120px;
+  top: auto;
+  right: auto;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+  animation: decoEnterCadastro 1s cubic-bezier(0.65, 0, 0.35, 1) both;
+  transition:
+    top    1s cubic-bezier(0.65, 0, 0.35, 1),
+    bottom 1s cubic-bezier(0.65, 0, 0.35, 1),
+    left   1s cubic-bezier(0.65, 0, 0.35, 1),
+    right  1s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Logo: apenas a FLUTUAÇÃO perpétua. */
+.cadastro-deco-logo {
+  display: block;
+  width: 380px;
+  height: auto;
+  opacity: 0.35;
+  filter: blur(3px);
+  pointer-events: none;
+  user-select: none;
+  animation: decoFloat 6s ease-in-out infinite;
+}
+
+@keyframes decoFloat {
+  0%   { transform: translateY(0)     rotate(0deg); }
+  50%  { transform: translateY(-24px) rotate(4deg); }
+  100% { transform: translateY(0)     rotate(0deg); }
+}
+
+/* Entrada do Cadastro: a logo "viaja" descendo do topo,
+   sugerindo que veio do Login (top-right). */
+@keyframes decoEnterCadastro {
+  from { transform: translateY(-180px); opacity: 0; }
+  to   { transform: translateY(0);      opacity: 1; }
+}

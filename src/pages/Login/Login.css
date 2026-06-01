@@ -1,0 +1,56 @@
+/* ─────────────────────────────────────────────────────────
+   Login — logo decorativa flutuante no lado esquerdo
+   ───────────────────────────────────────────────────────── */
+
+/* Garante que a headline e a logo do topo fiquem POR CIMA
+   da decoração (que tem z-index: 0). */
+.auth__left-logo,
+.auth__left-headline {
+  z-index: 2;
+}
+
+/* Wrapper: cuida da POSIÇÃO e da animação de ENTRADA
+   (transição entre páginas). Posição: canto superior direito,
+   vazando pela direita. */
+.login-deco-wrap {
+  position: absolute;
+  top: -60px;
+  right: -80px;
+  left: auto;
+  bottom: auto;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+  animation: decoEnterLogin 1s cubic-bezier(0.65, 0, 0.35, 1) both;
+  transition:
+    top    1s cubic-bezier(0.65, 0, 0.35, 1),
+    bottom 1s cubic-bezier(0.65, 0, 0.35, 1),
+    left   1s cubic-bezier(0.65, 0, 0.35, 1),
+    right  1s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Logo: cuida apenas da FLUTUAÇÃO perpétua.
+   Separada do wrapper pra que os transforms não se conflitem. */
+.login-deco-logo {
+  display: block;
+  width: 380px;
+  height: auto;
+  opacity: 0.35;
+  filter: blur(3px);
+  pointer-events: none;
+  user-select: none;
+  animation: decoFloat 6s ease-in-out infinite;
+}
+
+@keyframes decoFloat {
+  0%   { transform: translateY(0)     rotate(0deg); }
+  50%  { transform: translateY(-24px) rotate(4deg); }
+  100% { transform: translateY(0)     rotate(0deg); }
+}
+
+/* Entrada do Login: a logo "viaja" subindo de baixo,
+   sugerindo que veio do Cadastro (bottom-left). */
+@keyframes decoEnterLogin {
+  from { transform: translateY(180px); opacity: 0;    }
+  to   { transform: translateY(0);     opacity: 1;    }
+}

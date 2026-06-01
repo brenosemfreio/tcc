@@ -8,7 +8,9 @@ import { AuthPasswordField, StrengthMeter } from '../../components/PasswordField
 import { formContainerVariants, fieldVariants } from '../../styles/animations'
 import { calcStrength } from '../../utils/password'
 import logoHub from '../../assets/images/logo-hub.png'
+import logoMinimalista from '../../assets/images/logo-minimalista.png'
 import '../../styles/auth.css'
+import './Cadastro.css'
 
 export default function Cadastro() {
   const [form, setForm] = useState({
@@ -78,6 +80,15 @@ export default function Cadastro() {
     <div className={`auth${isExiting ? ' auth--exiting' : ''}`}>
       {/* ─── LADO ESQUERDO ─── */}
       <div className="auth__left">
+        <div className="cadastro-deco-wrap" aria-hidden="true">
+          <img
+            src={logoMinimalista}
+            alt=""
+            aria-hidden="true"
+            className="cadastro-deco-logo"
+          />
+        </div>
+
         <div className="auth__left-logo">
           <Link to="/" aria-label="HubStudio — página inicial">
             <img src={logoHub} alt="HubStudio" />

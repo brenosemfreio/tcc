@@ -7,7 +7,9 @@ import { GoogleIcon, FacebookIcon } from '../../components/OAuthIcons/OAuthIcons
 import { AuthPasswordField } from '../../components/PasswordField/PasswordField'
 import { formContainerVariants, fieldVariants } from '../../styles/animations'
 import logoHub from '../../assets/images/logo-hub.png'
+import logoMinimalista from '../../assets/images/logo-minimalista.png'
 import '../../styles/auth.css'
+import './Login.css'
 
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' })
@@ -58,6 +60,15 @@ export default function Login() {
     <div className={`auth${isExiting ? ' auth--exiting' : ''}`}>
       {/* ─── LADO ESQUERDO ─── */}
       <div className="auth__left">
+        <div className="login-deco-wrap" aria-hidden="true">
+          <img
+            src={logoMinimalista}
+            alt=""
+            aria-hidden="true"
+            className="login-deco-logo"
+          />
+        </div>
+
         <div className="auth__left-logo">
           <Link to="/" aria-label="HubStudio — página inicial">
             <img src={logoHub} alt="HubStudio" />

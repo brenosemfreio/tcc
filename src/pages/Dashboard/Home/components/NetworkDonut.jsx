@@ -22,9 +22,9 @@ export default function NetworkDonut({ data }) {
               <PieChart>
                 <Pie
                   data={data}
-                  innerRadius={50}
-                  outerRadius={75}
-                  paddingAngle={3}
+                  innerRadius={52}
+                  outerRadius={72}
+                  paddingAngle={4}
                   dataKey="value"
                   startAngle={90}
                   endAngle={-270}

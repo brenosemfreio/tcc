@@ -30,8 +30,6 @@ const PREVIEWS = {
 
 const HERO_AVATARS = ['#7C5FE8', '#E84FA5', '#4F35E8', '#B44FE8']
 
-const STEPS_PERKS = ['Grátis para começar', 'Sem cartão de crédito', 'Cancele quando quiser']
-
 // Formata o preço no padrão brasileiro: inteiros sem decimal ("0"), decimais com ","
 const formatPrice = (n) => {
   if (n === 0) return '0'
@@ -173,22 +171,15 @@ export default function Landing() {
             >
               Em <span className="l-gradient-text">3 passos simples</span><br />você já está no ar
             </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              Configurar, criar e analisar nunca foi tão simples. Em minutos você conecta suas redes e começa a crescer de verdade.
+            </motion.p>
           </div>
-
-          <motion.div
-            className="l-steps__perks"
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            {STEPS_PERKS.map(text => (
-              <span key={text} className="l-steps__perk">
-                <LuCheck size={14} />
-                {text}
-              </span>
-            ))}
-          </motion.div>
 
           <div className="l-steps__grid">
             {STEPS.map((s, i) => {

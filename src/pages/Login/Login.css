@@ -2,16 +2,15 @@
    Login — logo decorativa flutuante no lado esquerdo
    ───────────────────────────────────────────────────────── */
 
-/* Garante que a headline e a logo do topo fiquem POR CIMA
-   da decoração (que tem z-index: 0). */
 .auth__left-logo,
 .auth__left-headline {
   z-index: 2;
 }
 
-/* Wrapper: cuida da POSIÇÃO e da animação de ENTRADA
-   (transição entre páginas). Posição: canto superior direito,
-   vazando pela direita. */
+/* Wrapper: posição + animação de ENTRADA.
+   O blur sutil final (3px) fica aqui para que o keyframe
+   de entrada possa animá-lo de 24px → 3px sem conflitar
+   com o filter da img interna. */
 .login-deco-wrap {
   position: absolute;
   top: -60px;
@@ -21,7 +20,9 @@
   z-index: 0;
   pointer-events: none;
   user-select: none;
-  animation: decoEnterLogin 1s cubic-bezier(0.65, 0, 0.35, 1) both;
+  transform-origin: center center;
+  filter: blur(3px);
+  animation: decoEnterLogin 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
   transition:
     top    1s cubic-bezier(0.65, 0, 0.35, 1),
     bottom 1s cubic-bezier(0.65, 0, 0.35, 1),
@@ -29,14 +30,13 @@
     right  1s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-/* Logo: cuida apenas da FLUTUAÇÃO perpétua.
-   Separada do wrapper pra que os transforms não se conflitem. */
+/* Logo: apenas a FLUTUAÇÃO perpétua. Sem filter aqui —
+   o blur está no wrapper para evitar soma de valores. */
 .login-deco-logo {
   display: block;
   width: 380px;
   height: auto;
   opacity: 0.35;
-  filter: blur(3px);
   pointer-events: none;
   user-select: none;
   animation: decoFloat 6s ease-in-out infinite;
@@ -48,9 +48,19 @@
   100% { translate: 0 0px;   rotate: 0deg; }
 }
 
-/* Entrada do Login: a logo "viaja" subindo de baixo,
-   sugerindo que veio do Cadastro (bottom-left). */
 @keyframes decoEnterLogin {
-  from { transform: translateY(180px); opacity: 0;    }
-  to   { transform: translateY(0);     opacity: 1;    }
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+    filter: blur(24px);
+  }
+  60% {
+    opacity: 0.4;
+    filter: blur(10px);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    filter: blur(3px);
+  }
 }

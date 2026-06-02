@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   LuUser, LuShare2, LuShieldCheck, LuBell, LuPalette, LuCreditCard, LuLock,
@@ -25,9 +26,18 @@ const TABS = [
   { id: 'privacidade',  label: 'Privacidade',      icon: LuLock },
 ]
 
+const TAB_IDS = TABS.map(t => t.id)
+
 export default function Configuracoes() {
-  const [tab, setTab] = useState('perfil')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const initialTab = TAB_IDS.includes(searchParams.get('tab')) ? searchParams.get('tab') : 'perfil'
+  const [tab, setTab] = useState(initialTab)
   const [toast, setToast] = useState('')
+
+  const selectTab = (id) => {
+    setTab(id)
+    setSearchParams({ tab: id }, { replace: true })
+  }
 
   const flashToast = (msg) => {
     setToast(msg)
@@ -48,7 +58,7 @@ export default function Configuracoes() {
               key={id}
               type="button"
               className={`set-tab ${tab === id ? 'set-tab--active' : ''}`}
-              onClick={() => setTab(id)}
+              onClick={() => selectTab(id)}
             >
               <Icon size={17} className="set-tab__icon" />
               <span>{label}</span>

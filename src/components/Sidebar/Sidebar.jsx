@@ -164,10 +164,10 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
         </div>
       </nav>
 
-      {/* User — avatar é link pra futura página de perfil */}
+      {/* User — avatar e nome levam à aba Perfil das Configurações */}
       <div className="sidebar__user">
         <Link
-          to="/dashboard/perfil"
+          to="/dashboard/configuracoes?tab=perfil"
           className="sidebar__avatar-link"
           aria-label="Ver perfil"
           data-tooltip="Perfil"
@@ -175,7 +175,7 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
           <div className="sidebar__avatar">{getInitials(user?.name)}</div>
         </Link>
         <Link
-          to="/dashboard/perfil"
+          to="/dashboard/configuracoes?tab=perfil"
           className="sidebar__user-info"
           aria-label="Ver perfil"
         >

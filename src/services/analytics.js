@@ -79,10 +79,10 @@ export const getEngagementData = (granularity = 'daily', network = 'all') => {
 }
 
 export const getSocialBreakdown = () => Promise.resolve([
-  { name: 'Instagram',   value: 65, color: '#E1306C' },
-  { name: 'TikTok',      value: 20, color: '#010101' },
-  { name: 'YouTube',     value: 10, color: '#FF0000' },
-  { name: 'X (Twitter)', value: 5,  color: '#1DA1F2' },
+  { name: 'Instagram',   value: 65, color: '#4F35E8' },
+  { name: 'TikTok',      value: 20, color: '#7C5FE8' },
+  { name: 'YouTube',     value: 10, color: '#A78BFA' },
+  { name: 'X (Twitter)', value: 5,  color: '#C4B5FD' },
 ])
 
 export const getContentReach = () => Promise.resolve([

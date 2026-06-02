@@ -107,3 +107,10 @@ export const getAudience = () => Promise.resolve({
     { city: 'Belo Horizonte', value: 9  },
   ],
 })
+
+export const getAiInsights = () => Promise.resolve([
+  { id: 1, type: 'positive', highlight: '2.4x',              text: 'mais alcance nos Reels do que nos outros formatos' },
+  { id: 2, type: 'positive', highlight: '+24%',              text: 'de crescimento no TikTok este mês' },
+  { id: 3, type: 'negative', highlight: '−18%',              text: 'de engajamento nas postagens de terça-feira' },
+  { id: 4, type: 'tip',      highlight: 'Sex · 18h–21h',     text: 'é o melhor horário para postar' },
+])

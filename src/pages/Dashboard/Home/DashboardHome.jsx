@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { useAuth } from '../../../contexts/AuthContext'
 import {
   getStats, getEngagementData, getSocialBreakdown,
-  getContentReach, getAudience,
+  getContentReach, getAudience, getAiInsights,
 } from '../../../services/analytics'
 import {
   getTopPosts, getRecentPosts, getCalendarMarkers, getAiSuggestions,
@@ -13,6 +13,7 @@ import { dashFadeUp as fadeUp } from '../../../styles/animations'
 import { exportDashboardReport } from '../../../utils/export'
 
 import DashboardHeader from './components/DashboardHeader'
+import AIInsightsBar from './components/AIInsightsBar'
 import KpiGrid from './components/KpiGrid'
 import AudienceCard from './components/AudienceCard'
 import BestTimeCard from './components/BestTimeCard'
@@ -44,6 +45,7 @@ export default function DashboardHome() {
   const [recentPosts, setRecentPosts] = useState([])
   const [calendarMarkers, setCalendarMarkers] = useState({})
   const [aiSuggestions, setAiSuggestions] = useState([])
+  const [aiInsights, setAiInsights] = useState([])
 
   const [period, setPeriod] = useState('30d')
   const [network, setNetwork] = useState('all')
@@ -62,9 +64,10 @@ export default function DashboardHome() {
       getRecentPosts(),
       getCalendarMarkers(),
       getAiSuggestions(),
+      getAiInsights(),
     ]).then(([
       socialBreakdownRes, contentReachRes, audienceRes,
-      topPostsRes, recentPostsRes, markersRes, aiSuggestionsRes,
+      topPostsRes, recentPostsRes, markersRes, aiSuggestionsRes, aiInsightsRes,
     ]) => {
       setSocialBreakdown(socialBreakdownRes)
       setContentReach(contentReachRes)
@@ -73,6 +76,7 @@ export default function DashboardHome() {
       setRecentPosts(recentPostsRes)
       setCalendarMarkers(markersRes)
       setAiSuggestions(aiSuggestionsRes)
+      setAiInsights(aiInsightsRes)
     })
   }, [])
 
@@ -144,6 +148,8 @@ export default function DashboardHome() {
         {/* Left column */}
         <div className="dash-home__left">
           <KpiGrid stats={stats} />
+
+          <AIInsightsBar insights={aiInsights} onViewAll={() => {}} />
 
           {/* Engajamento + Donut (prioridade visual maior) */}
           <div className="dash-home__charts">

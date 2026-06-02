@@ -19,7 +19,6 @@ import AudienceCard from './components/AudienceCard'
 import BestTimeCard from './components/BestTimeCard'
 import CalendarModal from '../../../components/CalendarModal/CalendarModal'
 import EngagementChart from './components/EngagementChart'
-import NetworkDonut from './components/NetworkDonut'
 import NetworkComparison from './components/NetworkComparison'
 import ContentReachCard from './components/ContentReachCard'
 import TopPostsCard from './components/TopPostsCard'
@@ -151,14 +150,14 @@ export default function DashboardHome() {
 
           <AIInsightsBar insights={aiInsights} onViewAll={() => {}} />
 
-          {/* Engajamento + Donut (prioridade visual maior) */}
+          {/* Engajamento + Score */}
           <div className="dash-home__charts">
             <EngagementChart
               data={engagement}
               granularity={granularity}
               onGranularityChange={setGranularity}
             />
-            <NetworkDonut data={socialBreakdown} />
+            <AccountScoreCard />
           </div>
 
           {/* Audience + Best Time lado a lado */}
@@ -201,8 +200,6 @@ export default function DashboardHome() {
               onExpand={() => setShowCalendarModal(true)}
             />
           </motion.div>
-
-          <AccountScoreCard />
 
           <AISuggestionsCard
             suggestions={aiSuggestions}

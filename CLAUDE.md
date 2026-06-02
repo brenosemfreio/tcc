@@ -45,7 +45,7 @@ npm run preview    # preview do build
 ### Contextos globais
 
 - `AuthContext` — estado de autenticação (mock via localStorage). Exporta `useAuth()`.
-- `ThemeContext` — dark/light mode via `data-theme` no `<html>`. Exporta `useTheme()`.
+- `ThemeContext` — dark/light mode via `data-theme` no `<html>`. Exporta `useTheme()` (`theme`, `toggleTheme`, `setTheme`).
 
 ### Services (mock)
 
@@ -56,6 +56,7 @@ substituir apenas o corpo das funções — os contratos de retorno não mudam.
 - `posts.js` — top posts, recent posts, scheduled dates, AI suggestions, schedulePost()
 - `auth.js` — loginService, registerService
 - `support.js` — categorias da base de conhecimento, artigos populares, status do sistema, chamados (getTickets/createTicket), FAQ
+- `settings.js` — sessões ativas, histórico de faturas, uso do plano
 
 ### Componentes reutilizáveis
 
@@ -83,6 +84,19 @@ substituir apenas o corpo das funções — os contratos de retorno não mudam.
 - `SystemStatus.jsx` — painel de status dos componentes do sistema (operacional/instável/fora do ar).
 - `SupportPlanCard.jsx` — tier de suporte do plano atual + upsell para o Elite.
 - `LiveChatWidget.jsx` — chat flutuante mock (FAB → painel com auto-resposta da "Deb").
+
+### Estrutura da página de Configurações
+
+`Configuracoes.jsx` é composição com navegação lateral de 7 abas. Sub-componentes em `src/pages/Dashboard/Configuracoes/components/`:
+
+- `Toggle.jsx` — switch reutilizável (classes `set-toggle`).
+- `PerfilTab.jsx` — avatar (upload base64), nome, @usuário, e-mail, bio, fuso, idioma.
+- `RedesTab.jsx` — vincular redes (conectado/expirado/desconectado) + permissões + segurança. Substituiu a antiga página órfã `Redes/`.
+- `SegurancaTab.jsx` — trocar senha, 2FA (toggle), sessões ativas (encerrar dispositivos).
+- `NotificacoesTab.jsx` — matriz de notificações por canal (e-mail/push/no app).
+- `AparenciaTab.jsx` — seletor de tema (claro/escuro/sistema via `setTheme`), idioma, formato de data.
+- `CobrancaTab.jsx` — plano atual, medidores de uso, método de pagamento, histórico de faturas.
+- `PrivacidadeTab.jsx` — exportar dados (LGPD) + zona de perigo (excluir conta com confirmação por digitação).
 
 ### Hooks
 

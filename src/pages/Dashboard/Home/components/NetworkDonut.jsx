@@ -33,7 +33,7 @@ export default function NetworkDonut({ data }) {
                     <Cell
                       key={i}
                       fill={entry.color}
-                      stroke="var(--color-bg-elevated)"
+                      stroke="var(--color-card-bg)"
                       strokeWidth={2}
                     />
                   ))}

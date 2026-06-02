@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useOutletContext } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../../../contexts/AuthContext'
 import {
@@ -32,9 +32,7 @@ import './DashboardHome.css'
 
 export default function DashboardHome() {
   const { user } = useAuth()
-  const navigate = useNavigate()
-  // Atalho pra abrir o composer dedicado (substituiu o antigo PostModal).
-  const openComposer = () => navigate('/dashboard/posts/novo')
+  const { openPostModal } = useOutletContext()
 
   const [stats, setStats] = useState(null)
   const [engagement, setEngagement] = useState([])
@@ -110,7 +108,7 @@ export default function DashboardHome() {
       }
       return
     }
-    openComposer()
+    openPostModal({ text: suggestion.text })
   }
 
   const duplicatePost = (post) => {
@@ -125,7 +123,7 @@ export default function DashboardHome() {
   }
 
   const editPost = (post) => {
-    navigate(`/dashboard/posts/${post.id}/editar`)
+    openPostModal({ text: post.title, networks: post.network ? [post.network] : [] })
   }
 
   return (
@@ -137,7 +135,7 @@ export default function DashboardHome() {
         exportFeedback={feedback.export}
         onPeriodChange={setPeriod}
         onNetworkChange={setNetwork}
-        onNewPost={openComposer}
+        onNewPost={() => openPostModal()}
         onExport={handleExport}
       />
 
@@ -168,7 +166,7 @@ export default function DashboardHome() {
               className="chart-card chart-card--best-time"
               variants={fadeUp} initial="hidden" animate="visible" custom={5}
             >
-              <BestTimeCard onSchedule={openComposer} />
+              <BestTimeCard onSchedule={(slot) => openPostModal({ text: '', schedule: slot })} />
             </motion.div>
           </div>
 
@@ -181,7 +179,7 @@ export default function DashboardHome() {
             <TopPostsCard posts={topPosts} />
           </div>
 
-          <ScheduleCTA onSchedule={openComposer} />
+          <ScheduleCTA onSchedule={() => openPostModal()} />
         </div>
 
         {/* Right column */}

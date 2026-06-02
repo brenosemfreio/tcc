@@ -1,7 +1,5 @@
 import { LuClock, LuArrowRight, LuTrendingUp } from 'react-icons/lu'
 
-const ALT_BAR_COLORS = ['rgba(79,53,232,0.55)', 'rgba(79,53,232,0.40)', 'rgba(79,53,232,0.28)']
-
 // Substitui o heatmap. Foco em destacar O MELHOR horário + alternativas
 // próximas + ação direta de agendamento.
 const RECOMMENDATIONS = [
@@ -40,10 +38,7 @@ export default function BestTimeCard({ onSchedule }) {
             <span className="best-time__rank">#{i + 2}</span>
             <span className="best-time__when">{r.short} · {r.hour}</span>
             <div className="best-time__bar">
-              <div
-                className="best-time__bar-fill"
-                style={{ width: `${r.engagement}%`, background: ALT_BAR_COLORS[i] }}
-              />
+              <div className="best-time__bar-fill" style={{ width: `${r.engagement}%` }} />
             </div>
             <span className="best-time__pct">+{r.engagement}%</span>
           </div>

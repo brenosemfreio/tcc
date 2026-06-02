@@ -45,9 +45,9 @@ export default function EngagementChart({ data, granularity, onGranularityChange
               <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-text-muted)' }} />
               <YAxis tick={{ fontSize: 11, fill: 'var(--color-text-muted)' }} tickFormatter={v => `${Math.round(v / 1000)}K`} />
               <Tooltip content={<ChartTooltip />} />
-              <Line type="monotone" dataKey="views"    stroke="#4F35E8" strokeWidth={3} dot={false} name="Visualizações" />
-              <Line type="monotone" dataKey="likes"    stroke="#E1306C" strokeWidth={1.5} dot={false} name="Curtidas" />
-              <Line type="monotone" dataKey="comments" stroke="#10B981" strokeWidth={1.5} dot={false} name="Comentários" />
+              <Line type="monotone" dataKey="views"    stroke="#4F35E8" strokeWidth={2} dot={false} name="Visualizações" />
+              <Line type="monotone" dataKey="likes"    stroke="#E1306C" strokeWidth={2} dot={false} name="Curtidas" />
+              <Line type="monotone" dataKey="comments" stroke="#10B981" strokeWidth={2} dot={false} name="Comentários" />
             </LineChart>
           </ResponsiveContainer>
           <div className="chart-legend">

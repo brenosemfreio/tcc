@@ -22,9 +22,9 @@ export default function NetworkDonut({ data }) {
               <PieChart>
                 <Pie
                   data={data}
-                  innerRadius={52}
-                  outerRadius={72}
-                  paddingAngle={4}
+                  innerRadius={50}
+                  outerRadius={75}
+                  paddingAngle={3}
                   dataKey="value"
                   startAngle={90}
                   endAngle={-270}
@@ -33,7 +33,7 @@ export default function NetworkDonut({ data }) {
                     <Cell
                       key={i}
                       fill={entry.color}
-                      stroke="var(--color-card-bg)"
+                      stroke="var(--color-bg-elevated)"
                       strokeWidth={2}
                     />
                   ))}

@@ -1,14 +1,6 @@
 import { motion } from 'framer-motion'
 import { LuUsers, LuMapPin } from 'react-icons/lu'
 
-const AGE_BAR_COLORS = [
-  '#4F35E8',
-  'rgba(79,53,232,0.60)',
-  'rgba(79,53,232,0.38)',
-  'rgba(79,53,232,0.24)',
-  'rgba(79,53,232,0.14)',
-]
-
 export default function AudienceCard({ data }) {
   if (!data) {
     return (
@@ -40,7 +32,6 @@ export default function AudienceCard({ data }) {
               <div className="audience__bar-track">
                 <motion.div
                   className="audience__bar-fill"
-                  style={{ background: AGE_BAR_COLORS[i] ?? AGE_BAR_COLORS[AGE_BAR_COLORS.length - 1] }}
                   initial={{ width: 0 }}
                   animate={{ width: `${(g.value / maxAge) * 100}%` }}
                   transition={{ duration: 0.7, delay: 0.05 * i }}

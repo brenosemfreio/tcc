@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { LuEye, LuUsers, LuHeart, LuTrendingUp, LuTrendingDown, LuUserPlus } from 'react-icons/lu'
+import { LuEye, LuUsers, LuHeart, LuUserPlus, LuTrendingUp } from 'react-icons/lu'
 import { dashFadeUp as fadeUp } from '../../../../styles/animations'
 
 const STAT_ICONS = {
@@ -37,23 +37,21 @@ export default function KpiGrid({ stats }) {
     <div className="dash-home__kpis">
       {Object.entries(stats).map(([key, val], i) => {
         const Icon = STAT_ICONS[key]
-        const TrendIcon = val.trend === 'down' ? LuTrendingDown : LuTrendingUp
-        const isFeatured = i < 2
         return (
           <motion.div
             key={key}
-            className={`kpi-card${isFeatured ? ' kpi-card--featured' : ''}`}
+            className="kpi-card"
             variants={fadeUp} initial="hidden" animate="visible" custom={i}
           >
-            <div className="kpi-card__top">
-              <div className="kpi-card__icon"><Icon size={18} /></div>
-              <span className={`kpi-card__change kpi-card__change--${val.trend}`}>
-                <TrendIcon size={12} /> {val.change}
-              </span>
-            </div>
-            <div className="kpi-card__body">
-              <span className="kpi-card__value">{val.value}</span>
-              <span className="kpi-card__label">{STAT_LABELS[key]}</span>
+            <span className={`kpi-card__change kpi-card__change--${val.trend}`}>
+              <LuTrendingUp size={11} /> {val.change}
+            </span>
+            <div className="kpi-card__inner">
+              <div className="kpi-card__icon"><Icon size={20} /></div>
+              <div className="kpi-card__body">
+                <span className="kpi-card__label">{STAT_LABELS[key]}</span>
+                <span className="kpi-card__value">{val.value}</span>
+              </div>
             </div>
           </motion.div>
         )

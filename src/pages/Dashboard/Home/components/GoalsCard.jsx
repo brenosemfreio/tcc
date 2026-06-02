@@ -3,9 +3,9 @@ import { LuTarget } from 'react-icons/lu'
 
 // Mock — quando o backend chegar, vira service `getGoals()` ou similar.
 const GOALS = [
-  { id: 'followers', label: 'Seguidores',    current: 8642,   target: 10000,  color: 'linear-gradient(90deg, #4F35E8, #7C3AED)' },
-  { id: 'posts',     label: 'Posts no mês',  current: 18,     target: 30,     color: '#E1306C' },
-  { id: 'reach',     label: 'Alcance',       current: 127800, target: 200000, color: '#10B981' },
+  { id: 'followers', label: 'Seguidores',    current: 8642,   target: 10000, color: '#4F35E8' },
+  { id: 'posts',     label: 'Posts no mês',  current: 18,     target: 30,    color: '#E1306C' },
+  { id: 'reach',     label: 'Alcance',       current: 127800, target: 200000,color: '#10B981' },
 ]
 
 const fmt = (n) => n >= 1000 ? `${(n / 1000).toFixed(1)}K` : n.toLocaleString('pt-BR')

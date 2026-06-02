@@ -12,6 +12,8 @@ const NETWORK_MULT = {
   instagram: 0.65,
   tiktok:    0.20,
   youtube:   0.10,
+  facebook:  0.30,
+  linkedin:  0.08,
   twitter:   0.05,
 }
 

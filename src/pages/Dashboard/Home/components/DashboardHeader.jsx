@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { FaInstagram, FaTiktok, FaYoutube } from 'react-icons/fa'
+import { FaFacebook, FaInstagram, FaLinkedin, FaTiktok, FaYoutube } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
 import { LuCalendar, LuCheck, LuChevronDown, LuDownload, LuGlobe, LuInfinity, LuPlus } from 'react-icons/lu'
 
@@ -11,11 +11,13 @@ const PERIOD_OPTIONS = [
 ]
 
 const NETWORK_OPTIONS = [
-  { label: 'Todas as redes', shortLabel: 'Todas', value: 'all', icon: LuGlobe, tone: '#4F35E8' },
-  { label: 'Instagram', shortLabel: 'Instagram', value: 'instagram', icon: FaInstagram, tone: '#E1306C' },
-  { label: 'TikTok', shortLabel: 'TikTok', value: 'tiktok', icon: FaTiktok, tone: '#111827' },
-  { label: 'YouTube', shortLabel: 'YouTube', value: 'youtube', icon: FaYoutube, tone: '#FF0033' },
-  { label: 'X (Twitter)', shortLabel: 'X', value: 'twitter', icon: FaXTwitter, tone: '#0F172A' },
+  { label: 'Todas as redes', shortLabel: 'Todas',     value: 'all',       icon: LuGlobe,      tone: '#4F35E8' },
+  { label: 'Instagram',      shortLabel: 'Instagram', value: 'instagram', icon: FaInstagram,  tone: '#E1306C' },
+  { label: 'TikTok',         shortLabel: 'TikTok',    value: 'tiktok',    icon: FaTiktok,     tone: '#111827' },
+  { label: 'YouTube',        shortLabel: 'YouTube',   value: 'youtube',   icon: FaYoutube,    tone: '#FF0033' },
+  { label: 'Facebook',       shortLabel: 'Facebook',  value: 'facebook',  icon: FaFacebook,   tone: '#1877F2' },
+  { label: 'LinkedIn',       shortLabel: 'LinkedIn',  value: 'linkedin',  icon: FaLinkedin,   tone: '#0A66C2' },
+  { label: 'X (Twitter)',    shortLabel: 'X',         value: 'twitter',   icon: FaXTwitter,   tone: '#0F172A' },
 ]
 
 function DashboardSelect({ id, label, value, options, onChange, variant, showIcons = true }) {

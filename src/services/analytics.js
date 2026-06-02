@@ -1,6 +1,7 @@
 // Modificadores para simular variação dos dados conforme os filtros.
 // Quando o backend for plugado, esses params serão enviados como query string.
 const PERIOD_MULT = {
+  '24h': 0.036,
   '7d':  0.25,
   '30d': 1,
   'all': 6.8,

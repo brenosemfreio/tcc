@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { FaInstagram, FaTiktok, FaYoutube } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
-import { LuCalendar, LuCheck, LuChevronDown, LuDownload, LuGlobe, LuPlus } from 'react-icons/lu'
+import { LuCalendar, LuCheck, LuChevronDown, LuDownload, LuGlobe, LuPlus, LuInfinity } from 'react-icons/lu'
 
 const PERIOD_OPTIONS = [
-  { label: 'Ultimos 30 dias', shortLabel: '30 dias', value: '30d', icon: LuCalendar, desc: 'Tendencia mensal', tone: '#4F35E8' },
-  { label: 'Ultimos 7 dias', shortLabel: '7 dias', value: '7d', icon: LuCalendar, desc: 'Pulso recente', tone: '#7C5FE8' },
-  { label: 'Este mes', shortLabel: 'Este mes', value: 'month', icon: LuCalendar, desc: 'Visao atual', tone: '#6D28D9' },
+  { label: 'Ultimos 30 dias', shortLabel: '30 dias', value: '30d',  icon: LuCalendar, desc: 'Tendencia mensal',    tone: '#4F35E8' },
+  { label: 'Ultimos 7 dias',  shortLabel: '7 dias',  value: '7d',   icon: LuCalendar, desc: 'Pulso recente',       tone: '#7C5FE8' },
+  { label: 'Geral',           shortLabel: 'Geral',   value: 'all',  icon: LuInfinity, desc: 'Total acumulado',     tone: '#6D28D9' },
 ]
 
 const NETWORK_OPTIONS = [

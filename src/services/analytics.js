@@ -1,9 +1,9 @@
 // Modificadores para simular variação dos dados conforme os filtros.
 // Quando o backend for plugado, esses params serão enviados como query string.
 const PERIOD_MULT = {
-  '7d':   0.25,
-  '30d':  1,
-  'month': 0.85,
+  '7d':  0.25,
+  '30d': 1,
+  'all': 6.8,
 }
 
 const NETWORK_MULT = {

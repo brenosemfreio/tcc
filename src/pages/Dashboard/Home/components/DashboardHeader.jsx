@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { FaInstagram, FaTiktok, FaYoutube } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
-import { LuCheck, LuChevronDown, LuDownload, LuGlobe, LuPlus } from 'react-icons/lu'
+import { LuCalendar, LuCheck, LuChevronDown, LuDownload, LuGlobe, LuInfinity, LuPlus } from 'react-icons/lu'
 
 const PERIOD_OPTIONS = [
-  { label: 'Ultimas 24h',    shortLabel: '24h',     value: '24h', desc: 'Hoje em tempo real'  },
-  { label: 'Ultimos 7 dias', shortLabel: '7 dias',  value: '7d',  desc: 'Pulso recente'       },
-  { label: 'Ultimos 30 dias',shortLabel: '30 dias', value: '30d', desc: 'Tendencia mensal'    },
-  { label: 'Geral',          shortLabel: 'Geral',   value: 'all', desc: 'Total acumulado'     },
+  { label: 'Ultimas 24h',    shortLabel: '24h',     value: '24h', icon: LuCalendar, tone: '#4F35E8', desc: 'Hoje em tempo real'  },
+  { label: 'Ultimos 7 dias', shortLabel: '7 dias',  value: '7d',  icon: LuCalendar, tone: '#7C5FE8', desc: 'Pulso recente'       },
+  { label: 'Ultimos 30 dias',shortLabel: '30 dias', value: '30d', icon: LuCalendar, tone: '#4F35E8', desc: 'Tendencia mensal'    },
+  { label: 'Geral',          shortLabel: 'Geral',   value: 'all', icon: LuInfinity, tone: '#6D28D9', desc: 'Total acumulado'     },
 ]
 
 const NETWORK_OPTIONS = [
@@ -75,7 +75,7 @@ function DashboardSelect({ id, label, value, options, onChange, variant, showIco
         onKeyDown={handleKeyDown}
       >
         <span className="dash-select__value">
-          {showIcons && SelectedIcon && (
+          {SelectedIcon && (
             <span className="dash-select__icon" style={{ '--select-tone': selected.tone }}>
               <SelectedIcon size={16} aria-hidden="true" />
             </span>

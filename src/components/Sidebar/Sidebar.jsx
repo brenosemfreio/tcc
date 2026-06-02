@@ -128,15 +128,16 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
         ))}
 
         {/* Suporte */}
-        <button
-          type="button"
-          className="sidebar__item"
-          onClick={() => { window.location.href = 'mailto:suporte@hubstudio.com' }}
+        <NavLink
+          to="/dashboard/suporte"
           data-tooltip="Suporte"
+          className={({ isActive }) =>
+            `sidebar__item ${isActive ? 'sidebar__item--active' : ''}`
+          }
         >
           <LuCircleHelp size={20} className="sidebar__item-icon" />
           <span className="sidebar__item-label">Suporte</span>
-        </button>
+        </NavLink>
 
         {/* Theme toggle */}
         <div className={`sidebar__theme ${isCollapsed ? 'sidebar__theme--collapsed' : ''}`}>

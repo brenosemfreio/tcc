@@ -40,6 +40,7 @@ npm run preview    # preview do build
 | `/dashboard/posts/:id/editar` | Composer (editar post) | sim |
 | `/dashboard/equipes` | Equipes (placeholder em construção) | sim |
 | `/dashboard/configuracoes` | Configuracoes | sim |
+| `/dashboard/suporte` | Suporte (central de ajuda) | sim |
 
 ### Contextos globais
 
@@ -54,6 +55,7 @@ substituir apenas o corpo das funções — os contratos de retorno não mudam.
 - `analytics.js` — stats KPI, engagement, social breakdown, content reach, AI insights
 - `posts.js` — top posts, recent posts, scheduled dates, AI suggestions, schedulePost()
 - `auth.js` — loginService, registerService
+- `support.js` — categorias da base de conhecimento, artigos populares, status do sistema, chamados (getTickets/createTicket), FAQ
 
 ### Componentes reutilizáveis
 
@@ -67,6 +69,20 @@ substituir apenas o corpo das funções — os contratos de retorno não mudam.
 - `CalendarModal` — modal grande de calendário (botão "expandir" no `MiniCalendar`).
 - `ShortcutsModal` — lista de atalhos de teclado (abre com `?`).
 - `OnboardingTour` — modal de boas-vindas em 5 passos, exibido só na primeira visita (localStorage).
+
+### Estrutura da página de Suporte
+
+`Suporte.jsx` é composição. Sub-componentes em `src/pages/Dashboard/Suporte/components/`:
+
+- `SupportHero.jsx` — saudação + busca na base de conhecimento (dropdown de resultados ao digitar).
+- `SupportChannels.jsx` — 4 cards de canais (Chat ao vivo, Abrir chamado, E-mail, WhatsApp) com SLA/status.
+- `KnowledgeBase.jsx` — grid de categorias + lista de artigos populares.
+- `SupportFaq.jsx` — accordion de perguntas frequentes (auto-contido, classes `sup-faq`).
+- `MyTickets.jsx` — lista de chamados com status/prioridade + botão abrir novo.
+- `NewTicketModal.jsx` — formulário de chamado (assunto, categoria, prioridade, descrição) via `Modal`.
+- `SystemStatus.jsx` — painel de status dos componentes do sistema (operacional/instável/fora do ar).
+- `SupportPlanCard.jsx` — tier de suporte do plano atual + upsell para o Elite.
+- `LiveChatWidget.jsx` — chat flutuante mock (FAB → painel com auto-resposta da "Deb").
 
 ### Hooks
 

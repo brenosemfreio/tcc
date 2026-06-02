@@ -15,6 +15,7 @@ import Posts from './pages/Dashboard/Posts/Posts'
 import Composer from './pages/Dashboard/Posts/Composer'
 import Equipes from './pages/Dashboard/Equipes/Equipes'
 import Configuracoes from './pages/Dashboard/Configuracoes/Configuracoes'
+import Suporte from './pages/Dashboard/Suporte/Suporte'
 
 export default function App() {
   return (
@@ -43,6 +44,7 @@ export default function App() {
               <Route path="posts/:id/editar" element={<Composer />} />
               <Route path="equipes" element={<Equipes />} />
               <Route path="configuracoes" element={<Configuracoes />} />
+              <Route path="suporte" element={<Suporte />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

@@ -85,12 +85,55 @@ export const getSocialBreakdown = () => Promise.resolve([
   { name: 'X (Twitter)', value: 5,  color: '#C4B5FD' },
 ])
 
-export const getContentReach = () => Promise.resolve([
-  { type: 'Reels',     value: 62, color: '#4F35E8' },
-  { type: 'Carrossel', value: 22, color: '#7C5CFC' },
-  { type: 'Imagem',    value: 10, color: '#A78BFA' },
-  { type: 'Stories',   value: 6,  color: '#C4B5FD' },
-])
+const CONTENT_REACH = {
+  all: [
+    { type: 'Reels',        value: 62, color: '#4F35E8' },
+    { type: 'Carrossel',    value: 22, color: '#7C5CFC' },
+    { type: 'Shorts',       value: 16, color: '#A78BFA' },
+    { type: 'Imagem',       value: 10, color: '#C4B5FD' },
+    { type: 'Stories',      value: 8,  color: '#DDD6FE' },
+    { type: 'Lives',        value: 5,  color: '#4F35E8' },
+    { type: 'Artigo',       value: 3,  color: '#7C5CFC' },
+    { type: 'Thread',       value: 2,  color: '#A78BFA' },
+  ],
+  instagram: [
+    { type: 'Reels',        value: 68, color: '#4F35E8' },
+    { type: 'Stories',      value: 18, color: '#7C5CFC' },
+    { type: 'Carrossel',    value: 10, color: '#A78BFA' },
+    { type: 'Imagem',       value: 4,  color: '#C4B5FD' },
+  ],
+  tiktok: [
+    { type: 'Vídeo curto',  value: 75, color: '#4F35E8' },
+    { type: 'Lives',        value: 18, color: '#7C5CFC' },
+    { type: 'Dueto',        value: 7,  color: '#A78BFA' },
+  ],
+  youtube: [
+    { type: 'Shorts',       value: 55, color: '#4F35E8' },
+    { type: 'Vídeo longo',  value: 32, color: '#7C5CFC' },
+    { type: 'Lives',        value: 13, color: '#A78BFA' },
+  ],
+  facebook: [
+    { type: 'Reels',        value: 40, color: '#4F35E8' },
+    { type: 'Vídeo',        value: 28, color: '#7C5CFC' },
+    { type: 'Stories',      value: 18, color: '#A78BFA' },
+    { type: 'Carrossel',    value: 9,  color: '#C4B5FD' },
+    { type: 'Lives',        value: 5,  color: '#DDD6FE' },
+  ],
+  linkedin: [
+    { type: 'Artigo',       value: 45, color: '#4F35E8' },
+    { type: 'Post',         value: 30, color: '#7C5CFC' },
+    { type: 'Vídeo',        value: 18, color: '#A78BFA' },
+    { type: 'Documento',    value: 7,  color: '#C4B5FD' },
+  ],
+  twitter: [
+    { type: 'Thread',       value: 48, color: '#4F35E8' },
+    { type: 'Tweet',        value: 35, color: '#7C5CFC' },
+    { type: 'Enquete',      value: 17, color: '#A78BFA' },
+  ],
+}
+
+export const getContentReach = (network = 'all') =>
+  Promise.resolve(CONTENT_REACH[network] ?? CONTENT_REACH.all)
 
 export const getAudience = () => Promise.resolve({
   ageGroups: [

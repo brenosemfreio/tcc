@@ -632,7 +632,7 @@
 .dash-home__bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
 /* Reach bars */
-.reach-bars { display: flex; flex-direction: column; gap: 14px; }
+.reach-bars { display: flex; flex-direction: column; gap: 10px; }
 .reach-bar__meta {
   display: flex;
   justify-content: space-between;

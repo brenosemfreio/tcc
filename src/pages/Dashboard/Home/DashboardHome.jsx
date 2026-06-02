@@ -57,7 +57,6 @@ export default function DashboardHome() {
   useEffect(() => {
     Promise.all([
       getSocialBreakdown(),
-      getContentReach(),
       getAudience(),
       getTopPosts(),
       getRecentPosts(),
@@ -65,11 +64,10 @@ export default function DashboardHome() {
       getAiSuggestions(),
       getAiInsights(),
     ]).then(([
-      socialBreakdownRes, contentReachRes, audienceRes,
+      socialBreakdownRes, audienceRes,
       topPostsRes, recentPostsRes, markersRes, aiSuggestionsRes, aiInsightsRes,
     ]) => {
       setSocialBreakdown(socialBreakdownRes)
-      setContentReach(contentReachRes)
       setAudience(audienceRes)
       setTopPosts(topPostsRes)
       setRecentPosts(recentPostsRes)
@@ -86,6 +84,10 @@ export default function DashboardHome() {
   useEffect(() => {
     getEngagementData(granularity, network).then(setEngagement)
   }, [granularity, network])
+
+  useEffect(() => {
+    getContentReach(network).then(setContentReach)
+  }, [network])
 
   const firstName = user?.name?.split(' ')[0] || 'usuário'
 

@@ -25,7 +25,7 @@ import ContentReachCard from './components/ContentReachCard'
 import TopPostsCard from './components/TopPostsCard'
 import ScheduleCTA from './components/ScheduleCTA'
 import MiniCalendar from './components/MiniCalendar'
-import GoalsCard from './components/GoalsCard'
+import AccountScoreCard from './components/AccountScoreCard'
 import AISuggestionsCard from './components/AISuggestionsCard'
 import RecentPostsCard from './components/RecentPostsCard'
 
@@ -202,12 +202,7 @@ export default function DashboardHome() {
             />
           </motion.div>
 
-          <motion.div
-            className="chart-card chart-card--goals"
-            variants={fadeUp} initial="hidden" animate="visible" custom={2}
-          >
-            <GoalsCard />
-          </motion.div>
+          <AccountScoreCard />
 
           <AISuggestionsCard
             suggestions={aiSuggestions}

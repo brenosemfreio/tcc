@@ -151,6 +151,14 @@ export const getAudience = () => Promise.resolve({
   ],
 })
 
+export const getActivityFeed = () => Promise.resolve([
+  { id: 1, type: 'publish',   text: 'Post "5 dicas para aumentar seu engajamento" foi publicado', time: 'há 2h' },
+  { id: 2, type: 'milestone', text: 'Você ultrapassou 8.500 seguidores no Instagram 🎉',          time: 'há 5h' },
+  { id: 3, type: 'comment',   text: '23 novos comentários no seu último Reel',                     time: 'há 8h' },
+  { id: 4, type: 'connect',   text: 'Conta do YouTube reconectada com sucesso',                   time: 'ontem' },
+  { id: 5, type: 'schedule',  text: 'Post "Como criar conteúdo que conecta" foi agendado',        time: 'ontem' },
+])
+
 export const getAiInsights = () => Promise.resolve([
   { id: 1, type: 'positive', highlight: '2.4x',              text: 'mais alcance nos Reels do que nos outros formatos' },
   { id: 2, type: 'positive', highlight: '+24%',              text: 'de crescimento no TikTok este mês' },

@@ -1534,6 +1534,79 @@
 .goal__fill { height: 100%; border-radius: 999px; }
 .goal__values { font-size: 0.7rem; color: var(--color-text-muted); }
 
+/* ─── Próximos agendamentos ─── */
+.upcoming__list { display: flex; flex-direction: column; gap: 4px; }
+.upcoming__item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border-light);
+}
+.upcoming__item:last-child { border-bottom: none; }
+.upcoming__icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.upcoming__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.upcoming__title {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.upcoming__when { font-size: 0.65rem; color: var(--color-text-muted); }
+.upcoming__countdown {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  background: var(--color-primary-muted);
+  padding: 4px 9px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ─── Atividade recente ─── */
+.activity__list { display: flex; flex-direction: column; }
+.activity__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--color-border-light);
+}
+.activity__item:last-child { border-bottom: none; }
+.activity__icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.activity__body { flex: 1; min-width: 0; }
+.activity__body p {
+  font-size: var(--font-size-xs);
+  color: var(--color-text);
+  line-height: 1.45;
+}
+.activity__time {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+}
+
 /* ─── Hierarquia: chart de engagement com mais destaque ─── */
 .dash-home__charts .chart-card:first-child {
   border-color: color-mix(in srgb, var(--color-primary) 20%, var(--color-border));

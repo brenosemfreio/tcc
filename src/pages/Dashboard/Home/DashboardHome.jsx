@@ -4,10 +4,10 @@ import { motion } from 'framer-motion'
 import { useAuth } from '../../../contexts/AuthContext'
 import {
   getStats, getEngagementData, getSocialBreakdown,
-  getContentReach, getAudience, getAiInsights,
+  getContentReach, getAudience, getAiInsights, getActivityFeed,
 } from '../../../services/analytics'
 import {
-  getTopPosts, getRecentPosts, getCalendarMarkers, getAiSuggestions,
+  getTopPosts, getRecentPosts, getCalendarMarkers, getAiSuggestions, getUpcomingPosts,
 } from '../../../services/posts'
 import { dashFadeUp as fadeUp } from '../../../styles/animations'
 import { exportDashboardReport } from '../../../utils/export'
@@ -27,6 +27,8 @@ import MiniCalendar from './components/MiniCalendar'
 import AccountScoreCard from './components/AccountScoreCard'
 import AISuggestionsCard from './components/AISuggestionsCard'
 import RecentPostsCard from './components/RecentPostsCard'
+import UpcomingPosts from './components/UpcomingPosts'
+import ActivityFeed from './components/ActivityFeed'
 
 import './DashboardHome.css'
 
@@ -45,6 +47,8 @@ export default function DashboardHome() {
   const [calendarMarkers, setCalendarMarkers] = useState({})
   const [aiSuggestions, setAiSuggestions] = useState([])
   const [aiInsights, setAiInsights] = useState([])
+  const [upcomingPosts, setUpcomingPosts] = useState([])
+  const [activity, setActivity] = useState([])
 
   const [period, setPeriod] = useState('30d')
   const [network, setNetwork] = useState('all')
@@ -63,9 +67,12 @@ export default function DashboardHome() {
       getCalendarMarkers(),
       getAiSuggestions(),
       getAiInsights(),
+      getUpcomingPosts(),
+      getActivityFeed(),
     ]).then(([
       socialBreakdownRes, audienceRes,
       topPostsRes, recentPostsRes, markersRes, aiSuggestionsRes, aiInsightsRes,
+      upcomingRes, activityRes,
     ]) => {
       setSocialBreakdown(socialBreakdownRes)
       setAudience(audienceRes)
@@ -74,6 +81,8 @@ export default function DashboardHome() {
       setCalendarMarkers(markersRes)
       setAiSuggestions(aiSuggestionsRes)
       setAiInsights(aiInsightsRes)
+      setUpcomingPosts(upcomingRes)
+      setActivity(activityRes)
     })
   }, [])
 
@@ -202,6 +211,10 @@ export default function DashboardHome() {
               onExpand={() => setShowCalendarModal(true)}
             />
           </motion.div>
+
+          <UpcomingPosts posts={upcomingPosts} onSeeAll={() => navigate('/dashboard/posts')} />
+
+          <ActivityFeed items={activity} />
 
           <AISuggestionsCard
             suggestions={aiSuggestions}

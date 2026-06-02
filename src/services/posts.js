@@ -33,6 +33,14 @@ export const getAiSuggestions = () => Promise.resolve([
 
 export const schedulePost = (data) => Promise.resolve({ id: Date.now(), ...data, status: 'scheduled' })
 
+// Próximos posts agendados (fila) — relativo ao "agora" mockado.
+export const getUpcomingPosts = () => Promise.resolve([
+  { id: 1, title: 'Como criar conteúdo que conecta', network: 'instagram', date: '30 mai', time: '19:00', countdown: 'Hoje' },
+  { id: 2, title: 'Pensamentos que facilitam sua rotina', network: 'tiktok', date: '02 jun', time: '09:00', countdown: 'em 3 dias' },
+  { id: 3, title: 'Checklist para posts de sucesso', network: 'linkedin', date: '05 jun', time: '11:00', countdown: 'em 6 dias' },
+  { id: 4, title: 'Bastidores do meu setup', network: 'youtube', date: '08 jun', time: '15:00', countdown: 'em 9 dias' },
+])
+
 /**
  * Posts mock — estrutura completa preparada pro workflow de equipe.
  * Em modo solo, o `author` é sempre o usuário atual e ele aprova auto.

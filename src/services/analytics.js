@@ -87,14 +87,14 @@ export const getSocialBreakdown = () => Promise.resolve([
 
 const CONTENT_REACH = {
   all: [
-    { type: 'Reels',        value: 62, color: '#4F35E8' },
-    { type: 'Carrossel',    value: 22, color: '#7C5CFC' },
-    { type: 'Shorts',       value: 16, color: '#A78BFA' },
-    { type: 'Imagem',       value: 10, color: '#C4B5FD' },
-    { type: 'Stories',      value: 8,  color: '#DDD6FE' },
-    { type: 'Lives',        value: 5,  color: '#4F35E8' },
-    { type: 'Artigo',       value: 3,  color: '#7C5CFC' },
-    { type: 'Thread',       value: 2,  color: '#A78BFA' },
+    { type: 'Reels',     value: 62, color: 'rgba(79,53,232,1.00)' },
+    { type: 'Carrossel', value: 22, color: 'rgba(79,53,232,0.80)' },
+    { type: 'Shorts',    value: 16, color: 'rgba(79,53,232,0.63)' },
+    { type: 'Imagem',    value: 10, color: 'rgba(79,53,232,0.48)' },
+    { type: 'Stories',   value: 8,  color: 'rgba(79,53,232,0.36)' },
+    { type: 'Lives',     value: 5,  color: 'rgba(79,53,232,0.26)' },
+    { type: 'Artigo',    value: 3,  color: 'rgba(79,53,232,0.18)' },
+    { type: 'Thread',    value: 2,  color: 'rgba(79,53,232,0.12)' },
   ],
   instagram: [
     { type: 'Reels',        value: 68, color: '#4F35E8' },

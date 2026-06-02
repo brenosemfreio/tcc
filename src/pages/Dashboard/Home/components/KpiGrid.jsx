@@ -48,7 +48,7 @@ export default function KpiGrid({ stats }) {
               variants={fadeUp} initial="hidden" animate="visible" custom={i}
             >
               <div className="kpi-card__top">
-                <div className="kpi-card__icon"><Icon size={20} /></div>
+                <div className="kpi-card__icon"><Icon size={24} /></div>
                 <span className={`kpi-card__change kpi-card__change--${val.trend}`}>
                   <TrendIcon size={12} /> {val.change}
                 </span>

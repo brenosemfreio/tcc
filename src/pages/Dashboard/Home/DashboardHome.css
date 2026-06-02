@@ -1345,10 +1345,49 @@
   font-weight: 700;
   color: var(--color-text);
 }
+.net-compare__controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 .net-compare__sub {
   font-size: 0.75rem;
   color: var(--color-text-muted);
 }
+.net-compare__arrow {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-card-bg);
+  color: var(--color-text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  flex-shrink: 0;
+}
+.net-compare__arrow:hover:not(:disabled) {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-color: var(--color-primary-light);
+}
+.net-compare__arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.net-compare__track {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  cursor: grab;
+  -webkit-overflow-scrolling: touch;
+}
+.net-compare__track:active { cursor: grabbing; }
+.net-compare__track::-webkit-scrollbar { display: none; }
 .net-compare__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1358,9 +1397,12 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px;
+  padding: 12px 16px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
+  flex: 0 0 calc(25% - 9px);
+  min-width: 160px;
+  scroll-snap-align: start;
 }
 .net-compare__icon {
   width: 36px;

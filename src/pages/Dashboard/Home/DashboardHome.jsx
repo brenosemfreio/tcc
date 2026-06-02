@@ -179,7 +179,7 @@ export default function DashboardHome() {
           </div>
 
           {/* Comparação entre redes */}
-          <NetworkComparison />
+          <NetworkComparison period={period} />
 
           {/* Reach + Top posts */}
           <div className="dash-home__bottom">

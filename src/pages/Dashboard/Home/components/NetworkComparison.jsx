@@ -12,7 +12,14 @@ const NETWORKS = [
   { id: 'twitter',   name: 'X (Twitter)', icon: FaXTwitter,  color: '#000000', followers: '912',  growth: '-2.3%',  trend: 'down' },
 ]
 
-export default function NetworkComparison() {
+const PERIOD_LABELS = {
+  '24h':  'Crescimento nas últimas 24h',
+  '7d':   'Crescimento nos últimos 7 dias',
+  '30d':  'Crescimento nos últimos 30 dias',
+  'all':  'Crescimento acumulado total',
+}
+
+export default function NetworkComparison({ period = '30d' }) {
   return (
     <motion.div
       className="net-compare"
@@ -20,7 +27,7 @@ export default function NetworkComparison() {
     >
       <div className="net-compare__header">
         <h3>Comparação entre redes</h3>
-        <span className="net-compare__sub">Crescimento últimos 30 dias</span>
+        <span className="net-compare__sub">{PERIOD_LABELS[period] ?? PERIOD_LABELS['30d']}</span>
       </div>
       <div className="net-compare__grid">
         {NETWORKS.map(({ id, name, icon: Icon, color, followers, growth, trend }) => {

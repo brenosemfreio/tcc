@@ -1361,11 +1361,6 @@
   padding: 12px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  transition: all var(--transition-fast);
-}
-.net-compare__card:hover {
-  border-color: var(--net);
-  transform: translateY(-2px);
 }
 .net-compare__icon {
   width: 36px;

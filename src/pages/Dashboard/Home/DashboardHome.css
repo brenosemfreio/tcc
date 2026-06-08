@@ -16,13 +16,14 @@
 }
 
 .dash-home__greeting {
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   font-weight: 800;
   color: var(--color-text);
-  line-height: 1.18;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
   overflow-wrap: anywhere;
 }
-.dash-home__sub { font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-top: 4px; }
+.dash-home__sub { font-size: var(--font-size-base); color: var(--color-text-secondary); margin-top: 5px; }
 
 .dash-home__filters {
   display: flex;

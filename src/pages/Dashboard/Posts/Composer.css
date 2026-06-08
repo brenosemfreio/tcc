@@ -3,12 +3,20 @@
    Layout 2 colunas: formulário em steps à esquerda, phone preview à direita
    ════════════════════════════════════════════════════════════ */
 
+/* Fade só de opacidade — SEM transform. Um transform aqui tornaria o .composer
+   o containing block da barra `position: fixed`, fazendo-a "teleportar" ao fim
+   da animação. */
+@keyframes composerFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 .composer {
   display: flex;
   flex-direction: column;
   gap: 20px;
   padding-bottom: 100px;
-  animation: fadeIn 0.4s ease;
+  animation: composerFade 0.4s ease;
 }
 
 /* Topbar */

@@ -11,6 +11,7 @@ import { getInitials } from '../../utils/string'
 import logoHub from '../../assets/images/logo-hub.png'
 import logoHubDark from '../../assets/images/logo-hub-dark.png'
 import logoHubIcon from '../../assets/images/logo-hub-icon.png'
+import logoHubIconDark from '../../assets/images/logo-hub-icon-dark.png'
 import './Sidebar.css'
 
 const NAV_ITEMS = [
@@ -49,7 +50,7 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
       <Link to="/dashboard" className="sidebar__logo" aria-label="Ir para o Dashboard">
         <div className="sidebar__logo-stage">
           <img src={theme === 'dark' ? logoHubDark : logoHub} alt="HubStudio" className="sidebar__logo-img sidebar__logo-img--full" />
-          <img src={logoHubIcon} alt=""          className="sidebar__logo-img sidebar__logo-img--icon" aria-hidden="true" />
+          <img src={theme === 'dark' ? logoHubIconDark : logoHubIcon} alt="" className="sidebar__logo-img sidebar__logo-img--icon" aria-hidden="true" />
         </div>
       </Link>
 

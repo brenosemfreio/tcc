@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { LuActivity, LuSend, LuTrophy, LuMessageCircle, LuPlug, LuCalendarClock } from 'react-icons/lu'
+import { LuSend, LuTrophy, LuMessageCircle, LuPlug, LuCalendarClock } from 'react-icons/lu'
 import { dashFadeUp as fadeUp } from '../../../../styles/animations'
 
 const TYPE_META = {
@@ -17,7 +17,7 @@ export default function ActivityFeed({ items = [] }) {
       variants={fadeUp} initial="hidden" animate="visible" custom={4}
     >
       <div className="chart-card__header">
-        <h3><LuActivity size={16} /> Atividade recente</h3>
+        <h3>Atividade recente</h3>
       </div>
 
       {items.length === 0 ? (

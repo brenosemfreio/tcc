@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { LuClock, LuArrowRight } from 'react-icons/lu'
+import { LuArrowRight } from 'react-icons/lu'
 import { FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
 import { dashFadeUp as fadeUp } from '../../../../styles/animations'
@@ -20,7 +20,7 @@ export default function UpcomingPosts({ posts = [], onSeeAll }) {
       variants={fadeUp} initial="hidden" animate="visible" custom={3}
     >
       <div className="chart-card__header">
-        <h3><LuClock size={16} /> Próximos agendamentos</h3>
+        <h3>Próximos agendamentos</h3>
         <button type="button" className="chart-card__link" onClick={onSeeAll}>Ver todos</button>
       </div>
 

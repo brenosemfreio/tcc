@@ -12,12 +12,9 @@ const STATUS_LABEL = {
   draft:     'Rascunho',
 }
 
-function statusOf(day, markers) {
+function statusOf(year, month, day, markers) {
   if (!day) return null
-  if (markers.published?.includes(day)) return 'published'
-  if (markers.scheduled?.includes(day)) return 'scheduled'
-  if (markers.draft?.includes(day))     return 'draft'
-  return null
+  return markers[`${year}-${month}-${day}`] || null
 }
 
 export default function CalendarModal({ isOpen, onClose, markers = {} }) {
@@ -43,12 +40,15 @@ export default function CalendarModal({ isOpen, onClose, markers = {} }) {
   })
   const goToday = () => setView({ year: today.getFullYear(), month: today.getMonth() })
 
-  // Estatísticas do mês corrente
-  const totals = {
-    scheduled: markers.scheduled?.length || 0,
-    published: markers.published?.length || 0,
-    draft:     markers.draft?.length || 0,
-  }
+  // Estatísticas do mês exibido (conta os markers daquele ano/mês)
+  const totals = useMemo(() => {
+    const t = { scheduled: 0, published: 0, draft: 0 }
+    Object.entries(markers).forEach(([key, status]) => {
+      const [yy, mm] = key.split('-').map(Number)
+      if (yy === view.year && mm === view.month && t[status] != null) t[status]++
+    })
+    return t
+  }, [markers, view])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Calendário de publicações" size="xl">
@@ -84,7 +84,7 @@ export default function CalendarModal({ isOpen, onClose, markers = {} }) {
 
         <div className="cal-modal__grid">
           {cells.map((day, i) => {
-            const status = statusOf(day, markers)
+            const status = statusOf(view.year, view.month, day, markers)
             const isToday = isCurrentMonth && day === today.getDate()
             return (
               <div

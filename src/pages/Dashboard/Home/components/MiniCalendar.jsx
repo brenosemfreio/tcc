@@ -4,16 +4,10 @@ import { LuChevronLeft, LuChevronRight, LuMaximize2 } from 'react-icons/lu'
 const MONTHS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
 const WEEKDAYS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
 
-/**
- * Resolve o status de um dia. Prioridade: published > scheduled > draft.
- * (um dia só recebe um marker visual)
- */
-function dayStatus(day, markers) {
+// Status de um dia via lookup no mapa de datas reais (`ano-mês-dia`).
+function dayStatus(year, month, day, markers) {
   if (!day) return null
-  if (markers.published?.includes(day)) return 'published'
-  if (markers.scheduled?.includes(day)) return 'scheduled'
-  if (markers.draft?.includes(day))     return 'draft'
-  return null
+  return markers[`${year}-${month}-${day}`] || null
 }
 
 export default function MiniCalendar({ markers = {}, onExpand }) {
@@ -47,16 +41,16 @@ export default function MiniCalendar({ markers = {}, onExpand }) {
           aria-label="Mês anterior"
           type="button"
         >
-          <LuChevronLeft size={14} />
+          <LuChevronLeft size={16} />
         </button>
-        <span>{MONTHS[view.month]} {view.year}</span>
+        <span className="mini-cal__title">{MONTHS[view.month]} {view.year}</span>
         <button
           className="mini-cal__nav"
           onClick={goNext}
           aria-label="Próximo mês"
           type="button"
         >
-          <LuChevronRight size={14} />
+          <LuChevronRight size={16} />
         </button>
         {onExpand && (
           <button
@@ -66,7 +60,7 @@ export default function MiniCalendar({ markers = {}, onExpand }) {
             type="button"
             title="Expandir"
           >
-            <LuMaximize2 size={12} />
+            <LuMaximize2 size={13} />
           </button>
         )}
       </div>
@@ -75,7 +69,7 @@ export default function MiniCalendar({ markers = {}, onExpand }) {
       </div>
       <div className="mini-cal__days">
         {cells.map((day, i) => {
-          const status = dayStatus(day, markers)
+          const status = dayStatus(view.year, view.month, day, markers)
           const isToday = isCurrentMonth && day === today.getDate()
           return (
             <div

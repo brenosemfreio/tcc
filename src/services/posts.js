@@ -13,15 +13,45 @@ export const getRecentPosts = () => Promise.resolve([
   { id: 4, title: 'Rascunho: ideias para a semana',      date: '—',          time: '—',     status: 'draft',     network: 'instagram' },
 ])
 
-// Calendário: cada array contém os DIAS do mês corrente que têm o status correspondente.
-export const getCalendarMarkers = () => Promise.resolve({
-  scheduled: [23, 27],
-  published: [5, 8, 12, 15, 22],
-  draft:     [3, 17],
-})
+/**
+ * Calendário: mapa de DATAS reais → status, montado relativo ao dia de hoje.
+ * Chave no formato `${ano}-${mês0indexado}-${dia}`. Regra realista:
+ *   - publicado  → dias no passado
+ *   - agendado   → dias no futuro
+ *   - rascunho   → futuro próximo (planejado, sem data fixa)
+ * Meses distantes (ex: 2035 ou 1905) ficam vazios, como esperado.
+ */
+export const getCalendarMarkers = () => {
+  const today = new Date()
+  const y = today.getFullYear()
+  const m = today.getMonth()
+  const d = today.getDate()
 
-// Mantido por compatibilidade; usa o mesmo dado de scheduled.
-export const getScheduledDates = () => Promise.resolve([23, 27])
+  const map = {}
+  const daysIn = (yy, mm) => new Date(yy, mm + 1, 0).getDate()
+  const set = (yy, mm, dd, status) => {
+    if (dd < 1 || dd > daysIn(yy, mm)) return
+    map[`${yy}-${mm}-${dd}`] = status
+  }
+
+  // Mês atual — passado publicado, futuro agendado/rascunho
+  ;[d - 2, d - 5, d - 9, d - 14, d - 19].forEach(dd => set(y, m, dd, 'published'))
+  ;[d + 2, d + 5, d + 12].forEach(dd => set(y, m, dd, 'scheduled'))
+  ;[d + 1, d + 8].forEach(dd => set(y, m, dd, 'draft'))
+
+  // Mês anterior — histórico de publicados
+  const pm = m === 0 ? 11 : m - 1
+  const py = m === 0 ? y - 1 : y
+  ;[3, 7, 11, 16, 21, 26].forEach(dd => set(py, pm, dd, 'published'))
+
+  // Próximo mês — alguns agendados + um rascunho
+  const nm = m === 11 ? 0 : m + 1
+  const ny = m === 11 ? y + 1 : y
+  ;[5, 10, 18, 24].forEach(dd => set(ny, nm, dd, 'scheduled'))
+  set(ny, nm, 14, 'draft')
+
+  return Promise.resolve(map)
+}
 
 import { LuMessageSquare, LuChartBar, LuHash } from 'react-icons/lu'
 

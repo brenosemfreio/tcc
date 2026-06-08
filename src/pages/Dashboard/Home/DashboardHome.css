@@ -858,39 +858,51 @@
 .schedule-cta p { font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-top: 4px; }
 
 /* Mini Calendar */
-.mini-cal { margin-top: 8px; }
+/* Título do card centralizado */
+.chart-card--calendar h3 { text-align: center; }
+
+.mini-cal { margin-top: 4px; }
 .mini-cal__header {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.mini-cal__title {
+  min-width: 108px;
+  text-align: center;
   font-size: var(--font-size-sm);
   font-weight: 700;
   color: var(--color-text);
-  margin-bottom: 12px;
 }
 .mini-cal__nav {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-text-muted);
-  background: transparent;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-tertiary);
   border: none;
   cursor: pointer;
+  flex-shrink: 0;
   transition: background 160ms ease, color 160ms ease;
 }
 .mini-cal__nav:hover {
-  background: var(--color-bg-tertiary);
-  color: var(--color-text);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
 }
 .mini-cal__expand {
-  margin-left: 6px;
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -919,25 +931,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.7rem;
-  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  border-radius: 8px;
   color: var(--color-text-secondary);
   cursor: default;
   position: relative;
+  transition: background 140ms ease;
+}
+.mini-cal__day:not(.mini-cal__day--empty):not(.mini-cal__day--today):hover {
+  background: var(--color-bg-tertiary);
 }
 .mini-cal__day--today {
   background: var(--color-primary);
   color: #fff;
   font-weight: 700;
+  box-shadow: 0 4px 12px rgba(79, 53, 232, 0.32);
 }
 .mini-cal__day--scheduled::after,
 .mini-cal__day--published::after,
 .mini-cal__day--draft::after {
   content: '';
   position: absolute;
-  bottom: 2px;
-  width: 4px;
-  height: 4px;
+  bottom: 3px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
 }
 .mini-cal__day--scheduled::after { background: var(--color-primary); }

@@ -2,32 +2,54 @@ import { useState, useEffect, useMemo, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import {
-  LuSearch, LuFileText, LuHash, LuLayoutDashboard,
-  LuSettings, LuSparkles, LuArrowRight, LuPlus,
+  LuSearch, LuFileText, LuHash, LuLayoutDashboard, LuSparkles, LuArrowRight,
+  LuSquarePen, LuUsers, LuCircleHelp, LuUser, LuShare2, LuShieldCheck, LuBell,
+  LuPalette, LuCreditCard, LuLock, LuTicket, LuBookOpen, LuActivity,
 } from 'react-icons/lu'
 import './SearchModal.css'
 
-// Catálogo mock de coisas pesquisáveis. Cada item tem categoria, label,
-// uma ação a executar e ícone.
+// Catálogo de coisas pesquisáveis. Cada item tem categoria, label, ícone,
+// uma ação e (opcional) palavras-chave para a busca encontrar por sinônimos.
 const buildCatalog = ({ navigate, onNewPost }) => ([
   // Comandos
-  { id: 'cmd-1', cat: 'Comandos', label: 'Novo post',           icon: LuPlus,             action: () => onNewPost() },
-  { id: 'cmd-2', cat: 'Comandos', label: 'Ir para o Dashboard', icon: LuLayoutDashboard,  action: () => navigate('/dashboard') },
-  { id: 'cmd-3', cat: 'Comandos', label: 'Configurações',       icon: LuSettings,         action: () => navigate('/dashboard/configuracoes') },
-  // Posts (mock)
-  { id: 'p-1', cat: 'Publicações', label: '5 dicas para aumentar seu engajamento', icon: LuFileText, action: () => navigate('/dashboard') },
-  { id: 'p-2', cat: 'Publicações', label: 'Seus Reels alcançaram 2 do nada',       icon: LuFileText, action: () => navigate('/dashboard') },
-  { id: 'p-3', cat: 'Publicações', label: 'Como criar conteúdo que conecta',       icon: LuFileText, action: () => navigate('/dashboard') },
-  { id: 'p-4', cat: 'Publicações', label: 'Checklist para posts de sucesso',       icon: LuFileText, action: () => navigate('/dashboard') },
+  { id: 'cmd-new', cat: 'Comandos', label: 'Criar novo post', icon: LuSquarePen, keywords: 'agendar publicar composer escrever', action: () => onNewPost() },
+
+  // Navegação
+  { id: 'nav-dash',    cat: 'Navegação', label: 'Dashboard',         icon: LuLayoutDashboard, keywords: 'início home métricas visão geral', action: () => navigate('/dashboard') },
+  { id: 'nav-posts',   cat: 'Navegação', label: 'Publicações',       icon: LuSquarePen,       keywords: 'posts conteúdo agendados rascunhos', action: () => navigate('/dashboard/posts') },
+  { id: 'nav-equipes', cat: 'Navegação', label: 'Equipes',           icon: LuUsers,           keywords: 'membros time colaboradores cargos', action: () => navigate('/dashboard/equipes') },
+  { id: 'nav-suporte', cat: 'Navegação', label: 'Central de ajuda',  icon: LuCircleHelp,      keywords: 'suporte ajuda faq dúvidas atendimento', action: () => navigate('/dashboard/suporte') },
+
+  // Configurações — deep-link direto na aba
+  { id: 'set-perfil', cat: 'Configurações', label: 'Perfil',            icon: LuUser,        keywords: 'conta nome avatar foto bio usuário fuso idioma', action: () => navigate('/dashboard/configuracoes?tab=perfil') },
+  { id: 'set-redes',  cat: 'Configurações', label: 'Redes sociais',     icon: LuShare2,      keywords: 'conectar vincular instagram tiktok youtube facebook linkedin integração', action: () => navigate('/dashboard/configuracoes?tab=redes') },
+  { id: 'set-seg',    cat: 'Configurações', label: 'Segurança',         icon: LuShieldCheck, keywords: 'senha 2fa autenticação dois fatores sessões dispositivos', action: () => navigate('/dashboard/configuracoes?tab=seguranca') },
+  { id: 'set-notif',  cat: 'Configurações', label: 'Notificações',      icon: LuBell,        keywords: 'email push avisos alertas', action: () => navigate('/dashboard/configuracoes?tab=notificacoes') },
+  { id: 'set-apar',   cat: 'Configurações', label: 'Aparência',         icon: LuPalette,     keywords: 'tema claro escuro modo idioma formato data', action: () => navigate('/dashboard/configuracoes?tab=aparencia') },
+  { id: 'set-cobr',   cat: 'Configurações', label: 'Plano & Cobrança',  icon: LuCreditCard,  keywords: 'pagamento fatura plano assinatura uso cartão upgrade', action: () => navigate('/dashboard/configuracoes?tab=cobranca') },
+  { id: 'set-priv',   cat: 'Configurações', label: 'Privacidade',       icon: LuLock,        keywords: 'exportar dados excluir conta lgpd zona de perigo', action: () => navigate('/dashboard/configuracoes?tab=privacidade') },
+
+  // Suporte — atalhos
+  { id: 'sup-ticket', cat: 'Suporte', label: 'Abrir um chamado',      icon: LuTicket,   keywords: 'ticket problema solicitação', action: () => navigate('/dashboard/suporte') },
+  { id: 'sup-kb',     cat: 'Suporte', label: 'Base de conhecimento',  icon: LuBookOpen, keywords: 'artigos guias tutoriais como fazer', action: () => navigate('/dashboard/suporte') },
+  { id: 'sup-status', cat: 'Suporte', label: 'Status do sistema',     icon: LuActivity, keywords: 'operacional incidente serviços disponibilidade', action: () => navigate('/dashboard/suporte') },
+
+  // Publicações (mock)
+  { id: 'p-1', cat: 'Publicações', label: '5 dicas para aumentar seu engajamento', icon: LuFileText, action: () => navigate('/dashboard/posts') },
+  { id: 'p-2', cat: 'Publicações', label: 'Seus Reels alcançaram 2 do nada',       icon: LuFileText, action: () => navigate('/dashboard/posts') },
+  { id: 'p-3', cat: 'Publicações', label: 'Como criar conteúdo que conecta',       icon: LuFileText, action: () => navigate('/dashboard/posts') },
+  { id: 'p-4', cat: 'Publicações', label: 'Checklist para posts de sucesso',       icon: LuFileText, action: () => navigate('/dashboard/posts') },
+
   // Hashtags
   { id: 'h-1', cat: 'Hashtags', label: '#marketingdigital', icon: LuHash, action: () => {} },
   { id: 'h-2', cat: 'Hashtags', label: '#conteudo',         icon: LuHash, action: () => {} },
   { id: 'h-3', cat: 'Hashtags', label: '#redessociais',     icon: LuHash, action: () => {} },
   { id: 'h-4', cat: 'Hashtags', label: '#empreendedorismo', icon: LuHash, action: () => {} },
+
   // IA
-  { id: 'ai-1', cat: 'IA', label: 'Gerar legenda com IA',     icon: LuSparkles, action: () => onNewPost() },
-  { id: 'ai-2', cat: 'IA', label: 'Sugerir hashtags',         icon: LuSparkles, action: () => {} },
-  { id: 'ai-3', cat: 'IA', label: 'Variações da última post', icon: LuSparkles, action: () => {} },
+  { id: 'ai-1', cat: 'IA', label: 'Gerar legenda com IA',     icon: LuSparkles, keywords: 'inteligência artificial texto', action: () => onNewPost() },
+  { id: 'ai-2', cat: 'IA', label: 'Sugerir hashtags',         icon: LuSparkles, keywords: 'tags ia', action: () => onNewPost() },
+  { id: 'ai-3', cat: 'IA', label: 'Variações da última post', icon: LuSparkles, keywords: 'reescrever ia', action: () => onNewPost() },
 ])
 
 export default function SearchModal({ isOpen, onClose, onNewPost }) {
@@ -44,7 +66,10 @@ export default function SearchModal({ isOpen, onClose, onNewPost }) {
   const results = useMemo(() => {
     const q = query.trim().toLowerCase()
     if (!q) return catalog.slice(0, 8) // mostra alguns por padrão
-    return catalog.filter(item => item.label.toLowerCase().includes(q))
+    return catalog.filter(item => {
+      const haystack = `${item.label} ${item.keywords || ''}`.toLowerCase()
+      return haystack.includes(q)
+    })
   }, [query, catalog])
 
   // Agrupa por categoria preservando a ordem dos resultados

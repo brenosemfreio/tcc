@@ -100,6 +100,9 @@
 .sidebar--collapsed .sidebar__logo-img--full { opacity: 0; }
 .sidebar--collapsed .sidebar__logo-img--icon { opacity: 1; }
 
+/* No modo escuro, força o ícone (logo minimizada) para branco */
+[data-theme='dark'] .sidebar__logo-img--icon { filter: brightness(0) invert(1); }
+
 /* ── Search ── */
 .sidebar__search {
   display: flex;

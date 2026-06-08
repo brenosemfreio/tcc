@@ -1,4 +1,4 @@
-import { LuClock, LuArrowRight, LuTrendingUp } from 'react-icons/lu'
+import { LuArrowRight, LuTrendingUp } from 'react-icons/lu'
 
 // Substitui o heatmap. Foco em destacar O MELHOR horário + alternativas
 // próximas + ação direta de agendamento.
@@ -16,7 +16,7 @@ export default function BestTimeCard({ onSchedule }) {
   return (
     <div className="best-time">
       <div className="best-time__header">
-        <h3><LuClock size={16} /> Melhor horário para postar</h3>
+        <h3>Melhor horário para postar</h3>
       </div>
 
       <div className="best-time__featured">

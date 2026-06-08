@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion'
-import { LuUsers, LuMapPin } from 'react-icons/lu'
+import { LuMapPin } from 'react-icons/lu'
 
 export default function AudienceCard({ data }) {
   if (!data) {
     return (
       <div className="audience">
         <div className="chart-card__header">
-          <h3><LuUsers size={16} /> Seu público</h3>
+          <h3>Seu público</h3>
         </div>
         <div className="chart-card__empty">Sem dados de audiência.</div>
       </div>
@@ -19,7 +19,7 @@ export default function AudienceCard({ data }) {
   return (
     <div className="audience">
       <div className="chart-card__header">
-        <h3><LuUsers size={16} /> Seu público</h3>
+        <h3>Seu público</h3>
         <span className="audience__hint">Distribuição dos seguidores</span>
       </div>
 

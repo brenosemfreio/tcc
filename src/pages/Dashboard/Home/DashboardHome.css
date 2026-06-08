@@ -251,17 +251,20 @@
   background: color-mix(in srgb, var(--color-primary) 8%, transparent);
 }
 
-/* Grid layout */
+/* Grid layout — colunas se esticam à mesma altura (align stretch) e cada
+   coluna distribui seus cards (space-between) para a base ficar alinhada,
+   independente de qual coluna tem mais conteúdo. Isso evita vão embaixo de
+   qualquer card quando uma coluna é mais alta que a outra. */
 .dash-home__grid {
   display: grid;
   grid-template-columns: 1fr 300px;
   gap: 20px;
-  align-items: start;
+  align-items: stretch;
   min-width: 0;
 }
 
-.dash-home__left { display: flex; flex-direction: column; gap: 20px; }
-.dash-home__right { display: flex; flex-direction: column; gap: 20px; }
+.dash-home__left { display: flex; flex-direction: column; justify-content: space-between; gap: 20px; }
+.dash-home__right { display: flex; flex-direction: column; justify-content: space-between; gap: 20px; }
 .dash-home__left,
 .dash-home__right,
 .dash-home__grid > *,

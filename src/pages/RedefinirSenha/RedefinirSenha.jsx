@@ -4,7 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { LuArrowLeft, LuLockOpen } from 'react-icons/lu'
 import { RecoveryPasswordField, StrengthMeter } from '../../components/PasswordField/PasswordField'
 import { calcStrength } from '../../utils/password'
+import { useTheme } from '../../contexts/ThemeContext'
 import logoHub from '../../assets/images/logo-hub.png'
+import logoHubDark from '../../assets/images/logo-hub-dark.png'
 import '../EsqueciSenha/EsqueciSenha.css'
 
 const viewVariants = {
@@ -14,6 +16,8 @@ const viewVariants = {
 }
 
 export default function RedefinirSenha() {
+  const { theme } = useTheme()
+  const logo = theme === 'dark' ? logoHubDark : logoHub
   const [view, setView] = useState('form')   // 'form' | 'success'
   const [form, setForm] = useState({ password: '', confirm: '' })
   const [errors, setErrors] = useState({})
@@ -94,7 +98,7 @@ export default function RedefinirSenha() {
 
       <div className="recovery__shell">
         <Link to="/" className="recovery__logo" aria-label="HubStudio — página inicial">
-          <img src={logoHub} alt="HubStudio" className="recovery__logo-img" />
+          <img src={logo} alt="HubStudio" className="recovery__logo-img" />
         </Link>
 
         <div className="recovery__card">

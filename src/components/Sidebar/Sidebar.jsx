@@ -9,6 +9,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { useTheme } from '../../contexts/ThemeContext'
 import { getInitials } from '../../utils/string'
 import logoHub from '../../assets/images/logo-hub.png'
+import logoHubDark from '../../assets/images/logo-hub-dark.png'
 import logoHubIcon from '../../assets/images/logo-hub-icon.png'
 import './Sidebar.css'
 
@@ -47,7 +48,7 @@ export default function Sidebar({ isCollapsed, onToggle, onNewPost, onOpenSearch
       {/* Logo — duas imagens empilhadas, crossfade via CSS */}
       <Link to="/dashboard" className="sidebar__logo" aria-label="Ir para o Dashboard">
         <div className="sidebar__logo-stage">
-          <img src={logoHub}     alt="HubStudio" className="sidebar__logo-img sidebar__logo-img--full" />
+          <img src={theme === 'dark' ? logoHubDark : logoHub} alt="HubStudio" className="sidebar__logo-img sidebar__logo-img--full" />
           <img src={logoHubIcon} alt=""          className="sidebar__logo-img sidebar__logo-img--icon" aria-hidden="true" />
         </div>
       </Link>

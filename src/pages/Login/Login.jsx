@@ -3,11 +3,14 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { LuArrowLeft, LuCircleAlert } from 'react-icons/lu'
 import { useAuth } from '../../contexts/AuthContext'
+import { useTheme } from '../../contexts/ThemeContext'
 import { GoogleIcon, FacebookIcon } from '../../components/OAuthIcons/OAuthIcons'
 import { AuthPasswordField } from '../../components/PasswordField/PasswordField'
 import { formContainerVariants, fieldVariants } from '../../styles/animations'
 import logoHub from '../../assets/images/logo-hub.png'
+import logoHubDark from '../../assets/images/logo-hub-dark.png'
 import logoMinimalista from '../../assets/images/logo-minimalista.png'
+import logoMinimalistaDark from '../../assets/images/logo-minimalista-dark.png'
 import '../../styles/auth.css'
 import './Login.css'
 
@@ -18,7 +21,10 @@ export default function Login() {
   const [globalError, setGlobalError] = useState('')
   const [isExiting, setIsExiting] = useState(false)
   const { login } = useAuth()
+  const { theme } = useTheme()
   const navigate = useNavigate()
+  const logo = theme === 'dark' ? logoHubDark : logoHub
+  const deco = theme === 'dark' ? logoMinimalistaDark : logoMinimalista
 
   const validate = () => {
     const next = {}
@@ -62,7 +68,7 @@ export default function Login() {
       <div className="auth__left">
         <div className="login-deco-wrap" aria-hidden="true">
           <img
-            src={logoMinimalista}
+            src={deco}
             alt=""
             aria-hidden="true"
             className="login-deco-logo"
@@ -71,7 +77,7 @@ export default function Login() {
 
         <div className="auth__left-logo">
           <Link to="/" aria-label="HubStudio — página inicial">
-            <img src={logoHub} alt="HubStudio" />
+            <img src={logo} alt="HubStudio" />
           </Link>
         </div>
 
@@ -99,7 +105,7 @@ export default function Login() {
 
         <div className="auth__card">
           <div className="auth__mobile-logo" aria-hidden="true">
-            <img src={logoHub} alt="HubStudio" />
+            <img src={logo} alt="HubStudio" />
           </div>
 
           <header className="auth__heading">

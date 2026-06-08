@@ -4,7 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   LuArrowLeft, LuMail, LuMailCheck, LuCircleAlert, LuExternalLink, LuCheck,
 } from 'react-icons/lu'
+import { useTheme } from '../../contexts/ThemeContext'
 import logoHub from '../../assets/images/logo-hub.png'
+import logoHubDark from '../../assets/images/logo-hub-dark.png'
 import './EsqueciSenha.css'
 
 const viewVariants = {
@@ -14,6 +16,8 @@ const viewVariants = {
 }
 
 export default function EsqueciSenha() {
+  const { theme } = useTheme()
+  const logo = theme === 'dark' ? logoHubDark : logoHub
   const [view, setView] = useState('request')   // 'request' | 'sent'
   const [email, setEmail] = useState('')
   const [emailError, setEmailError] = useState('')
@@ -85,7 +89,7 @@ export default function EsqueciSenha() {
 
       <div className="recovery__shell">
         <Link to="/" className="recovery__logo" aria-label="HubStudio — página inicial">
-          <img src={logoHub} alt="HubStudio" className="recovery__logo-img" />
+          <img src={logo} alt="HubStudio" className="recovery__logo-img" />
         </Link>
 
         <div className="recovery__card">

@@ -265,6 +265,81 @@
 
 .dash-home__left { display: flex; flex-direction: column; justify-content: space-between; gap: 20px; }
 .dash-home__right { display: flex; flex-direction: column; justify-content: space-between; gap: 20px; }
+
+/* ─── Blocos modulares (Reorder) ─── */
+.dash-block { position: relative; min-width: 0; list-style: none; }
+.dash-block__handle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 8;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(79, 53, 232, 0.35);
+  pointer-events: none;
+}
+
+/* ─── Toolbar "Personalizar" ─── */
+.dash-home__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.dash-home__toolbar-hint {
+  margin-right: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-primary);
+}
+.dash-home__toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-card-bg);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+}
+.dash-home__toolbar-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.dash-home__toolbar-btn--primary { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+.dash-home__toolbar-btn--primary:hover { background: var(--color-primary-hover); border-color: var(--color-primary-hover); color: #fff; }
+
+/* ─── Modo de edição ─── */
+.dash-home__grid--editing .dash-home__left,
+.dash-home__grid--editing .dash-home__right { justify-content: flex-start; }
+
+.dash-home__grid--editing .dash-block {
+  cursor: grab;
+  border-radius: 18px;
+  outline: 2px dashed color-mix(in srgb, var(--color-primary) 45%, transparent);
+  outline-offset: 4px;
+  transition: outline-color var(--transition-fast);
+}
+.dash-home__grid--editing .dash-block:hover {
+  outline-color: var(--color-primary);
+}
+.dash-home__grid--editing .dash-block:active { cursor: grabbing; }
+/* Bloqueia interações internas durante a edição — só o arrasto funciona */
+.dash-home__grid--editing .dash-block > * { pointer-events: none; }
+.dash-home__grid--editing .dash-block__handle { pointer-events: none; }
 .dash-home__left,
 .dash-home__right,
 .dash-home__grid > *,
@@ -1772,10 +1847,9 @@
 }
 
 @media (max-width: 1200px) {
+  /* Colunas empilham (esquerda e depois direita), cada uma full-width */
   .dash-home__grid { grid-template-columns: minmax(0, 1fr); }
-  .dash-home__right { grid-row: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .dash-home__kpis { grid-template-columns: repeat(3, 1fr); }
-  .net-compare__grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 1024px) {
@@ -1826,14 +1900,6 @@
     align-items: stretch;
   }
 
-  .dash-home__left,
-  .dash-home__right,
-  .dash-home__charts,
-  .dash-home__row,
-  .dash-home__bottom {
-    display: contents;
-  }
-
   .dash-home__kpis,
   .chart-card,
   .net-compare,
@@ -1848,30 +1914,17 @@
     overflow: hidden;
   }
 
+  /* Pares lado a lado colapsam pra uma coluna no mobile */
   .dash-home__charts,
   .dash-home__bottom,
-  .dash-home__row--2,
-  .dash-home__right {
+  .dash-home__row--2 {
     grid-template-columns: minmax(0, 1fr);
   }
 
   .dash-home__kpis {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
-    order: 1;
   }
-
-  .chart-card--engagement { order: 2; }
-  .net-compare { order: 3; }
-  .chart-card--donut { order: 4; }
-  .chart-card--best-time { order: 5; }
-  .chart-card--top-posts { order: 6; }
-  .chart-card--audience { order: 7; }
-  .chart-card--goals { order: 8; }
-  .chart-card--calendar { order: 9; }
-  .chart-card--recent-posts { order: 10; }
-  .ai-suggestions-card { order: 11; }
-  .schedule-cta { order: 12; }
 
   .chart-card--content-reach {
     display: none;

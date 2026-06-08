@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, Reorder } from 'framer-motion'
+import { LuLayoutGrid, LuGripVertical, LuRotateCcw, LuCheck } from 'react-icons/lu'
 import { useAuth } from '../../../contexts/AuthContext'
 import {
   getStats, getEngagementData, getSocialBreakdown,
@@ -32,6 +33,25 @@ import ActivityFeed from './components/ActivityFeed'
 
 import './DashboardHome.css'
 
+// Ordem padrão dos blocos em cada coluna. Cada id é renderizado pelo registry
+// abaixo. Persistido no localStorage para o usuário montar o dashboard à vontade.
+const LEFT_DEFAULT  = ['kpis', 'insights', 'charts', 'audience', 'networks', 'bottom', 'cta']
+const RIGHT_DEFAULT = ['calendar', 'upcoming', 'activity', 'suggestions', 'recent']
+
+// Reconcilia a ordem salva com a padrão: mantém o que o usuário ordenou,
+// descarta ids inexistentes e acrescenta blocos novos no fim (à prova de futuro).
+const loadOrder = (key, def) => {
+  try {
+    const saved = JSON.parse(localStorage.getItem(key))
+    if (!Array.isArray(saved)) return def
+    const known = saved.filter(id => def.includes(id))
+    const missing = def.filter(id => !known.includes(id))
+    return [...known, ...missing]
+  } catch {
+    return def
+  }
+}
+
 export default function DashboardHome() {
   const { user } = useAuth()
   const navigate = useNavigate()
@@ -56,6 +76,16 @@ export default function DashboardHome() {
 
   const [feedback, setFeedback] = useState({})
   const [showCalendarModal, setShowCalendarModal] = useState(false)
+
+  // Layout modular
+  const [editMode, setEditMode] = useState(false)
+  const [leftOrder, setLeftOrder] = useState(() => loadOrder('hs-dash-left', LEFT_DEFAULT))
+  const [rightOrder, setRightOrder] = useState(() => loadOrder('hs-dash-right', RIGHT_DEFAULT))
+
+  useEffect(() => { localStorage.setItem('hs-dash-left', JSON.stringify(leftOrder)) }, [leftOrder])
+  useEffect(() => { localStorage.setItem('hs-dash-right', JSON.stringify(rightOrder)) }, [rightOrder])
+
+  const resetLayout = () => { setLeftOrder(LEFT_DEFAULT); setRightOrder(RIGHT_DEFAULT) }
 
   // Dados estáticos (não dependem dos filtros).
   useEffect(() => {
@@ -141,6 +171,107 @@ export default function DashboardHome() {
     navigate(`/dashboard/posts/${post.id}/editar`)
   }
 
+  // ─── Registry de blocos: cada id → conteúdo. Mantém os pares lado a lado
+  //     como uma unidade arrastável (charts, audience, bottom). ───
+  const LEFT_BLOCKS = {
+    kpis: <KpiGrid stats={stats} />,
+    insights: <AIInsightsBar insights={aiInsights} onViewAll={() => {}} />,
+    charts: (
+      <div className="dash-home__charts">
+        <EngagementChart
+          data={engagement}
+          granularity={granularity}
+          onGranularityChange={setGranularity}
+        />
+        <AccountScoreCard />
+      </div>
+    ),
+    audience: (
+      <div className="dash-home__row dash-home__row--2">
+        <motion.div
+          className="chart-card chart-card--audience"
+          variants={fadeUp} initial="hidden" animate="visible" custom={4}
+        >
+          <AudienceCard data={audience} />
+        </motion.div>
+        <motion.div
+          className="chart-card chart-card--best-time"
+          variants={fadeUp} initial="hidden" animate="visible" custom={5}
+        >
+          <BestTimeCard onSchedule={openComposer} />
+        </motion.div>
+      </div>
+    ),
+    networks: <NetworkComparison period={period} />,
+    bottom: (
+      <div className="dash-home__bottom">
+        <ContentReachCard data={contentReach} />
+        <TopPostsCard posts={topPosts} />
+      </div>
+    ),
+    cta: <ScheduleCTA onSchedule={openComposer} />,
+  }
+
+  const RIGHT_BLOCKS = {
+    calendar: (
+      <motion.div
+        className="chart-card chart-card--calendar"
+        variants={fadeUp} initial="hidden" animate="visible" custom={1}
+      >
+        <h3>Calendário de publicações</h3>
+        <MiniCalendar
+          markers={calendarMarkers}
+          onExpand={() => setShowCalendarModal(true)}
+        />
+      </motion.div>
+    ),
+    upcoming: <UpcomingPosts posts={upcomingPosts} onSeeAll={() => navigate('/dashboard/posts')} />,
+    activity: <ActivityFeed items={activity} />,
+    suggestions: (
+      <AISuggestionsCard
+        suggestions={aiSuggestions}
+        feedback={feedback}
+        onAction={handleAiAction}
+      />
+    ),
+    recent: (
+      <RecentPostsCard
+        posts={recentPosts}
+        onEdit={editPost}
+        onDuplicate={duplicatePost}
+        onDelete={deletePost}
+      />
+    ),
+  }
+
+  const renderColumn = (order, setOrder, blocks, columnClass) => (
+    <Reorder.Group
+      as="div"
+      axis="y"
+      values={order}
+      onReorder={setOrder}
+      className={columnClass}
+    >
+      {order.map(id => (
+        <Reorder.Item
+          key={id}
+          value={id}
+          as="div"
+          className="dash-block"
+          dragListener={editMode}
+          whileDrag={{ scale: 1.015, zIndex: 20 }}
+        >
+          {editMode && (
+            <span className="dash-block__handle" aria-hidden="true">
+              <LuGripVertical size={16} />
+            </span>
+          )}
+          {blocks[id]}
+        </Reorder.Item>
+      ))}
+    </Reorder.Group>
+  )
+
   return (
     <div className="dash-home">
       <DashboardHeader
@@ -154,81 +285,37 @@ export default function DashboardHome() {
         onExport={handleExport}
       />
 
-      <div className="dash-home__grid">
-        {/* Left column */}
-        <div className="dash-home__left">
-          <KpiGrid stats={stats} />
-
-          <AIInsightsBar insights={aiInsights} onViewAll={() => {}} />
-
-          {/* Engajamento + Score */}
-          <div className="dash-home__charts">
-            <EngagementChart
-              data={engagement}
-              granularity={granularity}
-              onGranularityChange={setGranularity}
-            />
-            <AccountScoreCard />
-          </div>
-
-          {/* Audience + Best Time lado a lado */}
-          <div className="dash-home__row dash-home__row--2">
-            <motion.div
-              className="chart-card chart-card--audience"
-              variants={fadeUp} initial="hidden" animate="visible" custom={4}
+      <div className="dash-home__toolbar">
+        {editMode ? (
+          <>
+            <span className="dash-home__toolbar-hint">
+              <LuGripVertical size={15} /> Arraste os cards para reordenar
+            </span>
+            <button type="button" className="dash-home__toolbar-btn" onClick={resetLayout}>
+              <LuRotateCcw size={14} /> Restaurar padrão
+            </button>
+            <button
+              type="button"
+              className="dash-home__toolbar-btn dash-home__toolbar-btn--primary"
+              onClick={() => setEditMode(false)}
             >
-              <AudienceCard data={audience} />
-            </motion.div>
-            <motion.div
-              className="chart-card chart-card--best-time"
-              variants={fadeUp} initial="hidden" animate="visible" custom={5}
-            >
-              <BestTimeCard onSchedule={openComposer} />
-            </motion.div>
-          </div>
-
-          {/* Comparação entre redes */}
-          <NetworkComparison period={period} />
-
-          {/* Reach + Top posts */}
-          <div className="dash-home__bottom">
-            <ContentReachCard data={contentReach} />
-            <TopPostsCard posts={topPosts} />
-          </div>
-
-          <ScheduleCTA onSchedule={openComposer} />
-        </div>
-
-        {/* Right column */}
-        <div className="dash-home__right">
-          <motion.div
-            className="chart-card chart-card--calendar"
-            variants={fadeUp} initial="hidden" animate="visible" custom={1}
+              <LuCheck size={14} /> Concluir
+            </button>
+          </>
+        ) : (
+          <button
+            type="button"
+            className="dash-home__toolbar-btn"
+            onClick={() => setEditMode(true)}
           >
-            <h3>Calendário de publicações</h3>
-            <MiniCalendar
-              markers={calendarMarkers}
-              onExpand={() => setShowCalendarModal(true)}
-            />
-          </motion.div>
+            <LuLayoutGrid size={14} /> Personalizar
+          </button>
+        )}
+      </div>
 
-          <UpcomingPosts posts={upcomingPosts} onSeeAll={() => navigate('/dashboard/posts')} />
-
-          <ActivityFeed items={activity} />
-
-          <AISuggestionsCard
-            suggestions={aiSuggestions}
-            feedback={feedback}
-            onAction={handleAiAction}
-          />
-
-          <RecentPostsCard
-            posts={recentPosts}
-            onEdit={editPost}
-            onDuplicate={duplicatePost}
-            onDelete={deletePost}
-          />
-        </div>
+      <div className={`dash-home__grid ${editMode ? 'dash-home__grid--editing' : ''}`}>
+        {renderColumn(leftOrder, setLeftOrder, LEFT_BLOCKS, 'dash-home__left')}
+        {renderColumn(rightOrder, setRightOrder, RIGHT_BLOCKS, 'dash-home__right')}
       </div>
 
       <CalendarModal

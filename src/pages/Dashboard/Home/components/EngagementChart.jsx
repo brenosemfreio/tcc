@@ -20,8 +20,10 @@ const METRICS = [
 const fmtCompact = (n) => {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`
   if (n >= 1_000) return `${(n / 1_000).toFixed(n >= 10_000 ? 0 : 1)}K`
-  return `${n}`
+  return `${Math.round(n)}`
 }
+
+const PERIOD_WORD = { daily: 'dia', weekly: 'semana', monthly: 'mês' }
 
 function MetricTooltip({ active, payload, label, color, metricLabel }) {
   if (!active || !payload?.length) return null
@@ -51,6 +53,16 @@ export default function EngagementChart({ data, granularity, onGranularityChange
   }, [data])
 
   const metric = METRICS.find(m => m.key === metricKey)
+
+  // Contexto que reconcilia o total (no card) com a escala do gráfico (por período)
+  const stats = useMemo(() => {
+    if (!data || data.length === 0) return null
+    const vals = data.map(d => d[metricKey] || 0)
+    return {
+      avg: vals.reduce((a, b) => a + b, 0) / vals.length,
+      max: Math.max(...vals),
+    }
+  }, [data, metricKey])
 
   return (
     <motion.div
@@ -88,6 +100,7 @@ export default function EngagementChart({ data, granularity, onGranularityChange
               {m.label}
             </span>
             <span className="eng-metric__value">{fmtCompact(totals[m.key])}</span>
+            <span className="eng-metric__caption">total no período</span>
           </button>
         ))}
       </div>
@@ -95,7 +108,17 @@ export default function EngagementChart({ data, granularity, onGranularityChange
       {isEmpty ? (
         <div className="chart-card__empty">Sem dados para o período selecionado.</div>
       ) : (
-        <ResponsiveContainer width="100%" height={230}>
+        <>
+          {stats && (
+            <div className="eng-summary">
+              <span className="eng-summary__dot" style={{ background: metric.color }} />
+              {metric.label} por {PERIOD_WORD[granularity]}:
+              <strong>{fmtCompact(stats.avg)}</strong> em média
+              <span className="eng-summary__sep">·</span>
+              pico de <strong>{fmtCompact(stats.max)}</strong>
+            </div>
+          )}
+          <ResponsiveContainer width="100%" height={210}>
           <AreaChart data={data} margin={{ top: 10, right: 6, left: -16, bottom: 0 }}>
             <defs>
               <linearGradient id="engFill" x1="0" y1="0" x2="0" y2="1">
@@ -132,7 +155,8 @@ export default function EngagementChart({ data, granularity, onGranularityChange
               activeDot={{ r: 5, strokeWidth: 2, stroke: 'var(--color-card-bg)', fill: metric.color }}
             />
           </AreaChart>
-        </ResponsiveContainer>
+          </ResponsiveContainer>
+        </>
       )}
     </motion.div>
   )

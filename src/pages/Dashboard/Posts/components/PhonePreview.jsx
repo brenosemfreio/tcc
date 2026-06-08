@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
-import { NETWORK_META } from '../../../../services/posts'
+import { NETWORK_META, networkColor } from '../../../../services/posts'
+import { useTheme } from '../../../../contexts/ThemeContext'
 import InstagramPreview from './network-previews/InstagramPreview'
 import TiktokPreview from './network-previews/TiktokPreview'
 import YoutubePreview from './network-previews/YoutubePreview'
@@ -46,6 +47,7 @@ export default function PhonePreview({
   user,
   activeNetwork, onActiveNetworkChange,
 }) {
+  const { theme } = useTheme()
   const [internalActive, setInternalActive] = useState(networks[0])
   const active = activeNetwork || internalActive
 
@@ -105,7 +107,7 @@ export default function PhonePreview({
                 type="button"
                 className={`phone-preview__tab${isActive ? ' phone-preview__tab--active' : ''}`}
                 onClick={() => setActive(n)}
-                style={isActive ? { color: m?.color } : {}}
+                style={isActive ? { color: networkColor(n, theme) } : {}}
                 title={m?.label}
               >
                 <Icon size={16} />
@@ -132,7 +134,7 @@ export default function PhonePreview({
       </div>
 
       {/* Rótulo */}
-      <span className="phone-preview__label" style={{ color: meta?.color }}>
+      <span className="phone-preview__label" style={{ color: networkColor(active, theme) }}>
         {meta?.label} · {meta?.types.find(t => t.id === activeType)?.label || ''}
       </span>
     </div>

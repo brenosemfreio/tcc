@@ -5,8 +5,9 @@ import {
 } from 'react-icons/lu'
 import { FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
-import { getPostById, NETWORK_META } from '../../../services/posts'
+import { getPostById, NETWORK_META, networkColor } from '../../../services/posts'
 import { useAuth } from '../../../contexts/AuthContext'
+import { useTheme } from '../../../contexts/ThemeContext'
 import PhonePreview from './components/PhonePreview'
 import MediaUploader from './components/MediaUploader'
 import DateTimePicker from './components/DateTimePicker'
@@ -40,6 +41,7 @@ export default function Composer() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const { user } = useAuth()
+  const { theme } = useTheme()
   const isEditing = Boolean(id)
 
   const initialDate = searchParams.get('date') || ''
@@ -232,7 +234,7 @@ export default function Composer() {
                     key={id}
                     type="button"
                     className={`composer__network-pill${selected ? ' composer__network-pill--active' : ''}`}
-                    style={selected ? { borderColor: meta.color, color: meta.color } : {}}
+                    style={selected ? { borderColor: networkColor(id, theme), color: networkColor(id, theme) } : {}}
                     onClick={() => toggleNetwork(id)}
                   >
                     <Icon size={18} />
@@ -258,7 +260,7 @@ export default function Composer() {
                   return (
                     <div key={networkId} className="composer__type-group">
                       <span className="composer__type-group-label">
-                        <Icon size={14} style={{ color: meta.color }} />
+                        <Icon size={14} style={{ color: networkColor(networkId, theme) }} />
                         {meta.label}
                       </span>
                       <div className="composer__type-pills">
@@ -267,7 +269,7 @@ export default function Composer() {
                             key={t.id}
                             type="button"
                             className={`composer__type-pill${selectedType === t.id ? ' composer__type-pill--active' : ''}`}
-                            style={selectedType === t.id ? { borderColor: meta.color, color: meta.color, background: `${meta.color}10` } : {}}
+                            style={selectedType === t.id ? { borderColor: networkColor(networkId, theme), color: networkColor(networkId, theme), background: `${networkColor(networkId, theme)}10` } : {}}
                             onClick={() => setTypeForNetwork(networkId, t.id)}
                           >
                             {t.label}
@@ -316,7 +318,7 @@ export default function Composer() {
                         key={n}
                         type="button"
                         className={`composer__net-tab${isActive ? ' composer__net-tab--active' : ''}`}
-                        style={isActive ? { color: meta.color, borderColor: meta.color } : {}}
+                        style={isActive ? { color: networkColor(n, theme), borderColor: networkColor(n, theme) } : {}}
                         onClick={() => setActiveNetwork(n)}
                       >
                         <Icon size={14} />
@@ -328,7 +330,7 @@ export default function Composer() {
               )}
 
               {/* Formulário da rede ativa */}
-              <div className="composer__net-form" style={{ borderColor: form.networks.length > 1 ? activeMeta?.color : undefined }}>
+              <div className="composer__net-form" style={{ borderColor: form.networks.length > 1 ? networkColor(activeNetwork, theme) : undefined }}>
                 {activeNeedsTitle && (
                   <div className="composer__field">
                     <label htmlFor="title">

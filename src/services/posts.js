@@ -241,6 +241,7 @@ export const NETWORK_META = {
   tiktok: {
     label: 'TikTok',
     color: '#010101',
+    darkColor: '#F5F5F7',   // preto não aparece no modo escuro
     types: [
       { id: 'video', label: 'Vídeo', orientation: 'vertical' },
       { id: 'photo', label: 'Foto',  orientation: 'vertical' },
@@ -282,6 +283,7 @@ export const NETWORK_META = {
   twitter: {
     label: 'X (Twitter)',
     color: '#000000',
+    darkColor: '#F5F5F7',   // preto não aparece no modo escuro
     types: [
       { id: 'tweet',  label: 'Tweet',  orientation: 'square' },
       { id: 'thread', label: 'Thread', orientation: 'square' },
@@ -289,6 +291,13 @@ export const NETWORK_META = {
     maxChars: 280,
     needsTitle: false,
   },
+}
+
+// Helper — cor da rede ajustada ao tema (preto vira claro no modo escuro)
+export const networkColor = (id, theme) => {
+  const meta = NETWORK_META[id]
+  if (!meta) return 'currentColor'
+  return theme === 'dark' && meta.darkColor ? meta.darkColor : meta.color
 }
 
 // Helper — retorna o maior limite entre as redes selecionadas (regra: cabe em todas)

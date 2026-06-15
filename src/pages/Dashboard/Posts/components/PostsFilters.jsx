@@ -2,14 +2,16 @@ import { useState, useEffect, useRef } from 'react'
 import { LuListFilter, LuX, LuCalendar, LuLayoutGrid, LuList } from 'react-icons/lu'
 import { FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
+import { networkColor } from '../../../../services/posts'
+import { useTheme } from '../../../../contexts/ThemeContext'
 
 const NETWORKS = [
-  { id: 'instagram', label: 'Instagram',   Icon: FaInstagram, color: '#E1306C' },
-  { id: 'tiktok',    label: 'TikTok',      Icon: FaTiktok,    color: '#010101' },
-  { id: 'youtube',   label: 'YouTube',     Icon: FaYoutube,   color: '#FF0000' },
-  { id: 'facebook',  label: 'Facebook',    Icon: FaFacebook,  color: '#1877F2' },
-  { id: 'linkedin',  label: 'LinkedIn',    Icon: FaLinkedin,  color: '#0A66C2' },
-  { id: 'twitter',   label: 'X (Twitter)', Icon: FaXTwitter,  color: '#000000' },
+  { id: 'instagram', label: 'Instagram',   Icon: FaInstagram },
+  { id: 'tiktok',    label: 'TikTok',      Icon: FaTiktok    },
+  { id: 'youtube',   label: 'YouTube',     Icon: FaYoutube   },
+  { id: 'facebook',  label: 'Facebook',    Icon: FaFacebook  },
+  { id: 'linkedin',  label: 'LinkedIn',    Icon: FaLinkedin  },
+  { id: 'twitter',   label: 'X (Twitter)', Icon: FaXTwitter  },
 ]
 
 const PERIODS = [
@@ -25,6 +27,7 @@ export default function PostsFilters({
   period, onPeriodChange,
   view, onViewChange,
 }) {
+  const { theme } = useTheme()
   const [netOpen, setNetOpen] = useState(false)
   const [perOpen, setPerOpen] = useState(false)
   const netRef = useRef(null)
@@ -86,7 +89,7 @@ export default function PostsFilters({
                       checked={checked}
                       onChange={() => toggleNetwork(n.id)}
                     />
-                    <span className="posts-filters__option-icon" style={{ color: n.color }}>
+                    <span className="posts-filters__option-icon" style={{ color: networkColor(n.id, theme) }}>
                       <Icon size={14} />
                     </span>
                     {n.label}
@@ -131,8 +134,9 @@ export default function PostsFilters({
         const n = NETWORKS.find(x => x.id === id)
         if (!n) return null
         const Icon = n.Icon
+        const color = networkColor(id, theme)
         return (
-          <span key={id} className="posts-filters__active" style={{ borderColor: n.color, color: n.color }}>
+          <span key={id} className="posts-filters__active" style={{ borderColor: color, color }}>
             <Icon size={12} />
             {n.label}
             <button type="button" onClick={() => toggleNetwork(id)} aria-label="Remover">

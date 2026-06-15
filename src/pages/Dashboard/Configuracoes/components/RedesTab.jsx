@@ -7,14 +7,16 @@ import { FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin } from 'react-
 import { FaXTwitter } from 'react-icons/fa6'
 import Button from '../../../../components/Button/Button'
 import { dashFadeUp as fadeUp } from '../../../../styles/animations'
+import { networkColor } from '../../../../services/posts'
+import { useTheme } from '../../../../contexts/ThemeContext'
 
 const INITIAL = [
-  { id: 'instagram', name: 'Instagram',   icon: FaInstagram, color: '#E1306C', status: 'connected',    handle: '@hubstudio' },
-  { id: 'tiktok',    name: 'TikTok',      icon: FaTiktok,    color: '#111827', status: 'expired',      handle: '@hubstudio' },
-  { id: 'youtube',   name: 'YouTube',     icon: FaYoutube,   color: '#FF0000', status: 'connected',    handle: 'HubStudio' },
-  { id: 'facebook',  name: 'Facebook',    icon: FaFacebook,  color: '#1877F2', status: 'connected',    handle: 'HubStudio' },
-  { id: 'linkedin',  name: 'LinkedIn',    icon: FaLinkedin,  color: '#0A66C2', status: 'disconnected', handle: '—' },
-  { id: 'twitter',   name: 'X (Twitter)', icon: FaXTwitter,  color: '#000000', status: 'disconnected', handle: '—' },
+  { id: 'instagram', name: 'Instagram',   icon: FaInstagram, status: 'connected',    handle: '@hubstudio' },
+  { id: 'tiktok',    name: 'TikTok',      icon: FaTiktok,    status: 'expired',      handle: '@hubstudio' },
+  { id: 'youtube',   name: 'YouTube',     icon: FaYoutube,   status: 'connected',    handle: 'HubStudio' },
+  { id: 'facebook',  name: 'Facebook',    icon: FaFacebook,  status: 'connected',    handle: 'HubStudio' },
+  { id: 'linkedin',  name: 'LinkedIn',    icon: FaLinkedin,  status: 'disconnected', handle: '—' },
+  { id: 'twitter',   name: 'X (Twitter)', icon: FaXTwitter,  status: 'disconnected', handle: '—' },
 ]
 
 const STATUS_CONFIG = {
@@ -30,6 +32,7 @@ const PERMISSIONS = [
 ]
 
 export default function RedesTab() {
+  const { theme } = useTheme()
   const [networks, setNetworks] = useState(INITIAL)
 
   const handleAction = (id, status) => {
@@ -47,9 +50,10 @@ export default function RedesTab() {
       </div>
 
       <div className="set-net-grid">
-        {networks.map(({ id, name, icon: Icon, color, status, handle }, i) => {
+        {networks.map(({ id, name, icon: Icon, status, handle }, i) => {
           const cfg = STATUS_CONFIG[status]
           const StatusIcon = cfg.icon
+          const color = networkColor(id, theme)
           return (
             <motion.div
               key={id}

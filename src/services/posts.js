@@ -1,3 +1,5 @@
+import { LuMessageSquare, LuChartBar, LuHash } from 'react-icons/lu'
+
 export const getTopPosts = () => Promise.resolve([
   { id: 1, title: '5 dicas para aumentar seu engajamento', date: '18 de maio de 2026', views: '12.4K', likes: '1.3K', comments: '2.6K' },
   { id: 2, title: 'Seus Reels alcançaram 2 do nada',       date: '15 de maio de 2026', views: '9.8K',  likes: '872',  comments: '1.9K' },
@@ -52,8 +54,6 @@ export const getCalendarMarkers = () => {
 
   return Promise.resolve(map)
 }
-
-import { LuMessageSquare, LuChartBar, LuHash } from 'react-icons/lu'
 
 export const getAiSuggestions = () => Promise.resolve([
   { id: 1, icon: LuMessageSquare, label: 'Ideia de post', text: 'Faça um post sobre tendências do seu nicho este mês!', action: 'Gerar' },
@@ -298,24 +298,6 @@ export const networkColor = (id, theme) => {
   const meta = NETWORK_META[id]
   if (!meta) return 'currentColor'
   return theme === 'dark' && meta.darkColor ? meta.darkColor : meta.color
-}
-
-// Helper — retorna o maior limite entre as redes selecionadas (regra: cabe em todas)
-export const minMaxChars = (networks) => {
-  if (!networks.length) return 5000
-  return Math.min(...networks.map(n => NETWORK_META[n]?.maxChars || 5000))
-}
-
-// Helper — true se alguma rede/tipo selecionado exige título
-export const needsTitle = (networks, typesByNetwork) => {
-  return networks.some(n => {
-    const meta = NETWORK_META[n]
-    if (!meta) return false
-    if (meta.needsTitle) return true
-    const typeId = typesByNetwork[n]
-    const typeMeta = meta.types.find(t => t.id === typeId)
-    return typeMeta?.needsTitle === true
-  })
 }
 
 // ════════════════════════════════════════════════════════════════

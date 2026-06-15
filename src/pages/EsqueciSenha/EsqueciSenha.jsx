@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  LuArrowLeft, LuMail, LuMailCheck, LuCircleAlert, LuExternalLink, LuCheck,
+  LuArrowLeft, LuMail, LuMailCheck, LuCircleAlert, LuCheck,
 } from 'react-icons/lu'
 import { useTheme } from '../../contexts/ThemeContext'
 import logoHub from '../../assets/images/logo-hub.png'

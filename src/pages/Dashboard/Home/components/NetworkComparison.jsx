@@ -4,14 +4,16 @@ import { LuTrendingUp, LuTrendingDown, LuChevronLeft, LuChevronRight } from 'rea
 import { FaFacebook, FaInstagram, FaLinkedin, FaTiktok, FaYoutube } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
 import { dashFadeUp as fadeUp } from '../../../../styles/animations'
+import { networkColor } from '../../../../services/posts'
+import { useTheme } from '../../../../contexts/ThemeContext'
 
 const NETWORKS = [
-  { id: 'instagram', name: 'Instagram',   icon: FaInstagram, color: '#E1306C', followers: '8.6K', growth: '+12.4%', trend: 'up'   },
-  { id: 'tiktok',    name: 'TikTok',      icon: FaTiktok,    color: '#111827', followers: '4.2K', growth: '+24.8%', trend: 'up'   },
-  { id: 'youtube',   name: 'YouTube',     icon: FaYoutube,   color: '#FF0000', followers: '1.8K', growth: '+6.1%',  trend: 'up'   },
-  { id: 'facebook',  name: 'Facebook',    icon: FaFacebook,  color: '#1877F2', followers: '3.1K', growth: '+8.3%',  trend: 'up'   },
-  { id: 'linkedin',  name: 'LinkedIn',    icon: FaLinkedin,  color: '#0A66C2', followers: '1.2K', growth: '+15.6%', trend: 'up'   },
-  { id: 'twitter',   name: 'X (Twitter)', icon: FaXTwitter,  color: '#000000', followers: '912',  growth: '-2.3%',  trend: 'down' },
+  { id: 'instagram', name: 'Instagram',   icon: FaInstagram, followers: '8.6K', growth: '+12.4%', trend: 'up'   },
+  { id: 'tiktok',    name: 'TikTok',      icon: FaTiktok,    followers: '4.2K', growth: '+24.8%', trend: 'up'   },
+  { id: 'youtube',   name: 'YouTube',     icon: FaYoutube,   followers: '1.8K', growth: '+6.1%',  trend: 'up'   },
+  { id: 'facebook',  name: 'Facebook',    icon: FaFacebook,  followers: '3.1K', growth: '+8.3%',  trend: 'up'   },
+  { id: 'linkedin',  name: 'LinkedIn',    icon: FaLinkedin,  followers: '1.2K', growth: '+15.6%', trend: 'up'   },
+  { id: 'twitter',   name: 'X (Twitter)', icon: FaXTwitter,  followers: '912',  growth: '-2.3%',  trend: 'down' },
 ]
 
 const PERIOD_LABELS = {
@@ -24,6 +26,7 @@ const PERIOD_LABELS = {
 const SCROLL_STEP = 220
 
 export default function NetworkComparison({ period = '30d' }) {
+  const { theme } = useTheme()
   const trackRef = useRef(null)
   const [canLeft,  setCanLeft]  = useState(false)
   const [canRight, setCanRight] = useState(true)
@@ -93,8 +96,9 @@ export default function NetworkComparison({ period = '30d' }) {
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
       >
-        {NETWORKS.map(({ id, name, icon: Icon, color, followers, growth, trend }) => {
+        {NETWORKS.map(({ id, name, icon: Icon, followers, growth, trend }) => {
           const TrendIcon = trend === 'up' ? LuTrendingUp : LuTrendingDown
+          const color = networkColor(id, theme)
           return (
             <div key={id} className="net-compare__card" style={{ '--net': color }}>
               <div className="net-compare__icon" style={{ background: `${color}18`, color }}>

@@ -117,18 +117,19 @@ substituir apenas o corpo das funções — os contratos de retorno não mudam.
 - `KpiGrid.jsx` — 4 KPI cards com skeleton fallback.
 - `AudienceCard.jsx` — demografia da audiência: faixa etária (barras), gênero (barra dividida) e top localizações.
 - `BestTimeCard.jsx` — destaque do pico de engajamento + lista das 3 alternativas + CTA de agendamento.
-- `EngagementChart.jsx` — line chart com toggle Diário/Semanal/Mensal.
-- `NetworkDonut.jsx` — donut da divisão de engajamento entre redes.
-- `NetworkComparison.jsx` — 4 mini-cards comparando crescimento por rede.
+- `EngagementChart.jsx` — area chart com gradiente + seletor de métrica (Visualizações/Curtidas/Comentários) e toggle Diário/Semanal/Mensal.
+- `NetworkComparison.jsx` — mini-cards comparando crescimento por rede (cores via `networkColor`).
 - `ContentReachCard.jsx` — barras de progresso por tipo de conteúdo.
 - `TopPostsCard.jsx` — top 5 publicações.
-- `GoalsCard.jsx` — metas do mês com progress bars.
+- `AIInsightsBar.jsx` — barra de insights da IA no topo do dashboard.
 - `AISuggestionsCard.jsx` — sugestões da IA (gerar/copiar).
+- `AccountScoreCard.jsx` — nota/score geral da conta.
+- `UpcomingPosts.jsx` — fila dos próximos agendamentos (cores via `networkColor`).
+- `ActivityFeed.jsx` — feed de atividade recente.
 - `RecentPostsCard.jsx` — publicações recentes com `PostMenu` (editar/duplicar/excluir).
 - `PostMenu.jsx` — dropdown de ações para um post.
 - `ScheduleCTA.jsx` — banner CTA que abre o `PostModal`.
 - `MiniCalendar.jsx` — calendário com navegação entre meses e 3 status (agendado/publicado/rascunho).
-- `ChartTooltip.jsx` — tooltip customizado do Recharts.
 
 ### Acesso ao PostModal pelas páginas filhas
 

@@ -1,19 +1,21 @@
 import { motion } from 'framer-motion'
-import { LuArrowRight } from 'react-icons/lu'
 import { FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
 import { dashFadeUp as fadeUp } from '../../../../styles/animations'
+import { networkColor } from '../../../../services/posts'
+import { useTheme } from '../../../../contexts/ThemeContext'
 
-const NET_META = {
-  instagram: { icon: FaInstagram, color: '#E1306C' },
-  tiktok:    { icon: FaTiktok,    color: '#111827' },
-  youtube:   { icon: FaYoutube,   color: '#FF0000' },
-  facebook:  { icon: FaFacebook,  color: '#1877F2' },
-  linkedin:  { icon: FaLinkedin,  color: '#0A66C2' },
-  twitter:   { icon: FaXTwitter,  color: '#000000' },
+const NET_ICONS = {
+  instagram: FaInstagram,
+  tiktok:    FaTiktok,
+  youtube:   FaYoutube,
+  facebook:  FaFacebook,
+  linkedin:  FaLinkedin,
+  twitter:   FaXTwitter,
 }
 
 export default function UpcomingPosts({ posts = [], onSeeAll }) {
+  const { theme } = useTheme()
   return (
     <motion.div
       className="chart-card upcoming"
@@ -29,11 +31,11 @@ export default function UpcomingPosts({ posts = [], onSeeAll }) {
       ) : (
         <ul className="upcoming__list">
           {posts.map(p => {
-            const net = NET_META[p.network] ?? NET_META.instagram
-            const Icon = net.icon
+            const Icon = NET_ICONS[p.network] ?? NET_ICONS.instagram
+            const color = networkColor(p.network, theme)
             return (
               <li key={p.id} className="upcoming__item">
-                <span className="upcoming__icon" style={{ background: `${net.color}18`, color: net.color }}>
+                <span className="upcoming__icon" style={{ background: `${color}18`, color }}>
                   <Icon size={15} />
                 </span>
                 <div className="upcoming__body">

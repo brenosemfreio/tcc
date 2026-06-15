@@ -1,56 +1,61 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  LuLayoutDashboard, LuSparkles, LuCalendarClock,
-  LuBell, LuKeyboard, LuArrowRight, LuX, LuCircleCheck,
+  LuPartyPopper, LuShare2, LuCalendarClock,
+  LuSparkles, LuArrowRight, LuX, LuLink,
 } from 'react-icons/lu'
 import './OnboardingTour.css'
 
-const STORAGE_KEY = 'hs-onboarding-done'
+// Flag setada no cadastro (AuthContext). O tour só aparece quando ela existe —
+// ou seja, logo após criar a conta. Logins normais não disparam.
+const STORAGE_KEY = 'hs-show-onboarding'
 
 const STEPS = [
   {
-    icon: LuLayoutDashboard,
-    title: 'Bem-vindo ao HubStudio!',
-    text: 'Centralize gestão, agendamento e análise das suas redes sociais em um só lugar. Vamos te mostrar o essencial em 5 passos.',
+    icon: LuPartyPopper,
+    title: 'Boas-vindas ao HubStudio! 🎉',
+    text: 'Sua conta está pronta. Em poucos passos você vai conectar suas redes e começar a gerenciar tudo de um só lugar. Leva menos de um minuto.',
   },
   {
-    icon: LuSparkles,
-    title: 'Acompanhe seu desempenho',
-    text: 'No Dashboard você vê visualizações, seguidores, engajamento e seu público em tempo real. Use os filtros pra recortar por período e rede social.',
+    icon: LuShare2,
+    title: 'Conecte suas redes sociais',
+    text: 'Esse é o passo mais importante: em Configurações → Redes sociais você vincula Instagram, TikTok, YouTube, Facebook, LinkedIn e X. Sem isso, não dá pra agendar nem ver métricas.',
   },
   {
     icon: LuCalendarClock,
-    title: 'Agende com inteligência',
-    text: 'O card "Melhor horário para postar" te diz exatamente quando publicar. Clique no botão "Posts" da sidebar pra criar uma publicação a qualquer momento.',
+    title: 'Agende seus posts',
+    text: 'Com as redes conectadas, use o botão "Novo post" pra criar e agendar publicações em várias redes ao mesmo tempo — com preview real de cada plataforma.',
   },
   {
-    icon: LuBell,
-    title: 'Não perca nenhuma novidade',
-    text: 'O sino no topo da página mostra notificações importantes: posts agendados, metas atingidas e alertas. Você pode dispensar individualmente ou marcar todas como lidas.',
-  },
-  {
-    icon: LuKeyboard,
-    title: 'Mais rápido com atalhos',
-    text: 'Use Ctrl + K (ou Cmd + K) pra abrir a busca global. Aperte ? a qualquer momento pra ver todos os atalhos disponíveis.',
+    icon: LuSparkles,
+    title: 'Deixe a IA trabalhar por você',
+    text: 'No Dashboard você acompanha desempenho em tempo real e recebe sugestões de conteúdo e do melhor horário pra postar. Pronto pra vincular sua primeira rede?',
+    cta: { label: 'Vincular minhas redes', to: '/dashboard/configuracoes?tab=redes' },
   },
 ]
 
 export default function OnboardingTour() {
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState(0)
 
   useEffect(() => {
-    // Abre na primeira visita (sem flag no localStorage)
-    if (!localStorage.getItem(STORAGE_KEY)) {
+    // Abre apenas se a flag de cadastro estiver presente
+    if (localStorage.getItem(STORAGE_KEY)) {
       const t = setTimeout(() => setOpen(true), 500)
       return () => clearTimeout(t)
     }
   }, [])
 
   const finish = () => {
-    localStorage.setItem(STORAGE_KEY, '1')
+    localStorage.removeItem(STORAGE_KEY)
     setOpen(false)
+  }
+
+  const finishAndGo = (to) => {
+    finish()
+    navigate(to)
   }
 
   const next = () => {
@@ -127,19 +132,25 @@ export default function OnboardingTour() {
                 className="onboarding__skip"
                 onClick={skip}
               >
-                Pular tour
+                {isLast ? 'Agora não' : 'Pular tour'}
               </button>
-              <button
-                type="button"
-                className="onboarding__next"
-                onClick={next}
-              >
-                {isLast ? (
-                  <>Começar <LuCircleCheck size={14} /></>
-                ) : (
-                  <>Próximo <LuArrowRight size={14} /></>
-                )}
-              </button>
+              {isLast && current.cta ? (
+                <button
+                  type="button"
+                  className="onboarding__next"
+                  onClick={() => finishAndGo(current.cta.to)}
+                >
+                  {current.cta.label} <LuLink size={14} />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="onboarding__next"
+                  onClick={next}
+                >
+                  Próximo <LuArrowRight size={14} />
+                </button>
+              )}
             </div>
           </motion.div>
         </div>

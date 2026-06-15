@@ -20,6 +20,8 @@ export function AuthProvider({ children }) {
     await loginService(email, password)
     const loggedUser = { ...MOCK_USER, email }
     localStorage.setItem('hs-user', JSON.stringify(loggedUser))
+    // Login normal nunca dispara o tour de boas-vindas
+    localStorage.removeItem('hs-show-onboarding')
     setUser(loggedUser)
     return loggedUser
   }
@@ -28,6 +30,8 @@ export function AuthProvider({ children }) {
     await registerService(data)
     const newUser = { ...MOCK_USER, ...data }
     localStorage.setItem('hs-user', JSON.stringify(newUser))
+    // Sinaliza que o tour de boas-vindas deve aparecer (só no cadastro)
+    localStorage.setItem('hs-show-onboarding', '1')
     setUser(newUser)
     return newUser
   }

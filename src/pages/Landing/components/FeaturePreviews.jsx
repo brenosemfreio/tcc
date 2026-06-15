@@ -1,5 +1,6 @@
 import { LuSparkles, LuTrendingUp } from 'react-icons/lu'
 import { FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin } from 'react-icons/fa'
+import { FaXTwitter } from 'react-icons/fa6'
 
 export function FeatureCalendarPreview() {
   const days = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D']
@@ -67,6 +68,7 @@ export function FeaturePlatformsPreview() {
     { Icon: FaYoutube,   color: '#FF0000' },
     { Icon: FaFacebook,  color: '#1877F2' },
     { Icon: FaLinkedin,  color: '#0A66C2' },
+    { Icon: FaXTwitter,  color: '#000000' },
   ]
   return (
     <div className="l-bento__preview l-bento__preview--platforms">
@@ -77,7 +79,6 @@ export function FeaturePlatformsPreview() {
           </span>
         ))}
       </div>
-      <span className="l-fp-platform-count">+5 redes</span>
     </div>
   )
 }

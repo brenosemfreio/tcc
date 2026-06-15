@@ -269,15 +269,6 @@
   font-size: 0.875rem;
 }
 
-.l-avatars { display: flex; }
-.l-avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  display: block;
-}
-
 /* Visual side */
 .l-hero__visual {
   position: relative;
@@ -1959,7 +1950,6 @@
   }
   .l-hero__link { font-size: 0.9375rem; }
   .l-hero__proof { font-size: 0.875rem; gap: 10px; }
-  .l-hero__proof .l-avatar { width: 28px; height: 28px; }
 
   /* Mockup escala reduzida */
   .l-mockup { max-width: 475px; }
@@ -2176,7 +2166,6 @@
   }
   .l-hero__link { font-size: 0.875rem; }
   .l-hero__proof { font-size: 0.8125rem; gap: 0.625rem; }
-  .l-hero__proof .l-avatar { width: 1.625rem; height: 1.625rem; }
 
   /* Visual: cabe mockup + badges flutuantes laterais */
   .l-hero__visual {

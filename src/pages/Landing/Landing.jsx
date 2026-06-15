@@ -28,8 +28,6 @@ const PREVIEWS = {
   platforms: FeaturePlatformsPreview,
 }
 
-const HERO_AVATARS = ['#7C5FE8', '#E84FA5', '#4F35E8', '#B44FE8']
-
 // Formata o preço no padrão brasileiro: inteiros sem decimal ("0"), decimais com ","
 const formatPrice = (n) => {
   if (n === 0) return '0'
@@ -84,11 +82,6 @@ export default function Landing() {
             </motion.div>
 
             <motion.div variants={fadeUp} className="l-hero__proof">
-              <div className="l-avatars">
-                {HERO_AVATARS.map((c, i) => (
-                  <span key={i} className="l-avatar" style={{ background: c, marginLeft: i ? -10 : 0 }} />
-                ))}
-              </div>
               <span>+1.200 criadores já usam o HubStudio</span>
             </motion.div>
           </motion.div>

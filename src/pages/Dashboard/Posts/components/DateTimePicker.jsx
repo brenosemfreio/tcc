@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import {
   LuCalendarClock, LuChevronLeft, LuChevronRight,
-  LuClock, LuX,
+  LuClock, LuX, LuSparkles,
 } from 'react-icons/lu'
 
 const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
@@ -40,6 +40,7 @@ function formatDisplay(d) {
 export default function DateTimePicker({
   value, onChange, placeholder = 'Selecionar data e hora',
   openUpward = false,   // se true, popover abre pra cima (útil quando o picker está no fim da página)
+  getBestTimes,         // (dateObj, now) => [{ label, h, m, reason }] — sugestões de IA (opcional)
 }) {
   const wrapRef = useRef(null)
   const [open, setOpen] = useState(false)
@@ -132,6 +133,20 @@ export default function DateTimePicker({
   const clear = (e) => {
     e.stopPropagation()
     onChange('')
+  }
+
+  // IA — melhores horários pra data escolhida (ou hoje, se nada selecionado)
+  const aiBase = selected || today
+  const aiSameDay =
+    aiBase.getFullYear() === today.getFullYear() &&
+    aiBase.getMonth() === today.getMonth() &&
+    aiBase.getDate() === today.getDate()
+  const aiSlots = getBestTimes ? getBestTimes(aiBase, today) : []
+
+  const applyAiSlot = (h, m) => {
+    setHour(h); setMinute(m)
+    const d = new Date(aiBase.getFullYear(), aiBase.getMonth(), aiBase.getDate(), h, m)
+    onChange(toLocalString(d))
   }
 
   return (
@@ -281,6 +296,37 @@ export default function DateTimePicker({
                 </button>
               ))}
             </div>
+
+            {/* IA — melhores horários pra data escolhida */}
+            {getBestTimes && aiSlots.length > 0 && (
+              <div className="dtpicker__ai">
+                <span className="dtpicker__ai-label">
+                  <LuSparkles size={13} />
+                  Melhores horários {aiSameDay ? 'pra hoje' : 'pra este dia'}
+                </span>
+                <div className="dtpicker__ai-slots">
+                  {aiSlots.map(s => {
+                    const active = hour === s.h && minute === s.m
+                    return (
+                      <button
+                        key={s.label}
+                        type="button"
+                        className={`dtpicker__ai-slot${active ? ' dtpicker__ai-slot--active' : ''}`}
+                        onClick={() => applyAiSlot(s.h, s.m)}
+                      >
+                        <strong>{s.label}</strong>
+                        <em>{s.reason}</em>
+                      </button>
+                    )
+                  })}
+                </div>
+                {aiSameDay && (
+                  <span className="dtpicker__ai-note">
+                    Mostrando só horários que ainda não passaram hoje.
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Footer */}

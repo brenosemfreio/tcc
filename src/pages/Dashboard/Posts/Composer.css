@@ -838,6 +838,115 @@
 }
 .dtpicker__confirm:hover { background: var(--color-primary-hover); }
 
+/* ════════════════════════════════════════════════════════════
+   IA — insight de formato (card 2), ferramentas de legenda (card 3),
+   melhores horários (card 4)
+   ════════════════════════════════════════════════════════════ */
+@keyframes composerSpin { to { transform: rotate(360deg); } }
+.composer__ai-spin { animation: composerSpin 0.7s linear infinite; }
+
+/* Card 2 — insight + formato recomendado */
+.composer__type-insight {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+.composer__type-insight svg { color: var(--color-primary); flex-shrink: 0; margin-top: 1px; }
+.composer__type-insight strong { color: var(--color-text); font-weight: 700; }
+.composer__type-pill--rec {
+  border-color: color-mix(in srgb, var(--color-primary) 45%, var(--color-border));
+}
+.composer__type-rec-ic { color: var(--color-primary); }
+
+/* Card 3 — ferramentas de IA na legenda */
+.composer__ai-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.composer__ai-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  background: var(--color-primary-light);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--color-primary);
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: all var(--transition-fast);
+}
+.composer__ai-btn:not(:disabled):hover {
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 16%, transparent);
+}
+.composer__ai-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* Card 4 — melhores horários (dentro do DateTimePicker) */
+.dtpicker__ai {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--color-border);
+}
+.dtpicker__ai-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-primary);
+  margin-bottom: 8px;
+}
+.dtpicker__ai-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.dtpicker__ai-slot {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 6px 11px;
+  background: var(--color-primary-light);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: all var(--transition-fast);
+}
+.dtpicker__ai-slot strong {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+.dtpicker__ai-slot em {
+  font-style: normal;
+  font-size: 0.6rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.dtpicker__ai-slot:hover { border-color: var(--color-primary); }
+.dtpicker__ai-slot--active { background: var(--color-primary); }
+.dtpicker__ai-slot--active strong { color: #fff; }
+.dtpicker__ai-slot--active em { color: rgba(255, 255, 255, 0.8); }
+.dtpicker__ai-note {
+  display: block;
+  margin-top: 7px;
+  font-size: 0.64rem;
+  color: var(--color-text-muted);
+}
+
 @media (max-width: 1100px) {
   .composer__layout { grid-template-columns: 1fr; }
   .composer__preview-wrap {

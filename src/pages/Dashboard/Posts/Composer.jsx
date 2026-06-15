@@ -2,10 +2,14 @@ import { useState, useEffect, useMemo } from 'react'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import {
   LuArrowLeft, LuSave, LuSend, LuCalendarClock, LuImage,
+  LuSparkles, LuWandSparkles, LuHash, LuLoaderCircle,
 } from 'react-icons/lu'
 import { FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
-import { getPostById, NETWORK_META, networkColor } from '../../../services/posts'
+import {
+  getPostById, NETWORK_META, networkColor,
+  getContentTypeInsight, generateCaption, suggestHashtags, getBestTimeSlots,
+} from '../../../services/posts'
 import { useAuth } from '../../../contexts/AuthContext'
 import { useTheme } from '../../../contexts/ThemeContext'
 import PhonePreview from './components/PhonePreview'
@@ -58,6 +62,7 @@ export default function Composer() {
 
   const [loading, setLoading] = useState(false)
   const [feedback, setFeedback] = useState('')
+  const [aiBusy, setAiBusy] = useState(null)   // 'caption' | 'hashtags' | null
 
   // Carrega o post quando estamos em modo edição
   useEffect(() => {
@@ -201,6 +206,51 @@ export default function Composer() {
   const activeMeta = activeNetwork ? NETWORK_META[activeNetwork] : null
   const activeNeedsTitle = activeNetwork ? typeNeedsTitle(activeNetwork, activeType) : false
 
+  // Pré-requisitos das ferramentas de IA do conteúdo
+  const activeHasMedia = (activeContent?.media?.length || 0) > 0
+  const activeHasTitle = (activeContent?.title?.trim().length || 0) > 0
+  const canGenCaption = activeHasMedia || activeHasTitle   // legenda: mídia OU título
+  const canHashtags = activeHasMedia                       // hashtags: precisa de mídia
+
+  // IA — gera uma legenda ideal pro post
+  const handleGenerateCaption = async () => {
+    if (!activeNetwork || aiBusy) return
+    setAiBusy('caption')
+    setFeedback('')
+    try {
+      const caption = await generateCaption({
+        networkId: activeNetwork,
+        title: activeContent?.title || '',
+      })
+      updateNetworkField(activeNetwork, 'content', caption.slice(0, activeMeta?.maxChars || 5000))
+      setFeedback('Legenda gerada pela IA!')
+    } finally {
+      setAiBusy(null)
+      setTimeout(() => setFeedback(''), 1800)
+    }
+  }
+
+  // IA — anexa hashtags sugeridas ao final da legenda
+  const handleSuggestHashtags = async () => {
+    if (!activeNetwork || aiBusy) return
+    setAiBusy('hashtags')
+    setFeedback('')
+    try {
+      const tags = await suggestHashtags({
+        networkId: activeNetwork,
+        content: activeContent?.content || '',
+        title: activeContent?.title || '',
+      })
+      const existing = (activeContent?.content || '').trimEnd()
+      const block = (existing ? existing + '\n\n' : '') + tags.join(' ')
+      updateNetworkField(activeNetwork, 'content', block.slice(0, activeMeta?.maxChars || 5000))
+      setFeedback('Hashtags adicionadas!')
+    } finally {
+      setAiBusy(null)
+      setTimeout(() => setFeedback(''), 1800)
+    }
+  }
+
   return (
     <div className="composer">
       <div className="composer__topbar">
@@ -257,6 +307,7 @@ export default function Composer() {
                   const meta = NETWORK_META[networkId]
                   const Icon = NETWORK_ICONS[networkId]
                   const selectedType = form.typesByNetwork[networkId]
+                  const insight = getContentTypeInsight(networkId)
                   return (
                     <div key={networkId} className="composer__type-group">
                       <span className="composer__type-group-label">
@@ -264,23 +315,37 @@ export default function Composer() {
                         {meta.label}
                       </span>
                       <div className="composer__type-pills">
-                        {meta.types.map(t => (
-                          <button
-                            key={t.id}
-                            type="button"
-                            className={`composer__type-pill${selectedType === t.id ? ' composer__type-pill--active' : ''}`}
-                            style={selectedType === t.id ? { borderColor: networkColor(networkId, theme), color: networkColor(networkId, theme), background: `${networkColor(networkId, theme)}10` } : {}}
-                            onClick={() => setTypeForNetwork(networkId, t.id)}
-                          >
-                            {t.label}
-                            <span className="composer__type-pill-orient">
-                              {t.orientation === 'vertical' && '9:16'}
-                              {t.orientation === 'square' && '1:1'}
-                              {t.orientation === 'horizontal' && '16:9'}
-                            </span>
-                          </button>
-                        ))}
+                        {meta.types.map(t => {
+                          const recommended = insight?.type === t.id
+                          return (
+                            <button
+                              key={t.id}
+                              type="button"
+                              className={`composer__type-pill${selectedType === t.id ? ' composer__type-pill--active' : ''}${recommended ? ' composer__type-pill--rec' : ''}`}
+                              style={selectedType === t.id ? { borderColor: networkColor(networkId, theme), color: networkColor(networkId, theme), background: `${networkColor(networkId, theme)}10` } : {}}
+                              onClick={() => setTypeForNetwork(networkId, t.id)}
+                              title={recommended ? 'Formato que mais engaja neste perfil' : undefined}
+                            >
+                              {recommended && <LuSparkles size={11} className="composer__type-rec-ic" />}
+                              {t.label}
+                              <span className="composer__type-pill-orient">
+                                {t.orientation === 'vertical' && '9:16'}
+                                {t.orientation === 'square' && '1:1'}
+                                {t.orientation === 'horizontal' && '16:9'}
+                              </span>
+                            </button>
+                          )
+                        })}
                       </div>
+                      {insight && (
+                        <p className="composer__type-insight">
+                          <LuSparkles size={13} />
+                          <span>
+                            <strong>{insight.label}</strong> renderam <strong>+{insight.uplift}%</strong> de
+                            engajamento vs. {insight.vs} no último mês.
+                          </span>
+                        </p>
+                      )}
                     </div>
                   )
                 })}
@@ -351,6 +416,39 @@ export default function Composer() {
                   <label htmlFor="content">
                     {activeNeedsTitle ? 'Descrição' : 'Legenda'} pro {activeMeta?.label}
                   </label>
+
+                  {/* Ferramentas de IA — geram legenda e hashtags */}
+                  <div className="composer__ai-tools">
+                    <button
+                      type="button"
+                      className="composer__ai-btn"
+                      onClick={handleGenerateCaption}
+                      disabled={!canGenCaption || aiBusy !== null}
+                      title={canGenCaption
+                        ? 'Gerar uma legenda ideal com IA a partir do seu conteúdo'
+                        : 'Adicione uma mídia ou um título primeiro'}
+                    >
+                      {aiBusy === 'caption'
+                        ? <LuLoaderCircle size={14} className="composer__ai-spin" />
+                        : <LuWandSparkles size={14} />}
+                      Gerar legenda
+                    </button>
+                    <button
+                      type="button"
+                      className="composer__ai-btn"
+                      onClick={handleSuggestHashtags}
+                      disabled={!canHashtags || aiBusy !== null}
+                      title={canHashtags
+                        ? 'Sugerir as melhores hashtags pro seu conteúdo'
+                        : 'Adicione uma mídia primeiro'}
+                    >
+                      {aiBusy === 'hashtags'
+                        ? <LuLoaderCircle size={14} className="composer__ai-spin" />
+                        : <LuHash size={14} />}
+                      Hashtags
+                    </button>
+                  </div>
+
                   <textarea
                     id="content"
                     placeholder={`Escreva o conteúdo pro ${activeMeta?.label}...`}
@@ -397,6 +495,7 @@ export default function Composer() {
                   onChange={(v) => setForm(f => ({ ...f, scheduledFor: v }))}
                   placeholder="Escolha quando publicar"
                   openUpward
+                  getBestTimes={getBestTimeSlots}
                 />
                 <span className="composer__hint">
                   Deixe vazio pra salvar como rascunho sem agendar. Vale pra todas as redes.

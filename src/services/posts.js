@@ -317,3 +317,129 @@ export const needsTitle = (networks, typesByNetwork) => {
     return typeMeta?.needsTitle === true
   })
 }
+
+// ════════════════════════════════════════════════════════════════
+// IA do Composer — mocks determinísticos. Quando o backend existir,
+// trocar só o corpo destas funções (contratos de retorno não mudam).
+// ════════════════════════════════════════════════════════════════
+const pad2 = (n) => String(n).padStart(2, '0')
+
+/**
+ * Card 2 — insight de qual formato mais engaja em cada rede.
+ * `type` aponta o id do formato recomendado (casa com NETWORK_META[id].types).
+ */
+const CONTENT_TYPE_INSIGHTS = {
+  instagram: { type: 'reel',   label: 'Reels',   vs: 'posts no feed', uplift: 132 },
+  tiktok:    { type: 'video',  label: 'Vídeos',  vs: 'fotos',         uplift: 95  },
+  youtube:   { type: 'shorts', label: 'Shorts',  vs: 'vídeos longos', uplift: 78  },
+  facebook:  { type: 'reel',   label: 'Reels',   vs: 'posts',         uplift: 64  },
+  linkedin:  { type: 'post',   label: 'Posts',   vs: 'artigos',       uplift: 41  },
+  twitter:   { type: 'thread', label: 'Threads', vs: 'tweets soltos', uplift: 58  },
+}
+export const getContentTypeInsight = (networkId) => CONTENT_TYPE_INSIGHTS[networkId] || null
+
+/**
+ * Card 3 — gera uma legenda "ideal" com base no título/rede do usuário.
+ * Depende de mídia OU título (validado na UI). Emoji-free de propósito.
+ */
+export const generateCaption = ({ networkId, title = '' }) =>
+  new Promise(resolve => {
+    const meta = NETWORK_META[networkId]
+    const topic = title.trim()
+    const subject = topic || 'esse conteúdo que preparei pra você'
+    const subjectLow = subject.toLowerCase()
+
+    const hooks = [
+      `Para tudo o que você está fazendo: ${subject} pode mudar o seu dia.`,
+      `Ninguém te conta isso sobre ${subjectLow} — mas eu vou.`,
+      `Salva esse post: ${subject} explicado de um jeito simples.`,
+      `Eu queria ter visto isso antes de começar com ${subjectLow}.`,
+    ]
+    const bodies = [
+      'Levei um tempo pra entender, então resumi tudo o que importa em poucos pontos pra você aplicar hoje mesmo.',
+      'A ideia é simples, mas quase ninguém faz: consistência e atenção aos detalhes mudam o resultado.',
+      'Testei na prática e o retorno apareceu rápido. Aqui vai o passo a passo direto ao ponto.',
+    ]
+    const ctas = {
+      instagram: 'Comenta aqui embaixo o que você achou e marca alguém que precisa ver isso.',
+      tiktok:    'Segue pra mais dicas como essa todos os dias.',
+      youtube:   'Se curtir, deixa o like e se inscreve pra não perder os próximos.',
+      facebook:  'Compartilha com quem vai gostar e deixa seu comentário.',
+      linkedin:  'Qual a sua experiência com isso? Compartilha nos comentários.',
+      twitter:   'Concorda? Responde aí o que você faria diferente.',
+    }
+
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)]
+    let caption = `${pick(hooks)}\n\n${pick(bodies)}\n\n${ctas[networkId] || pick(bodies)}`
+    if (meta?.maxChars) caption = caption.slice(0, meta.maxChars)
+    setTimeout(() => resolve(caption), 850)
+  })
+
+/**
+ * Card 3 — sugere hashtags a partir do conteúdo/título + rede.
+ * Depende de mídia (validado na UI).
+ */
+export const suggestHashtags = ({ networkId, content = '', title = '' }) =>
+  new Promise(resolve => {
+    const base = [
+      '#conteudo', '#dicas', '#marketingdigital', '#criadordeconteudo',
+      '#estrategia', '#engajamento', '#redessociais', '#crescimento',
+    ]
+    const byNetwork = {
+      instagram: ['#instadica', '#reels', '#explorar', '#viral'],
+      tiktok:    ['#tiktokbrasil', '#fyp', '#paravoce', '#viralizou'],
+      youtube:   ['#youtubeshorts', '#youtubebrasil', '#inscrevase'],
+      facebook:  ['#facebook', '#comunidade', '#compartilhe'],
+      linkedin:  ['#carreira', '#negocios', '#produtividade', '#lideranca'],
+      twitter:   ['#threads', '#assuntodomomento'],
+    }
+    // "Analisa" o texto do usuário: vira hashtag as palavras mais relevantes
+    const words = `${title} ${content}`
+      .toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .match(/[a-z]{5,}/g) || []
+    const fromText = [...new Set(words)].slice(0, 3).map(w => `#${w}`)
+
+    const pool = [...fromText, ...(byNetwork[networkId] || []), ...base]
+    const tags = [...new Set(pool)].slice(0, 12)
+    setTimeout(() => resolve(tags), 850)
+  })
+
+/**
+ * Card 4 — melhores horários para postar NA DATA escolhida.
+ * Filtra horários que já passaram quando a data é hoje (não recomenda 14h
+ * se já são 15h) e ordena por engajamento estimado. Síncrono de propósito
+ * (o picker chama durante o render).
+ */
+const slotReason = (h) => {
+  if (h < 9)  return 'começo do dia'
+  if (h < 12) return 'manhã'
+  if (h < 14) return 'hora do almoço'
+  if (h < 18) return 'tarde'
+  if (h < 21) return 'pico da noite'
+  return 'fim da noite'
+}
+export const getBestTimeSlots = (dateObj, now = new Date()) => {
+  const date = dateObj || now
+  const weekend = date.getDay() === 0 || date.getDay() === 6
+
+  const catalog = weekend
+    ? [ { h: 10, m: 0, score: 88 }, { h: 12, m: 0, score: 80 }, { h: 16, m: 0, score: 85 }, { h: 20, m: 0, score: 93 }, { h: 21, m: 30, score: 87 } ]
+    : [ { h: 8,  m: 0, score: 82 }, { h: 12, m: 30, score: 86 }, { h: 18, m: 0, score: 90 }, { h: 19, m: 0, score: 95 }, { h: 21, m: 0, score: 84 } ]
+
+  const sameDay =
+    date.getFullYear() === now.getFullYear() &&
+    date.getMonth() === now.getMonth() &&
+    date.getDate() === now.getDate()
+  const nowMin = now.getHours() * 60 + now.getMinutes()
+
+  return catalog
+    .filter(s => !sameDay || s.h * 60 + s.m > nowMin + 15) // 15 min de folga
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
+    .map(s => ({
+      h: s.h, m: s.m, score: s.score,
+      label: `${pad2(s.h)}:${pad2(s.m)}`,
+      reason: slotReason(s.h),
+    }))
+}

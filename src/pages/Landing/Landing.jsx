@@ -80,10 +80,6 @@ export default function Landing() {
                 Já tenho conta <LuChevronRight />
               </Link>
             </motion.div>
-
-            <motion.div variants={fadeUp} className="l-hero__proof">
-              <span>+1.200 criadores já usam o HubStudio</span>
-            </motion.div>
           </motion.div>
 
           <HeroMockup />

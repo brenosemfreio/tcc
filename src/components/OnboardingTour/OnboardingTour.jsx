@@ -14,7 +14,7 @@ const STORAGE_KEY = 'hs-show-onboarding'
 const STEPS = [
   {
     icon: LuPartyPopper,
-    title: 'Boas-vindas ao HubStudio! 🎉',
+    title: 'Boas-vindas ao HubStudio!',
     text: 'Sua conta está pronta. Em poucos passos você vai conectar suas redes e começar a gerenciar tudo de um só lugar. Leva menos de um minuto.',
   },
   {

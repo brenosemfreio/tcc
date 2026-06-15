@@ -4,10 +4,10 @@ import { LuMessageCircle, LuX, LuSend } from 'react-icons/lu'
 
 const WELCOME = {
   from: 'agent',
-  text: 'Olá! 👋 Sou a Deb, do time HubStudio. Como posso te ajudar hoje?',
+  text: 'Olá! Sou a Deb, do time HubStudio. Como posso te ajudar hoje?',
 }
 
-const AUTO_REPLY = 'Obrigada pela mensagem! Um especialista vai assumir esta conversa em instantes. Enquanto isso, dá uma olhada na nossa base de conhecimento acima. 💜'
+const AUTO_REPLY = 'Obrigada pela mensagem! Um especialista vai assumir esta conversa em instantes. Enquanto isso, dá uma olhada na nossa base de conhecimento acima.'
 
 export default function LiveChatWidget({ open, onOpenChange }) {
   const [messages, setMessages] = useState([WELCOME])

@@ -6,28 +6,24 @@ const LINKS = [
   {
     title: 'Produto',
     items: [
-      { label: 'Funcionalidades', href: '#funcionalidades' },
-      { label: 'Planos e preços', href: '#precos'          },
-      { label: 'Começar grátis', to: '/cadastro'           },
-      { label: 'Changelog',      href: '#'                 },
+      { label: 'Funcionalidades',       href: '#funcionalidades' },
+      { label: 'Planos e preços',       href: '#precos'          },
+      { label: 'Sobre nós',             href: '#sobre'           },
+      { label: 'Perguntas frequentes',  href: '#faq'             },
     ],
   },
   {
-    title: 'Empresa',
+    title: 'Conta',
     items: [
-      { label: 'Sobre nós',   href: '#sobre' },
-      { label: 'Blog',        href: '#'      },
-      { label: 'Carreiras',   href: '#'      },
-      { label: 'Imprensa',    href: '#'      },
+      { label: 'Começar grátis', to: '/cadastro' },
+      { label: 'Entrar',         to: '/entrar'   },
     ],
   },
   {
     title: 'Suporte',
     items: [
-      { label: 'Central de ajuda',    href: '#'                          },
-      { label: 'Contato',             href: 'mailto:hubstudio@gmail.com' },
-      { label: 'Privacidade',         href: '#'                          },
-      { label: 'Termos de uso',       href: '#'                          },
+      { label: 'Central de ajuda', to: '/dashboard/suporte'           },
+      { label: 'Contato',          href: 'mailto:hubstudio@gmail.com' },
     ],
   },
 ]
@@ -86,11 +82,6 @@ export default function Footer() {
       <div className="footer__bottom">
         <div className="container footer__bottom-inner">
           <p>© 2026 HubStudio. Todos os direitos reservados.</p>
-          <div className="footer__bottom-links">
-            <a href="#">Privacidade</a>
-            <a href="#">Termos</a>
-            <a href="#">Cookies</a>
-          </div>
         </div>
       </div>
     </footer>

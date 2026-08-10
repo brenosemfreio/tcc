@@ -8,13 +8,17 @@ import { FaInstagram, FaTiktok, FaYoutube, FaFacebook, FaLinkedin } from 'react-
 import { FaXTwitter } from 'react-icons/fa6'
 import {
   getPostById, NETWORK_META, networkColor,
-  getContentTypeInsight, generateCaption, suggestHashtags, getBestTimeSlots,
+  getContentTypeInsight, getBestTimeSlots,
+  getSocialAccounts, PLATFORM_IMAGE_TYPES,
 } from '../../../services/posts'
+import { API_BASE } from '../../../services/api'
+import { showToast } from '../../../components/Toast'
 import { useAuth } from '../../../contexts/AuthContext'
 import { useTheme } from '../../../contexts/ThemeContext'
 import PhonePreview from './components/PhonePreview'
 import MediaUploader from './components/MediaUploader'
 import DateTimePicker from './components/DateTimePicker'
+import CaptionIdeaModal from './components/CaptionIdeaModal'
 import './Composer.css'
 
 const NETWORK_ICONS = {
@@ -28,8 +32,8 @@ const NETWORK_ICONS = {
 
 const NETWORK_IDS = ['instagram', 'tiktok', 'youtube', 'facebook', 'linkedin', 'twitter']
 
-// Estrutura padrão pra conteúdo de uma rede
-const emptyNetworkContent = () => ({ title: '', content: '', media: [] })
+// Estrutura padrão pra conteúdo de uma rede (mídia é compartilhada em form.media)
+const emptyNetworkContent = () => ({ title: '', content: '' })
 
 // Verifica se a rede/tipo selecionado exige título
 function typeNeedsTitle(networkId, typeId) {
@@ -53,7 +57,8 @@ export default function Composer() {
   const [form, setForm] = useState({
     networks: [],
     typesByNetwork: {},
-    contentByNetwork: {},  // { instagram: { title, content, media }, ... }
+    contentByNetwork: {},  // { instagram: { title, content }, ... }
+    media: [],             // mídia única compartilhada entre todas as redes
     scheduledFor: initialDate,
   })
 
@@ -62,7 +67,9 @@ export default function Composer() {
 
   const [loading, setLoading] = useState(false)
   const [feedback, setFeedback] = useState('')
-  const [aiBusy, setAiBusy] = useState(null)   // 'caption' | 'hashtags' | null
+  const [aiBusy, setAiBusy] = useState(null)          // 'caption' | 'hashtags' | null
+  const [captionModalOpen, setCaptionModalOpen] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
 
   // Carrega o post quando estamos em modo edição
   useEffect(() => {
@@ -79,13 +86,13 @@ export default function Composer() {
           contentByNetwork[n] = {
             title: post.title || '',
             content: post.content || '',
-            media: [],
           }
         })
         setForm({
           networks: post.networks || [],
           typesByNetwork,
           contentByNetwork,
+          media: [],
           scheduledFor: post.scheduledFor ? post.scheduledFor.slice(0, 16) : '',
         })
         if (post.networks?.[0]) setActiveNetwork(post.networks[0])
@@ -93,7 +100,87 @@ export default function Composer() {
     })
   }, [id])
 
-  // Toggle de rede: ao adicionar, inicia tipo + content vazio. Ao remover, limpa tudo.
+  // Retorna a orientação do tipo selecionado de uma rede ('vertical' | 'horizontal' | 'square')
+  const getTypeOrientation = (networkId, typeId) => {
+    const meta = NETWORK_META[networkId]
+    return meta?.types.find(t => t.id === typeId)?.orientation || 'square'
+  }
+
+  // Retorna true se o tipo aceita apenas vídeo (sem upload de imagem)
+  const isVideoOnly = (networkId, typeId) =>
+    PLATFORM_IMAGE_TYPES[networkId]?.[typeId] === null
+
+  // Dado o conjunto atual de redes, retorna o tipo mais compatível para uma nova rede candidata.
+  // Prioriza manter a orientação da sessão atual.
+  const bestTypeForNetwork = (candidateId, networks, typesByNetwork) => {
+    const meta = NETWORK_META[candidateId]
+    if (!meta) return undefined
+
+    // Orientações já em uso na sessão
+    const sessionOrientations = new Set(
+      networks.map(n => getTypeOrientation(n, typesByNetwork[n]))
+    )
+    // Verifica se a sessão é de imagem (algum tipo selecionado é image-only / não-vídeo)
+    const sessionHasImageType = networks.some(n => !isVideoOnly(n, typesByNetwork[n]) && PLATFORM_IMAGE_TYPES[n]?.[typesByNetwork[n]] !== undefined)
+
+    // Prefere tipo com orientação já usada na sessão (vertical > horizontal > square)
+    for (const orientation of ['vertical', 'horizontal', 'square']) {
+      if (sessionOrientations.has(orientation)) {
+        const match = meta.types.find(t => t.orientation === orientation)
+        if (match) return match.id
+      }
+    }
+    return meta.types[0]?.id
+  }
+
+  // Retorna a razão de incompatibilidade ao tentar adicionar `candidateId`.
+  // null = compatível.
+  const getIncompatibilityReason = (candidateId, networks, typesByNetwork) => {
+    const candidateMeta = NETWORK_META[candidateId]
+    if (!candidateMeta) return null
+
+    for (const existingId of networks) {
+      const existingType = typesByNetwork[existingId]
+      const existingOrientation = getTypeOrientation(existingId, existingType)
+      const existingIsVideoOnly = isVideoOnly(existingId, existingType)
+
+      // Se a sessão atual é de IMAGEM (tipo sem vídeo, como TikTok foto ou Instagram feed)
+      // e o candidato só tem tipos de vídeo → incompatível
+      if (!existingIsVideoOnly) {
+        const platformTypes = PLATFORM_IMAGE_TYPES[existingId]
+        const existingAcceptsImages = platformTypes && platformTypes[existingType] !== null
+        if (existingAcceptsImages) {
+          const candidateHasImageType = candidateMeta.types.some(
+            t => PLATFORM_IMAGE_TYPES[candidateId]?.[t.id] !== null
+          )
+          if (!candidateHasImageType) {
+            const existingLabel = NETWORK_META[existingId]?.label
+            return `${existingLabel} (${existingType}) publica imagens, mas ${candidateMeta.label} só aceita vídeo`
+          }
+        }
+      }
+
+      // Conflito de orientação: vertical ↔ horizontal
+      if (existingOrientation === 'vertical' || existingOrientation === 'horizontal') {
+        const oppositeOrientation = existingOrientation === 'vertical' ? 'horizontal' : 'vertical'
+        // O candidato tem ALGUM tipo compatível? (não bloqueia se ele tem alternativa)
+        const candidateBestType = bestTypeForNetwork(candidateId, networks, typesByNetwork)
+        const candidateBestOrientation = getTypeOrientation(candidateId, candidateBestType)
+        if (candidateBestOrientation === oppositeOrientation) {
+          // Sem alternativa compatível
+          const allCandidateOrientations = candidateMeta.types.map(t => t.orientation)
+          const hasCompatibleType = allCandidateOrientations.some(o => o !== oppositeOrientation)
+          if (!hasCompatibleType) {
+            const existingLabel = NETWORK_META[existingId]?.label
+            return `${existingLabel} (${existingOrientation}) não é compatível com ${candidateMeta.label}`
+          }
+        }
+      }
+    }
+    return null
+  }
+
+  // Toggle de rede: ao adicionar, escolhe o tipo mais compatível com a sessão atual.
   const toggleNetwork = (networkId) => {
     setForm(f => {
       const isSelected = f.networks.includes(networkId)
@@ -107,25 +194,55 @@ export default function Composer() {
           contentByNetwork: restContent,
         }
       }
-      const meta = NETWORK_META[networkId]
-      const defaultType = meta?.types[0]?.id
+
+      const reason = getIncompatibilityReason(networkId, f.networks, f.typesByNetwork)
+      if (reason) {
+        setFeedback(reason)
+        setTimeout(() => setFeedback(''), 4000)
+        return f
+      }
+
+      const chosenType = bestTypeForNetwork(networkId, f.networks, f.typesByNetwork)
+      const defaultType = NETWORK_META[networkId]?.types[0]?.id
+      if (chosenType && chosenType !== defaultType) {
+        const label = NETWORK_META[networkId]?.label
+        const typeLabel = NETWORK_META[networkId]?.types.find(t => t.id === chosenType)?.label
+        setFeedback(`${label} adicionado como ${typeLabel} (compatível com a sessão atual)`)
+        setTimeout(() => setFeedback(''), 3000)
+      }
+
       const newNetworks = [...f.networks, networkId]
-      // Define rede ativa se for a primeira
       if (newNetworks.length === 1) setActiveNetwork(networkId)
       return {
         ...f,
         networks: newNetworks,
-        typesByNetwork: { ...f.typesByNetwork, [networkId]: defaultType },
+        typesByNetwork: { ...f.typesByNetwork, [networkId]: chosenType },
         contentByNetwork: { ...f.contentByNetwork, [networkId]: emptyNetworkContent() },
       }
     })
   }
 
   const setTypeForNetwork = (networkId, typeId) => {
-    setForm(f => ({
-      ...f,
-      typesByNetwork: { ...f.typesByNetwork, [networkId]: typeId },
-    }))
+    setForm(f => {
+      // Verifica se o novo tipo cria conflito de orientação com as outras redes
+      const otherNetworks = f.networks.filter(n => n !== networkId)
+      const newOrientation = getTypeOrientation(networkId, typeId)
+
+      for (const otherId of otherNetworks) {
+        const otherOrientation = getTypeOrientation(otherId, f.typesByNetwork[otherId])
+        if (
+          (newOrientation === 'vertical' && otherOrientation === 'horizontal') ||
+          (newOrientation === 'horizontal' && otherOrientation === 'vertical')
+        ) {
+          const otherLabel = NETWORK_META[otherId]?.label
+          const typeLabel = NETWORK_META[networkId]?.types.find(t => t.id === typeId)?.label
+          setFeedback(`${typeLabel} (${newOrientation}) não é compatível com ${otherLabel} (${otherOrientation})`)
+          setTimeout(() => setFeedback(''), 4000)
+          return f
+        }
+      }
+      return { ...f, typesByNetwork: { ...f.typesByNetwork, [networkId]: typeId } }
+    })
   }
 
   // Atualiza um campo do conteúdo de uma rede específica
@@ -154,7 +271,6 @@ export default function Composer() {
           next[n] = {
             title: source.title,
             content: source.content.slice(0, NETWORK_META[n]?.maxChars || 5000),
-            media: source.media,
           }
         }
       })
@@ -173,20 +289,198 @@ export default function Composer() {
       const needsT = typeNeedsTitle(n, t)
       return {
         network: n,
-        hasContent: c.content.trim().length > 0,
-        hasTitle: !needsT || c.title.trim().length > 0,
+        hasContent: (c.content?.trim().length || 0) > 0,
+        hasTitle: !needsT || (c.title?.trim().length || 0) > 0,
         needsTitle: needsT,
       }
     })
   }, [form.networks, form.contentByNetwork, form.typesByNetwork])
 
   const canSubmit = hasNetworks && validationByNetwork.every(v => v.hasContent && v.hasTitle)
+
+  // Interseção dos formatos de imagem aceitos por todas as redes selecionadas
+  const allowedImageMimeTypes = useMemo(() => {
+    const typeSets = []
+    for (const networkId of form.networks) {
+      const typeId = form.typesByNetwork[networkId]
+      const allowed = PLATFORM_IMAGE_TYPES[networkId]?.[typeId]
+      if (allowed === null) continue // tipo só aceita vídeo, ignora restrição de imagem
+      if (Array.isArray(allowed)) typeSets.push(new Set(allowed))
+    }
+    if (typeSets.length === 0) return null
+    const intersection = [...typeSets[0]].filter(t => typeSets.every(s => s.has(t)))
+    return intersection.length > 0 ? intersection : null
+  }, [form.networks, form.typesByNetwork])
+
+  const handleMediaRejected = (rejectedFiles) => {
+    const names = rejectedFiles.map(f => f.name).join(', ')
+    const formatsAllowed = allowedImageMimeTypes
+      ? allowedImageMimeTypes.map(t => t.split('/')[1].toUpperCase()).join(', ')
+      : 'qualquer formato'
+    setFeedback(`Formato não suportado pelas redes selecionadas: ${names}. Aceitos: ${formatsAllowed}.`)
+    setTimeout(() => setFeedback(''), 5000)
+  }
   const hasAnyContent = validationByNetwork.some(v => v.hasContent)
 
-  // Salva o post (mock)
+const xhrUpload = (endpoint, formData, onProgress) =>
+    new Promise((resolve, reject) => {
+      const token = localStorage.getItem('hs-token')
+      const xhr = new XMLHttpRequest()
+      xhr.upload.addEventListener('progress', e => {
+        if (e.lengthComputable) onProgress(Math.round((e.loaded / e.total) * 100))
+      })
+      xhr.addEventListener('load', () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try { resolve(JSON.parse(xhr.responseText)) } catch { resolve({}) }
+        } else {
+          try {
+            const d = JSON.parse(xhr.responseText)
+            reject(new Error(d.message || d.detail || `Erro HTTP ${xhr.status}`))
+          } catch { reject(new Error(`Erro HTTP ${xhr.status}`)) }
+        }
+      })
+      xhr.addEventListener('error', () => reject(new Error('Erro de rede ao enviar vídeo')))
+      xhr.open('POST', `${API_BASE}${endpoint}`)
+      if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`)
+      xhr.send(formData)
+    })
+
   const handleSave = async (status) => {
     setLoading(true)
     setFeedback('')
+    setUploadProgress(0)
+
+    const token = localStorage.getItem('hs-token')
+
+    if (status === 'scheduled' && token) {
+      // Quando não há data definida, publica imediatamente usando o horário atual
+      const effectiveDate = form.scheduledFor || (() => {
+        const now = new Date()
+        const pad = n => String(n).padStart(2, '0')
+        return `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`
+      })()
+
+      const tiktokType = form.typesByNetwork['tiktok']
+      const youtubeType = form.typesByNetwork['youtube']
+
+      // Redes de vídeo: TikTok(video) + YouTube(video ou shorts)
+      const videoNetworks = form.networks.filter(n => {
+        if (n === 'tiktok') return tiktokType === 'video'
+        if (n === 'youtube') return true
+        return false
+      })
+
+      // TikTok foto (fluxo separado)
+      const tiktokPhotoSelected = form.networks.includes('tiktok') && tiktokType === 'photo'
+
+      const isoDate = effectiveDate.length === 16 ? effectiveDate + ':00' : effectiveDate
+
+      // ── Fluxo de FOTOS (TikTok Photo) ──────────────────────────────
+      if (tiktokPhotoSelected) {
+        const imageItems = form.media.filter(m => m.type === 'image' && m.file)
+        if (imageItems.length === 0) {
+          setFeedback('Selecione ao menos uma imagem para publicar no TikTok.')
+          setLoading(false)
+          return
+        }
+        try {
+          const accounts = await getSocialAccounts()
+          const matchingIds = accounts
+            .filter(a => (a.platform || '').toLowerCase() === 'tiktok')
+            .map(a => a.id)
+
+          if (matchingIds.length === 0) {
+            setFeedback('Nenhuma conta TikTok conectada. Vá em Configurações > Redes.')
+            setLoading(false)
+            return
+          }
+
+          const tiktokContent = form.contentByNetwork['tiktok'] || {}
+          const photoTitle = tiktokContent.title || tiktokContent.content?.slice(0, 60) || ''
+          const fd = new FormData()
+          imageItems.forEach(item => fd.append('photos', item.file))
+          fd.append('title', photoTitle)
+          fd.append('scheduledAt', isoDate)
+          matchingIds.forEach(id => fd.append('socialAccountIds', id))
+
+          setFeedback('Enviando fotos…')
+          await xhrUpload('/posts/schedule/photo', fd, pct => {
+            setUploadProgress(pct)
+            setFeedback(pct < 100 ? `Enviando fotos… ${pct}%` : 'Registrando agendamento…')
+          })
+
+          const label = form.scheduledFor
+            ? `Agendado para ${new Date(form.scheduledFor).toLocaleString('pt-BR')}`
+            : 'Publicando agora…'
+          showToast({ type: 'success', title: 'Post enviado com sucesso', message: label })
+
+          // Se também há vídeo para YouTube, continua; senão, sai
+          if (videoNetworks.length === 0) {
+            setTimeout(() => navigate('/dashboard/posts'), 700)
+            setLoading(false)
+            return
+          }
+        } catch (err) {
+          setFeedback(`Erro ao publicar fotos: ${err.message}`)
+          setLoading(false)
+          return
+        }
+      }
+
+      // ── Fluxo de VÍDEO (TikTok Video + YouTube Video/Shorts) ───────
+      const videoFile = form.media.find(m => m.type === 'video' && m.file)?.file
+      let videoTitle = ''
+      for (const n of videoNetworks) {
+        const c = form.contentByNetwork[n]
+        if (c?.title || c?.content) {
+          videoTitle = c.title || c.content.slice(0, 60)
+          break
+        }
+      }
+
+      if (videoNetworks.length > 0 && videoFile) {
+        try {
+          const accounts = await getSocialAccounts()
+          const matchingIds = accounts
+            .filter(a => videoNetworks.includes((a.platform || '').toLowerCase()))
+            .map(a => a.id)
+
+          if (matchingIds.length === 0) {
+            setFeedback('Nenhuma conta TikTok/YouTube conectada. Vá em Configurações > Redes.')
+            setLoading(false)
+            return
+          }
+
+          const youtubeIsShort = form.networks.includes('youtube') && youtubeType === 'shorts'
+          const fd = new FormData()
+          fd.append('video', videoFile)
+          fd.append('title', videoTitle)
+          fd.append('scheduledAt', isoDate)
+          matchingIds.forEach(id => fd.append('socialAccountIds', id))
+          if (youtubeIsShort) fd.append('youtubeIsShort', 'true')
+
+          setFeedback('Enviando vídeo…')
+          await xhrUpload('/posts/schedule/video', fd, pct => {
+            setUploadProgress(pct)
+            setFeedback(pct < 100 ? `Enviando vídeo… ${pct}%` : 'Registrando agendamento…')
+          })
+
+          const label = form.scheduledFor
+            ? `Agendado para ${new Date(form.scheduledFor).toLocaleString('pt-BR')}`
+            : 'Publicando agora…'
+          showToast({ type: 'success', title: 'Post enviado com sucesso', message: label })
+          setTimeout(() => navigate('/dashboard/posts'), 700)
+          setLoading(false)
+          return
+        } catch (err) {
+          setFeedback(`Erro ao publicar: ${err.message}`)
+          setLoading(false)
+          return
+        }
+      }
+    }
+
+    // Fallback mock (rascunho, aprovação, ou sem arquivo de vídeo)
     await new Promise(r => setTimeout(r, 600))
     setLoading(false)
     const msg = {
@@ -195,6 +489,13 @@ export default function Composer() {
       pending:   'Submetido pra aprovação!',
     }[status] || 'Salvo!'
     setFeedback(msg)
+    if (status === 'scheduled') {
+      showToast({
+        type: 'success',
+        title: 'Post agendado com sucesso',
+        message: 'Seu conteudo foi agendado e sera publicado automaticamente.',
+      })
+    }
     setTimeout(() => navigate('/dashboard/posts'), 700)
   }
 
@@ -207,47 +508,82 @@ export default function Composer() {
   const activeNeedsTitle = activeNetwork ? typeNeedsTitle(activeNetwork, activeType) : false
 
   // Pré-requisitos das ferramentas de IA do conteúdo
-  const activeHasMedia = (activeContent?.media?.length || 0) > 0
+  const activeHasContent = (activeContent?.content?.trim().length || 0) > 0
   const activeHasTitle = (activeContent?.title?.trim().length || 0) > 0
-  const canGenCaption = activeHasMedia || activeHasTitle   // legenda: mídia OU título
-  const canHashtags = activeHasMedia                       // hashtags: precisa de mídia
+  const canHashtags = activeHasContent || activeHasTitle   // hashtags: precisa de conteúdo ou título
 
-  // IA — gera uma legenda ideal pro post
-  const handleGenerateCaption = async () => {
+  // IA — abre o modal de ideia; depois chama o endpoint Groq via backend
+  const handleGenerateCaption = () => {
     if (!activeNetwork || aiBusy) return
-    setAiBusy('caption')
-    setFeedback('')
-    try {
-      const caption = await generateCaption({
-        networkId: activeNetwork,
-        title: activeContent?.title || '',
-      })
-      updateNetworkField(activeNetwork, 'content', caption.slice(0, activeMeta?.maxChars || 5000))
-      setFeedback('Legenda gerada pela IA!')
-    } finally {
-      setAiBusy(null)
-      setTimeout(() => setFeedback(''), 1800)
-    }
+    setCaptionModalOpen(true)
   }
 
-  // IA — anexa hashtags sugeridas ao final da legenda
+  const handleCaptionGenerate = async (idea) => {
+    setAiBusy('caption')
+    const token = localStorage.getItem('hs-token')
+    const res = await fetch(`${API_BASE}/ai/generate-caption`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({
+        networkId: activeNetwork,
+        idea,
+        maxChars: activeMeta?.maxChars || 2200,
+      }),
+    })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      setAiBusy(null)
+      throw new Error(err.message || `Erro ${res.status}`)
+    }
+    const data = await res.json()
+    setAiBusy(null)
+    return data
+  }
+
+  const handleCaptionSelect = (caption, cta) => {
+    const content = cta ? `${caption}\n\n${cta}` : caption
+    updateNetworkField(activeNetwork, 'content', content)
+    setCaptionModalOpen(false)
+    setFeedback('Legenda gerada pela IA!')
+    setTimeout(() => setFeedback(''), 2000)
+  }
+
+  // IA — sugere hashtags via Groq e anexa ao final da legenda
   const handleSuggestHashtags = async () => {
     if (!activeNetwork || aiBusy) return
     setAiBusy('hashtags')
     setFeedback('')
     try {
-      const tags = await suggestHashtags({
-        networkId: activeNetwork,
-        content: activeContent?.content || '',
-        title: activeContent?.title || '',
+      const token = localStorage.getItem('hs-token')
+      const res = await fetch(`${API_BASE}/ai/suggest-hashtags`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          networkId: activeNetwork,
+          content: activeContent?.content || '',
+          title: activeContent?.title || '',
+        }),
       })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err.message || `Erro ${res.status}`)
+      }
+      const { hashtags } = await res.json()
       const existing = (activeContent?.content || '').trimEnd()
-      const block = (existing ? existing + '\n\n' : '') + tags.join(' ')
+      const block = (existing ? existing + '\n\n' : '') + hashtags.join(' ')
       updateNetworkField(activeNetwork, 'content', block.slice(0, activeMeta?.maxChars || 5000))
       setFeedback('Hashtags adicionadas!')
+    } catch (err) {
+      setFeedback(`Erro: ${err.message}`)
     } finally {
       setAiBusy(null)
-      setTimeout(() => setFeedback(''), 1800)
+      setTimeout(() => setFeedback(''), 2000)
     }
   }
 
@@ -279,11 +615,17 @@ export default function Composer() {
                 const meta = NETWORK_META[id]
                 const Icon = NETWORK_ICONS[id]
                 const selected = form.networks.includes(id)
+                const incompatReason = !selected
+                  ? getIncompatibilityReason(id, form.networks, form.typesByNetwork)
+                  : null
+                const blocked = Boolean(incompatReason)
                 return (
                   <button
                     key={id}
                     type="button"
-                    className={`composer__network-pill${selected ? ' composer__network-pill--active' : ''}`}
+                    disabled={blocked}
+                    title={blocked ? incompatReason : undefined}
+                    className={`composer__network-pill${selected ? ' composer__network-pill--active' : ''}${blocked ? ' composer__network-pill--blocked' : ''}`}
                     style={selected ? { borderColor: networkColor(id, theme), color: networkColor(id, theme) } : {}}
                     onClick={() => toggleNetwork(id)}
                   >
@@ -344,6 +686,11 @@ export default function Composer() {
                             <strong>{insight.label}</strong> renderam <strong>+{insight.uplift}%</strong> de
                             engajamento vs. {insight.vs} no último mês.
                           </span>
+                        </p>
+                      )}
+                      {networkId === 'youtube' && selectedType === 'shorts' && (
+                        <p className="composer__type-warning">
+                          O YouTube classifica vídeos como Shorts <strong>automaticamente</strong> com base no arquivo enviado: duração máxima de <strong>60 segundos</strong> e proporção <strong>vertical (9:16)</strong>. O hashtag #Shorts é adicionado para ajudar na descoberta, mas não substitui esses requisitos.
                         </p>
                       )}
                     </div>
@@ -423,10 +770,8 @@ export default function Composer() {
                       type="button"
                       className="composer__ai-btn"
                       onClick={handleGenerateCaption}
-                      disabled={!canGenCaption || aiBusy !== null}
-                      title={canGenCaption
-                        ? 'Gerar uma legenda ideal com IA a partir do seu conteúdo'
-                        : 'Adicione uma mídia ou um título primeiro'}
+                      disabled={aiBusy !== null}
+                      title="Gerar uma legenda com IA"
                     >
                       {aiBusy === 'caption'
                         ? <LuLoaderCircle size={14} className="composer__ai-spin" />
@@ -439,8 +784,8 @@ export default function Composer() {
                       onClick={handleSuggestHashtags}
                       disabled={!canHashtags || aiBusy !== null}
                       title={canHashtags
-                        ? 'Sugerir as melhores hashtags pro seu conteúdo'
-                        : 'Adicione uma mídia primeiro'}
+                        ? 'Sugerir hashtags com IA baseadas no seu conteúdo'
+                        : 'Escreva a legenda ou título primeiro'}
                     >
                       {aiBusy === 'hashtags'
                         ? <LuLoaderCircle size={14} className="composer__ai-spin" />
@@ -465,25 +810,36 @@ export default function Composer() {
                   </span>
                 </div>
 
-                {/* Mídia por rede */}
-                <div className="composer__field">
-                  <label>
-                    <LuImage size={14} /> Mídia pro {activeMeta?.label}
-                  </label>
-                  <MediaUploader
-                    media={activeContent.media}
-                    onChange={(media) => updateNetworkField(activeNetwork, 'media', media)}
-                  />
-                </div>
               </div>
             </div>
           )}
 
-          {/* PASSO 4 — Agendamento (global) */}
+          {/* PASSO 4 — Mídia compartilhada entre todas as redes */}
           {hasNetworks && (
             <div className="composer__step">
               <div className="composer__step-head">
                 <span className="composer__step-num">4</span>
+                <h3>
+                  <LuImage size={16} /> Mídia da publicação
+                </h3>
+              </div>
+              <p className="composer__hint">
+                Imagens e vídeos enviados aqui serão usados em todas as redes selecionadas.
+              </p>
+              <MediaUploader
+                media={form.media}
+                onChange={(media) => setForm(f => ({ ...f, media }))}
+                allowedImageMimeTypes={allowedImageMimeTypes}
+                onRejected={allowedImageMimeTypes ? handleMediaRejected : null}
+              />
+            </div>
+          )}
+
+          {/* PASSO 5 — Agendamento (global) */}
+          {hasNetworks && (
+            <div className="composer__step">
+              <div className="composer__step-head">
+                <span className="composer__step-num">5</span>
                 <h3>Quando publicar?</h3>
               </div>
               <div className="composer__field">
@@ -511,6 +867,7 @@ export default function Composer() {
             networks={form.networks}
             typesByNetwork={form.typesByNetwork}
             contentByNetwork={form.contentByNetwork}
+            media={form.media}
             user={user}
             activeNetwork={activeNetwork}
             onActiveNetworkChange={setActiveNetwork}
@@ -518,9 +875,23 @@ export default function Composer() {
         </aside>
       </div>
 
+      {captionModalOpen && activeNetwork && (
+        <CaptionIdeaModal
+          networkLabel={activeMeta?.label || activeNetwork}
+          onGenerate={handleCaptionGenerate}
+          onSelect={handleCaptionSelect}
+          onClose={() => { setCaptionModalOpen(false); setAiBusy(null) }}
+        />
+      )}
+
       {/* Barra fixa de ações */}
       <div className="composer__actions">
         {feedback && <span className="composer__feedback">{feedback}</span>}
+        {loading && uploadProgress > 0 && uploadProgress < 100 && (
+          <div className="composer__upload-bar">
+            <div className="composer__upload-fill" style={{ width: `${uploadProgress}%` }} />
+          </div>
+        )}
 
         <button
           type="button"
@@ -545,9 +916,9 @@ export default function Composer() {
           type="button"
           className="composer__btn composer__btn--primary"
           onClick={() => handleSave('scheduled')}
-          disabled={loading || !canSubmit || !form.scheduledFor}
+          disabled={loading || !canSubmit}
         >
-          <LuCalendarClock size={15} /> Agendar
+          <LuCalendarClock size={15} /> {form.scheduledFor ? 'Agendar' : 'Publicar agora'}
         </button>
       </div>
     </div>

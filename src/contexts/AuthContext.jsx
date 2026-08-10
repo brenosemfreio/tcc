@@ -1,43 +1,55 @@
 import { createContext, useContext, useState } from 'react'
-import { loginService, registerService } from '../services/auth'
+import { loginService, registerService, fetchMe } from '../services/auth'
 
 const AuthContext = createContext(null)
 
-const MOCK_USER = {
-  name: 'Breno Dantas',
-  email: 'breno.dantas.pc@gmail.com',
-  avatar: null,
-  plan: 'pro',
+function isTokenExpired(token) {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    return payload.exp * 1000 < Date.now()
+  } catch {
+    return true
+  }
+}
+
+function clearSession() {
+  localStorage.removeItem('hs-user')
+  localStorage.removeItem('hs-token')
 }
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     const stored = localStorage.getItem('hs-user')
-    return stored ? JSON.parse(stored) : null
+    const token = localStorage.getItem('hs-token')
+    if (!stored) return null
+    if (!token || isTokenExpired(token)) {
+      clearSession()
+      return null
+    }
+    return JSON.parse(stored)
   })
 
   const login = async (email, password) => {
     await loginService(email, password)
-    const loggedUser = { ...MOCK_USER, email }
-    localStorage.setItem('hs-user', JSON.stringify(loggedUser))
-    // Login normal nunca dispara o tour de boas-vindas
+    const profile = await fetchMe()
+    localStorage.setItem('hs-user', JSON.stringify(profile))
     localStorage.removeItem('hs-show-onboarding')
-    setUser(loggedUser)
-    return loggedUser
+    setUser(profile)
+    return profile
   }
 
   const register = async (data) => {
     await registerService(data)
-    const newUser = { ...MOCK_USER, ...data }
-    localStorage.setItem('hs-user', JSON.stringify(newUser))
-    // Sinaliza que o tour de boas-vindas deve aparecer (só no cadastro)
+    await loginService(data.email, data.password)
+    const profile = await fetchMe()
+    localStorage.setItem('hs-user', JSON.stringify(profile))
     localStorage.setItem('hs-show-onboarding', '1')
-    setUser(newUser)
-    return newUser
+    setUser(profile)
+    return profile
   }
 
   const logout = () => {
-    localStorage.removeItem('hs-user')
+    clearSession()
     setUser(null)
   }
 

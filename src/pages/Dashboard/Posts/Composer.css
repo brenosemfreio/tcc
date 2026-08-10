@@ -125,6 +125,14 @@
   background: var(--color-card-bg);
   font-weight: 700;
 }
+.composer__network-pill--blocked {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: auto;
+}
+.composer__network-pill--blocked:hover {
+  background: transparent;
+}
 
 /* Type groups (per network) */
 .composer__type-groups {
@@ -724,6 +732,11 @@
   font-weight: 700;
   color: var(--color-primary);
 }
+.dtpicker__day--past {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
 .dtpicker__day--selected {
   background: var(--color-primary) !important;
   color: #fff !important;
@@ -836,7 +849,18 @@
   font-family: var(--font-family);
   transition: background var(--transition-fast);
 }
-.dtpicker__confirm:hover { background: var(--color-primary-hover); }
+.dtpicker__confirm:hover:not(:disabled) { background: var(--color-primary-hover); }
+.dtpicker__confirm:disabled { background: var(--color-text-muted); cursor: not-allowed; opacity: 0.6; }
+.dtpicker__warn {
+  margin: 0 0 8px;
+  padding: 6px 10px;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  color: #92400e;
+  line-height: 1.4;
+}
 
 /* ════════════════════════════════════════════════════════════
    IA — insight de formato (card 2), ferramentas de legenda (card 3),
@@ -857,6 +881,23 @@
 }
 .composer__type-insight svg { color: var(--color-primary); flex-shrink: 0; margin-top: 1px; }
 .composer__type-insight strong { color: var(--color-text); font-weight: 700; }
+.composer__type-warning {
+  margin-top: 6px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: #7a5800;
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+}
+[data-theme='dark'] .composer__type-warning {
+  color: #ffd54f;
+  background: #2a2000;
+  border-color: #5a4500;
+}
+.composer__type-warning strong { font-weight: 700; }
+
 .composer__type-pill--rec {
   border-color: color-mix(in srgb, var(--color-primary) 45%, var(--color-border));
 }
@@ -945,6 +986,23 @@
   margin-top: 7px;
   font-size: 0.64rem;
   color: var(--color-text-muted);
+}
+
+/* Upload progress bar (scheduling via API) */
+.composer__upload-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--color-border);
+  border-radius: 2px;
+  overflow: hidden;
+  min-width: 80px;
+  max-width: 200px;
+}
+.composer__upload-fill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: 2px;
+  transition: width 0.2s ease;
 }
 
 @media (max-width: 1100px) {

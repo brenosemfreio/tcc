@@ -17,6 +17,123 @@
   color: var(--color-text-muted);
 }
 
+/* ── Estado vazio (sem equipes) ── */
+.eq-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 40px 24px;
+}
+
+.eq-empty__content {
+  max-width: 420px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.eq-empty__content h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.eq-empty__content p {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.eq-empty__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+  width: 100%;
+}
+
+.eq-empty__btn {
+  padding: 10px 28px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s;
+}
+
+.eq-empty__btn--primary {
+  background: var(--color-primary, #4F35E8);
+  color: #fff;
+}
+
+.eq-empty__btn--primary:hover { opacity: 0.88; }
+
+.eq-empty__divider {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.eq-empty__join {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.eq-empty__join input {
+  flex: 1;
+  min-width: 140px;
+  max-width: 200px;
+  padding: 9px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  outline: none;
+}
+
+.eq-empty__join input:focus {
+  border-color: var(--color-primary, #4F35E8);
+}
+
+.eq-empty__join button {
+  padding: 9px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.eq-empty__join button:hover:not(:disabled) {
+  background: var(--color-hover);
+}
+
+.eq-empty__join button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.eq-empty__error {
+  width: 100%;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--color-danger, #EF4444);
+}
+
 /* ── Header ── */
 .eq-header {
   display: flex;
@@ -883,6 +1000,74 @@
   line-height: 1.35;
 }
 
+/* Share code modal */
+.share-code {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 0 4px;
+  text-align: center;
+}
+.share-code__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.share-code__desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  line-height: 1.55;
+  max-width: 320px;
+}
+.share-code__desc strong { color: var(--color-text); }
+.share-code__box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  background: var(--color-bg);
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+}
+.share-code__code {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+.share-code__copy {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-card-bg);
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.share-code__copy:hover, .share-code__copy--done {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.share-code__hint {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  max-width: 300px;
+  line-height: 1.5;
+}
+
 .invite__footer {
   display: flex;
   justify-content: flex-end;
@@ -1470,6 +1655,43 @@
 .config-type__icon { font-size: 1.5rem; }
 .config-type strong { font-size: var(--font-size-sm); }
 
+/* Código de entrada */
+.config-join {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--color-bg, #f8f8f8);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  width: fit-content;
+}
+.config-join__code {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.25em;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+.config-join__copy {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-card-bg);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.18s, border-color 0.18s;
+}
+.config-join__copy:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
 /* Save bar flutuante */
 .config-savebar {
   position: fixed;
@@ -1827,6 +2049,48 @@
 }
 .create-team__next:hover:not(:disabled) { background: var(--color-primary-hover); }
 .create-team__next:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ════════════════════════════════════════════════════════════
+   Entrada por código inline (dentro do dashboard)
+   ════════════════════════════════════════════════════════════ */
+.eq-join-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  margin-bottom: 4px;
+  overflow: hidden;
+}
+.eq-join-inline input {
+  flex: 1;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  background: var(--color-bg);
+  color: var(--color-text);
+  text-transform: uppercase;
+  outline: none;
+}
+.eq-join-inline input:focus { border-color: var(--color-primary); }
+.eq-join-inline button {
+  padding: 8px 16px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.eq-join-inline button:disabled { opacity: 0.55; cursor: not-allowed; }
 
 /* ════════════════════════════════════════════════════════════
    Toast de feedback

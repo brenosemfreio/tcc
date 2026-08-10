@@ -214,6 +214,8 @@
   padding: 12px;
   height: 100%;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 .np-ig__story-header {
   display: flex;
@@ -244,6 +246,7 @@
   align-items: center;
   justify-content: center;
   color: rgba(255,255,255,0.5);
+  position: relative;
 }
 .np-ig__story-text {
   position: absolute;
@@ -801,6 +804,54 @@
   object-fit: cover;
   display: block;
 }
+/* Contêineres de mídia estáticos precisam virar contexto de posicionamento
+   pro vídeo. (np-tt__media, np-yt__shorts-media e np-ig__story-media já são
+   position:absolute — não entram aqui pra não perder o inset:0.) */
+.np-ig__media,
+.np-yt__player,
+.np-fb__media,
+.np-li__media,
+.np-li__article-cover,
+.np-tw__media {
+  position: relative;
+}
+
+/* Vídeo funcional — wrapper clicável que preenche o slot */
+.np-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  background: #000;
+}
+.np-video__btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding-left: 2px;
+  transition: opacity var(--transition-fast), background var(--transition-fast);
+  z-index: 3;
+}
+.np-video__btn:hover { background: rgba(0, 0, 0, 0.75); }
+/* Esconde o botão enquanto reproduz; reaparece no hover */
+.np-video__btn--playing {
+  opacity: 0;
+  padding-left: 0;
+}
+.np-video:hover .np-video__btn--playing { opacity: 1; }
+
 /* Quando tem mídia preenchida, esconde o placeholder de ícone */
 .np-ig__media--filled,
 .np-tt__media--filled,

@@ -1,4 +1,16 @@
 import { LuMessageSquare, LuChartBar, LuHash } from 'react-icons/lu'
+import { authFetch } from './api'
+
+export const getSocialAccounts = async (companyId) => {
+  const token = localStorage.getItem('hs-token')
+  if (!token) return []
+  try {
+    const url = companyId ? `/social/accounts?companyId=${companyId}` : '/social/accounts'
+    const res = await authFetch(url)
+    if (!res.ok) return []
+    return await res.json()
+  } catch { return [] }
+}
 
 export const getTopPosts = () => Promise.resolve([
   { id: 1, title: '5 dicas para aumentar seu engajamento', date: '18 de maio de 2026', views: '12.4K', likes: '1.3K', comments: '2.6K' },
@@ -15,44 +27,32 @@ export const getRecentPosts = () => Promise.resolve([
   { id: 4, title: 'Rascunho: ideias para a semana',      date: '—',          time: '—',     status: 'draft',     network: 'instagram' },
 ])
 
-/**
- * Calendário: mapa de DATAS reais → status, montado relativo ao dia de hoje.
- * Chave no formato `${ano}-${mês0indexado}-${dia}`. Regra realista:
- *   - publicado  → dias no passado
- *   - agendado   → dias no futuro
- *   - rascunho   → futuro próximo (planejado, sem data fixa)
- * Meses distantes (ex: 2035 ou 1905) ficam vazios, como esperado.
- */
-export const getCalendarMarkers = () => {
-  const today = new Date()
-  const y = today.getFullYear()
-  const m = today.getMonth()
-  const d = today.getDate()
+const STATUS_TO_MARKER = {
+  draft:           'draft',
+  scheduled:       'scheduled',
+  posting:         'scheduled',
+  posted:          'published',
+  partial_success: 'published',
+  error:           'draft',
+}
+const MARKER_PRIORITY = { published: 3, scheduled: 2, draft: 1 }
 
+export const getCalendarMarkers = async () => {
+  const posts = await getAllPosts()
   const map = {}
-  const daysIn = (yy, mm) => new Date(yy, mm + 1, 0).getDate()
-  const set = (yy, mm, dd, status) => {
-    if (dd < 1 || dd > daysIn(yy, mm)) return
-    map[`${yy}-${mm}-${dd}`] = status
-  }
-
-  // Mês atual — passado publicado, futuro agendado/rascunho
-  ;[d - 2, d - 5, d - 9, d - 14, d - 19].forEach(dd => set(y, m, dd, 'published'))
-  ;[d + 2, d + 5, d + 12].forEach(dd => set(y, m, dd, 'scheduled'))
-  ;[d + 1, d + 8].forEach(dd => set(y, m, dd, 'draft'))
-
-  // Mês anterior — histórico de publicados
-  const pm = m === 0 ? 11 : m - 1
-  const py = m === 0 ? y - 1 : y
-  ;[3, 7, 11, 16, 21, 26].forEach(dd => set(py, pm, dd, 'published'))
-
-  // Próximo mês — alguns agendados + um rascunho
-  const nm = m === 11 ? 0 : m + 1
-  const ny = m === 11 ? y + 1 : y
-  ;[5, 10, 18, 24].forEach(dd => set(ny, nm, dd, 'scheduled'))
-  set(ny, nm, 14, 'draft')
-
-  return Promise.resolve(map)
+  posts.forEach(post => {
+    const dateStr = post.scheduledFor || post.publishedAt
+    if (!dateStr) return
+    const d = new Date(dateStr)
+    if (isNaN(d.getTime())) return
+    const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`
+    const marker = STATUS_TO_MARKER[post.status] || 'draft'
+    const existing = map[key]
+    if (!existing || (MARKER_PRIORITY[marker] || 0) > (MARKER_PRIORITY[existing] || 0)) {
+      map[key] = marker
+    }
+  })
+  return map
 }
 
 export const getAiSuggestions = () => Promise.resolve([
@@ -63,13 +63,30 @@ export const getAiSuggestions = () => Promise.resolve([
 
 export const schedulePost = (data) => Promise.resolve({ id: Date.now(), ...data, status: 'scheduled' })
 
-// Próximos posts agendados (fila) — relativo ao "agora" mockado.
-export const getUpcomingPosts = () => Promise.resolve([
-  { id: 1, title: 'Como criar conteúdo que conecta', network: 'instagram', date: '30 mai', time: '19:00', countdown: 'Hoje' },
-  { id: 2, title: 'Pensamentos que facilitam sua rotina', network: 'tiktok', date: '02 jun', time: '09:00', countdown: 'em 3 dias' },
-  { id: 3, title: 'Checklist para posts de sucesso', network: 'linkedin', date: '05 jun', time: '11:00', countdown: 'em 6 dias' },
-  { id: 4, title: 'Bastidores do meu setup', network: 'youtube', date: '08 jun', time: '15:00', countdown: 'em 9 dias' },
-])
+export const getUpcomingPosts = async () => {
+  const posts = await getAllPosts()
+  const now = new Date()
+  const scheduled = posts
+    .filter(p => p.status === 'scheduled' && p.scheduledFor)
+    .sort((a, b) => new Date(a.scheduledFor) - new Date(b.scheduledFor))
+    .slice(0, 5)
+  if (!scheduled.length) return []
+  return scheduled.map(p => {
+    const d = new Date(p.scheduledFor)
+    const diffDays = Math.ceil((d - now) / 86400000)
+    const countdown = diffDays <= 0 ? 'Hoje'
+      : diffDays === 1 ? 'Amanhã'
+      : `em ${diffDays} dias`
+    return {
+      id: p.id,
+      title: p.title || p.content?.slice(0, 50) || '(sem título)',
+      network: p.networks?.[0] ?? 'instagram',
+      date: d.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' }),
+      time: d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+      countdown,
+    }
+  })
+}
 
 /**
  * Posts mock — estrutura completa preparada pro workflow de equipe.
@@ -206,7 +223,17 @@ const ALL_POSTS = [
   },
 ]
 
-export const getAllPosts = () => Promise.resolve(ALL_POSTS)
+export const getAllPosts = async () => {
+  const token = localStorage.getItem('hs-token')
+  if (!token) return ALL_POSTS
+  try {
+    const res = await authFetch('/posts/schedule/all-posts')
+    if (!res.ok) return ALL_POSTS
+    return await res.json()
+  } catch {
+    return ALL_POSTS
+  }
+}
 
 export const getPostById = (id) =>
   Promise.resolve(ALL_POSTS.find(p => p.id === id) || null)
@@ -290,6 +317,41 @@ export const NETWORK_META = {
     ],
     maxChars: 280,
     needsTitle: false,
+  },
+}
+
+/**
+ * Formatos de imagem aceitos por plataforma/tipo.
+ * null  = o tipo só aceita vídeo (sem upload de imagem)
+ * array = lista de MIME types permitidos
+ * key ausente = sem restrição de formato
+ */
+export const PLATFORM_IMAGE_TYPES = {
+  tiktok: {
+    photo: ['image/jpeg', 'image/webp'],
+    video: null,
+  },
+  instagram: {
+    feed:     ['image/jpeg', 'image/png'],
+    carousel: ['image/jpeg', 'image/png'],
+    story:    ['image/jpeg', 'image/png'],
+    reel:     null,
+  },
+  youtube: {
+    video:  null,
+    shorts: null,
+  },
+  facebook: {
+    post: ['image/jpeg', 'image/png', 'image/gif'],
+    reel: null,
+  },
+  linkedin: {
+    post:    ['image/jpeg', 'image/png', 'image/gif'],
+    article: ['image/jpeg', 'image/png', 'image/gif'],
+  },
+  twitter: {
+    tweet:  ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+    thread: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
   },
 }
 

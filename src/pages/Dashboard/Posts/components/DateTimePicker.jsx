@@ -105,6 +105,13 @@ export default function DateTimePicker({
     view.month === selected.getMonth() &&
     day === selected.getDate()
 
+  // Dias anteriores a hoje não podem ser selecionados
+  const isPastDay = (day) => {
+    if (!day) return false
+    const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+    return new Date(view.year, view.month, day) < todayMidnight
+  }
+
   const goPrev = () => setView(v => {
     const m = v.month - 1
     return m < 0 ? { year: v.year - 1, month: 11 } : { ...v, month: m }
@@ -237,21 +244,25 @@ export default function DateTimePicker({
 
               {/* Grid */}
               <div className="dtpicker__grid">
-                {cells.map((day, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    disabled={!day}
-                    className={`dtpicker__day
-                      ${isToday(day) ? 'dtpicker__day--today' : ''}
-                      ${isSelected(day) ? 'dtpicker__day--selected' : ''}
-                      ${!day ? 'dtpicker__day--empty' : ''}
-                    `}
-                    onClick={() => day && applyDate(day)}
-                  >
-                    {day || ''}
-                  </button>
-                ))}
+                {cells.map((day, i) => {
+                  const past = isPastDay(day)
+                  return (
+                    <button
+                      key={i}
+                      type="button"
+                      disabled={!day || past}
+                      className={`dtpicker__day
+                        ${isToday(day) ? 'dtpicker__day--today' : ''}
+                        ${isSelected(day) ? 'dtpicker__day--selected' : ''}
+                        ${past ? 'dtpicker__day--past' : ''}
+                        ${!day ? 'dtpicker__day--empty' : ''}
+                      `}
+                      onClick={() => day && !past && applyDate(day)}
+                    >
+                      {day || ''}
+                    </button>
+                  )
+                })}
               </div>
             </>
           )}

@@ -7,7 +7,7 @@ export const FEATURES = [
   {
     slot: 'wide',
     icon: LuCalendarClock,
-    color: '#7C5FE8',
+    color: '#6A4AE0',
     preview: 'calendar',
     title: 'Agendamento Inteligente',
     desc: 'Planeje e publique em todas as redes num calendário visual. A IA sugere os horários de maior engajamento automaticamente.',
@@ -23,7 +23,7 @@ export const FEATURES = [
   {
     slot: 'sm',
     icon: LuBrain,
-    color: '#4F35E8',
+    color: '#4A30DE',
     preview: 'hashtags',
     title: 'IA Insights',
     desc: 'Sugestões de conteúdo, hashtags e tendências geradas por inteligência artificial.',

@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, Reorder } from 'framer-motion'
-import { LuLayoutGrid, LuGripVertical, LuRotateCcw, LuCheck } from 'react-icons/lu'
+import { LuLayoutGrid, LuGripVertical, LuRotateCcw, LuCheck, LuRefreshCw } from 'react-icons/lu'
 import { useAuth } from '../../../contexts/AuthContext'
+import { useTeam } from '../../../contexts/TeamContext'
 import {
-  getStats, getEngagementData, getSocialBreakdown,
-  getContentReach, getAudience, getAiInsights, getActivityFeed,
+  getStats, getEngagementData, getSocialBreakdown, getNetworkComparison,
+  getContentReach, getBestTimes, getAudience, getAccountScore, getAudienceTotal, getAiInsights, getActivityFeed,
 } from '../../../services/analytics'
 import {
   getTopPosts, getRecentPosts, getCalendarMarkers, getAiSuggestions, getUpcomingPosts,
+  refreshAllMetrics,
 } from '../../../services/posts'
 import { dashFadeUp as fadeUp } from '../../../styles/animations'
 import { exportDashboardReport } from '../../../utils/export'
@@ -26,6 +28,7 @@ import TopPostsCard from './components/TopPostsCard'
 import ScheduleCTA from './components/ScheduleCTA'
 import MiniCalendar from './components/MiniCalendar'
 import AccountScoreCard from './components/AccountScoreCard'
+import FollowersCard from './components/FollowersCard'
 import AISuggestionsCard from './components/AISuggestionsCard'
 import RecentPostsCard from './components/RecentPostsCard'
 import UpcomingPosts from './components/UpcomingPosts'
@@ -35,7 +38,7 @@ import './DashboardHome.css'
 
 // Ordem padrão dos blocos em cada coluna. Cada id é renderizado pelo registry
 // abaixo. Persistido no localStorage para o usuário montar o dashboard à vontade.
-const LEFT_DEFAULT  = ['kpis', 'insights', 'charts', 'audience', 'networks', 'bottom', 'cta']
+const LEFT_DEFAULT  = ['kpis', 'followersTotal', 'insights', 'charts', 'audience', 'networks', 'bottom', 'cta']
 const RIGHT_DEFAULT = ['calendar', 'upcoming', 'activity', 'suggestions', 'recent']
 
 // Reconcilia a ordem salva com a padrão: mantém o que o usuário ordenou,
@@ -54,14 +57,20 @@ const loadOrder = (key, def) => {
 
 export default function DashboardHome() {
   const { user } = useAuth()
+  const { activeContext } = useTeam()
+  const companyId = activeContext.personal ? null : activeContext.id
   const navigate = useNavigate()
   const openComposer = (prefill) => navigate('/dashboard/posts/novo')
 
   const [stats, setStats] = useState(null)
   const [engagement, setEngagement] = useState([])
   const [socialBreakdown, setSocialBreakdown] = useState([])
+  const [networkComparison, setNetworkComparison] = useState([])
   const [contentReach, setContentReach] = useState([])
+  const [bestTimes, setBestTimes] = useState([])
   const [audience, setAudience] = useState(null)
+  const [accountScore, setAccountScore] = useState(null)
+  const [audienceTotal, setAudienceTotal] = useState(null)
   const [topPosts, setTopPosts] = useState([])
   const [recentPosts, setRecentPosts] = useState([])
   const [calendarMarkers, setCalendarMarkers] = useState({})
@@ -76,6 +85,7 @@ export default function DashboardHome() {
 
   const [feedback, setFeedback] = useState({})
   const [showCalendarModal, setShowCalendarModal] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
 
   // Layout modular
   const [editMode, setEditMode] = useState(false)
@@ -87,46 +97,78 @@ export default function DashboardHome() {
 
   const resetLayout = () => { setLeftOrder(LEFT_DEFAULT); setRightOrder(RIGHT_DEFAULT) }
 
-  // Dados estáticos (não dependem dos filtros).
-  useEffect(() => {
-    Promise.all([
-      getSocialBreakdown(),
-      getAudience(),
-      getTopPosts(),
-      getRecentPosts(),
-      getCalendarMarkers(),
-      getAiSuggestions(),
-      getAiInsights(),
-      getUpcomingPosts(),
-      getActivityFeed(),
-    ]).then(([
-      socialBreakdownRes, audienceRes,
-      topPostsRes, recentPostsRes, markersRes, aiSuggestionsRes, aiInsightsRes,
-      upcomingRes, activityRes,
-    ]) => {
-      setSocialBreakdown(socialBreakdownRes)
-      setAudience(audienceRes)
-      setTopPosts(topPostsRes)
-      setRecentPosts(recentPostsRes)
-      setCalendarMarkers(markersRes)
-      setAiSuggestions(aiSuggestionsRes)
-      setAiInsights(aiInsightsRes)
-      setUpcomingPosts(upcomingRes)
-      setActivity(activityRes)
-    })
-  }, [])
+  // Dados estáticos (não dependem dos filtros de período/rede, mas dependem
+  // do contexto ativo — Pessoal ou uma equipe).
+  const loadStaticData = () => Promise.all([
+    getSocialBreakdown(),
+    getAudience(companyId),
+    getAccountScore(companyId),
+    getRecentPosts(companyId),
+    getCalendarMarkers(companyId),
+    getAiSuggestions(),
+    getUpcomingPosts(companyId),
+    getActivityFeed(),
+  ]).then(([
+    socialBreakdownRes, audienceRes, accountScoreRes,
+    recentPostsRes, markersRes, aiSuggestionsRes,
+    upcomingRes, activityRes,
+  ]) => {
+    setSocialBreakdown(socialBreakdownRes)
+    setAudience(audienceRes)
+    setAccountScore(accountScoreRes)
+    setRecentPosts(recentPostsRes)
+    setCalendarMarkers(markersRes)
+    setAiSuggestions(aiSuggestionsRes)
+    setUpcomingPosts(upcomingRes)
+    setActivity(activityRes)
+  })
+
+  useEffect(() => { loadStaticData() }, [companyId]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Top posts, alcance por tipo de conteúdo e melhores horários dependem tanto
+  // de período quanto de rede — antes ignoravam os dois filtros por completo.
+  const loadFilteredData = () => Promise.all([
+    getStats(period, network, companyId).then(setStats),
+    getEngagementData(granularity, network, companyId).then(setEngagement),
+    getTopPosts(period, network, companyId).then(setTopPosts),
+    getContentReach(period, network, companyId).then(setContentReach),
+    getBestTimes(period, network, companyId).then(setBestTimes),
+    getNetworkComparison(period, companyId).then(setNetworkComparison),
+    getAudienceTotal(period, network, companyId).then(setAudienceTotal),
+    getAiInsights(period, companyId).then(setAiInsights),
+  ])
 
   useEffect(() => {
-    getStats(period, network).then(setStats)
-  }, [period, network])
+    getStats(period, network, companyId).then(setStats)
+  }, [period, network, companyId])
 
   useEffect(() => {
-    getEngagementData(granularity, network).then(setEngagement)
-  }, [granularity, network])
+    getTopPosts(period, network, companyId).then(setTopPosts)
+  }, [period, network, companyId])
 
   useEffect(() => {
-    getContentReach(network).then(setContentReach)
-  }, [network])
+    getAudienceTotal(period, network, companyId).then(setAudienceTotal)
+  }, [period, network, companyId])
+
+  useEffect(() => {
+    getAiInsights(period, companyId).then(setAiInsights)
+  }, [period, companyId])
+
+  useEffect(() => {
+    getEngagementData(granularity, network, companyId).then(setEngagement)
+  }, [granularity, network, companyId])
+
+  useEffect(() => {
+    getContentReach(period, network, companyId).then(setContentReach)
+  }, [period, network, companyId])
+
+  useEffect(() => {
+    getBestTimes(period, network, companyId).then(setBestTimes)
+  }, [period, network, companyId])
+
+  useEffect(() => {
+    getNetworkComparison(period, companyId).then(setNetworkComparison)
+  }, [period, companyId])
 
   const firstName = user?.name?.split(' ')[0] || 'usuário'
 
@@ -141,6 +183,24 @@ export default function DashboardHome() {
   const handleExport = () => {
     exportDashboardReport(stats, engagement)
     flashFeedback('export', 'Baixado!')
+  }
+
+  // Força a coleta de métricas direto nas redes (em vez de esperar o job
+  // automático do backend, que roda a cada 6h) e recarrega o dashboard.
+  const handleRefresh = async () => {
+    if (refreshing) return
+    setRefreshing(true)
+    try {
+      if (localStorage.getItem('hs-token')) {
+        await refreshAllMetrics(companyId)
+      }
+      await Promise.all([loadStaticData(), loadFilteredData()])
+      flashFeedback('refresh', 'Atualizado!')
+    } catch {
+      flashFeedback('refresh', 'Erro ao atualizar')
+    } finally {
+      setRefreshing(false)
+    }
   }
 
   const handleAiAction = async (suggestion) => {
@@ -175,6 +235,7 @@ export default function DashboardHome() {
   //     como uma unidade arrastável (charts, audience, bottom). ───
   const LEFT_BLOCKS = {
     kpis: <KpiGrid stats={stats} />,
+    followersTotal: <FollowersCard data={audienceTotal} />,
     insights: <AIInsightsBar insights={aiInsights} onViewAll={() => {}} />,
     charts: (
       <div className="dash-home__charts">
@@ -183,7 +244,7 @@ export default function DashboardHome() {
           granularity={granularity}
           onGranularityChange={setGranularity}
         />
-        <AccountScoreCard />
+        <AccountScoreCard data={accountScore} />
       </div>
     ),
     audience: (
@@ -198,11 +259,11 @@ export default function DashboardHome() {
           className="chart-card chart-card--best-time"
           variants={fadeUp} initial="hidden" animate="visible" custom={5}
         >
-          <BestTimeCard onSchedule={openComposer} />
+          <BestTimeCard data={bestTimes} onSchedule={openComposer} />
         </motion.div>
       </div>
     ),
-    networks: <NetworkComparison period={period} />,
+    networks: <NetworkComparison period={period} data={networkComparison} />,
     bottom: (
       <div className="dash-home__bottom">
         <ContentReachCard data={contentReach} />
@@ -303,13 +364,24 @@ export default function DashboardHome() {
             </button>
           </>
         ) : (
-          <button
-            type="button"
-            className="dash-home__toolbar-btn"
-            onClick={() => setEditMode(true)}
-          >
-            <LuLayoutGrid size={14} /> Personalizar
-          </button>
+          <>
+            <button
+              type="button"
+              className="dash-home__toolbar-btn"
+              onClick={handleRefresh}
+              disabled={refreshing}
+            >
+              <LuRefreshCw size={14} className={refreshing ? 'dash-home__spin' : ''} />
+              {' '}{feedback.refresh || (refreshing ? 'Atualizando...' : 'Atualizar')}
+            </button>
+            <button
+              type="button"
+              className="dash-home__toolbar-btn"
+              onClick={() => setEditMode(true)}
+            >
+              <LuLayoutGrid size={14} /> Personalizar
+            </button>
+          </>
         )}
       </div>
 

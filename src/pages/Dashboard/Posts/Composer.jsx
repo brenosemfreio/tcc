@@ -11,10 +11,12 @@ import {
   getContentTypeInsight, getBestTimeSlots,
   getSocialAccounts, PLATFORM_IMAGE_TYPES,
 } from '../../../services/posts'
-import { API_BASE } from '../../../services/api'
+import { API_BASE, authFetch } from '../../../services/api'
 import { showToast } from '../../../components/Toast'
 import { useAuth } from '../../../contexts/AuthContext'
 import { useTheme } from '../../../contexts/ThemeContext'
+import { useTeam } from '../../../contexts/TeamContext'
+import { PERMISSION_MATRIX } from '../../../services/team'
 import PhonePreview from './components/PhonePreview'
 import MediaUploader from './components/MediaUploader'
 import DateTimePicker from './components/DateTimePicker'
@@ -31,6 +33,26 @@ const NETWORK_ICONS = {
 }
 
 const NETWORK_IDS = ['instagram', 'tiktok', 'youtube', 'facebook', 'linkedin', 'twitter']
+
+// Instagram/Facebook rejeitam fotos de feed fora da proporção 4:5–1.91:1
+// (retrato–paisagem). Reels/Stories têm faixas próprias, não entram aqui.
+const FEED_PHOTO_TYPES = { instagram: ['feed', 'carousel'], facebook: ['post'] }
+
+// Usado tanto na validação no momento do upload (MediaUploader) quanto na
+// checagem de segurança se a rede/tipo mudar depois que a imagem já foi anexada.
+function checkFeedAspectRatio(width, height, networks, typesByNetwork) {
+  const affected = networks.filter(n => FEED_PHOTO_TYPES[n]?.includes(typesByNetwork[n]))
+  if (affected.length === 0) return { valid: true }
+
+  const ratio = width / height
+  if (ratio >= 0.8 && ratio <= 1.91) return { valid: true }
+
+  const labels = affected.map(n => NETWORK_META[n].label).join(' e ')
+  return {
+    valid: false,
+    message: `Imagem com proporção ${ratio.toFixed(2)}:1 não é aceita pelo feed do ${labels} (precisa ficar entre 4:5 e 1.91:1). Recorte a imagem e tente de novo.`,
+  }
+}
 
 // Estrutura padrão pra conteúdo de uma rede (mídia é compartilhada em form.media)
 const emptyNetworkContent = () => ({ title: '', content: '' })
@@ -50,6 +72,12 @@ export default function Composer() {
   const [searchParams] = useSearchParams()
   const { user } = useAuth()
   const { theme } = useTheme()
+  const { activeContext } = useTeam()
+  const companyId = activeContext.personal ? null : activeContext.id
+  const canCreatePost = activeContext.personal || Boolean(PERMISSION_MATRIX[activeContext.role]?.createPost)
+  const canScheduleDirectly = activeContext.personal || Boolean(PERMISSION_MATRIX[activeContext.role]?.scheduleDirectly)
+  // Endpoints de post recebem companyId como query param (nunca no corpo JSON).
+  const withCompany = (path) => companyId ? `${path}${path.includes('?') ? '&' : '?'}companyId=${companyId}` : path
   const isEditing = Boolean(id)
 
   const initialDate = searchParams.get('date') || ''
@@ -70,6 +98,21 @@ export default function Composer() {
   const [aiBusy, setAiBusy] = useState(null)          // 'caption' | 'hashtags' | null
   const [captionModalOpen, setCaptionModalOpen] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
+  const [imageDims, setImageDims] = useState({}) // { [mediaId]: { width, height } }
+
+  // Mede a resolução de cada imagem anexada (o Instagram/Facebook rejeitam
+  // posts de feed fora da proporção 4:5–1.91:1 — ver aspectRatioIssues abaixo)
+  useEffect(() => {
+    const images = form.media.filter(m => m.type === 'image' && !imageDims[m.id])
+    images.forEach(m => {
+      const img = new Image()
+      img.onload = () => {
+        setImageDims(prev => ({ ...prev, [m.id]: { width: img.naturalWidth, height: img.naturalHeight } }))
+      }
+      img.src = m.url
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.media])
 
   // Carrega o post quando estamos em modo edição
   useEffect(() => {
@@ -296,7 +339,30 @@ export default function Composer() {
     })
   }, [form.networks, form.contentByNetwork, form.typesByNetwork])
 
-  const canSubmit = hasNetworks && validationByNetwork.every(v => v.hasContent && v.hasTitle)
+  // Rede de segurança: se a rede/tipo mudar DEPOIS que a imagem já foi anexada
+  // (a validação principal roda no upload, dentro do MediaUploader).
+  const aspectRatioIssues = useMemo(() => {
+    const imageItem = form.media.find(m => m.type === 'image')
+    if (!imageItem) return []
+    const dims = imageDims[imageItem.id]
+    if (!dims) return [] // ainda carregando a resolução da imagem
+
+    const check = checkFeedAspectRatio(dims.width, dims.height, form.networks, form.typesByNetwork)
+    return check.valid ? [] : [check]
+  }, [form.media, form.networks, form.typesByNetwork, imageDims])
+
+  // Instagram Carrossel exige entre 2 e 10 imagens
+  const carouselIssue = useMemo(() => {
+    const isCarousel = form.networks.includes('instagram') && form.typesByNetwork.instagram === 'carousel'
+    if (!isCarousel) return null
+    const count = form.media.filter(m => m.type === 'image').length
+    if (count === 0) return null // sem mídia anexada ainda, a validação de conteúdo cuida disso
+    if (count < 2) return 'O carrossel do Instagram precisa de pelo menos 2 imagens.'
+    if (count > 10) return 'O carrossel do Instagram aceita no máximo 10 imagens.'
+    return null
+  }, [form.networks, form.typesByNetwork, form.media])
+
+  const canSubmit = hasNetworks && validationByNetwork.every(v => v.hasContent && v.hasTitle) && aspectRatioIssues.length === 0 && !carouselIssue
 
   // Interseção dos formatos de imagem aceitos por todas as redes selecionadas
   const allowedImageMimeTypes = useMemo(() => {
@@ -320,6 +386,18 @@ export default function Composer() {
     setFeedback(`Formato não suportado pelas redes selecionadas: ${names}. Aceitos: ${formatsAllowed}.`)
     setTimeout(() => setFeedback(''), 5000)
   }
+
+  // Impede a imagem de entrar na galeria se a proporção não servir pra
+  // nenhuma rede/tipo selecionado (em vez de só avisar depois de já anexada).
+  const validateImageAspect = (width, height) =>
+    checkFeedAspectRatio(width, height, form.networks, form.typesByNetwork)
+
+  const handleAspectRejected = (rejectedFiles, message) => {
+    const names = rejectedFiles.map(f => f.name).join(', ')
+    setFeedback(message || `Imagem fora da proporção aceita: ${names}`)
+    setTimeout(() => setFeedback(''), 5000)
+  }
+
   const hasAnyContent = validationByNetwork.some(v => v.hasContent)
 
 const xhrUpload = (endpoint, formData, onProgress) =>
@@ -363,12 +441,19 @@ const xhrUpload = (endpoint, formData, onProgress) =>
       const tiktokType = form.typesByNetwork['tiktok']
       const youtubeType = form.typesByNetwork['youtube']
 
-      // Redes de vídeo: TikTok(video) + YouTube(video ou shorts)
-      const videoNetworks = form.networks.filter(n => {
-        if (n === 'tiktok') return tiktokType === 'video'
-        if (n === 'youtube') return true
-        return false
-      })
+      // Redes de vídeo: qualquer rede cujo tipo selecionado só aceite vídeo
+      // (TikTok Vídeo, YouTube, Instagram Reel, Facebook Reel...) — o arquivo
+      // é enviado uma única vez e publicado em todas via /posts/schedule/video,
+      // que já suporta Instagram/Facebook no dispatch do PostSchedulerJob.
+      const videoNetworks = form.networks.filter(n =>
+        PLATFORM_IMAGE_TYPES[n]?.[form.typesByNetwork[n]] === null
+      )
+
+      // Redes por URL (Instagram/Facebook/LinkedIn) que NÃO são vídeo —
+      // essas já foram roteadas pra videoNetworks acima.
+      const urlNetworks = form.networks.filter(n =>
+        ['instagram', 'facebook', 'linkedin'].includes(n) && !videoNetworks.includes(n)
+      )
 
       // TikTok foto (fluxo separado)
       const tiktokPhotoSelected = form.networks.includes('tiktok') && tiktokType === 'photo'
@@ -384,7 +469,7 @@ const xhrUpload = (endpoint, formData, onProgress) =>
           return
         }
         try {
-          const accounts = await getSocialAccounts()
+          const accounts = await getSocialAccounts(companyId)
           const matchingIds = accounts
             .filter(a => (a.platform || '').toLowerCase() === 'tiktok')
             .map(a => a.id)
@@ -397,16 +482,22 @@ const xhrUpload = (endpoint, formData, onProgress) =>
 
           const tiktokContent = form.contentByNetwork['tiktok'] || {}
           const photoTitle = tiktokContent.title || tiktokContent.content?.slice(0, 60) || ''
+          const immediate = !form.scheduledFor
+          if (!(immediate ? canScheduleDirectly : canCreatePost)) {
+            setFeedback(`Você não tem permissão para ${immediate ? 'publicar' : 'agendar'} em ${activeContext.name}.`)
+            setLoading(false)
+            return
+          }
           const fd = new FormData()
           imageItems.forEach(item => fd.append('photos', item.file))
           fd.append('title', photoTitle)
-          fd.append('scheduledAt', isoDate)
+          if (!immediate) fd.append('scheduledAt', isoDate)
           matchingIds.forEach(id => fd.append('socialAccountIds', id))
 
           setFeedback('Enviando fotos…')
-          await xhrUpload('/posts/schedule/photo', fd, pct => {
+          await xhrUpload(withCompany(immediate ? '/posts/publish/photo' : '/posts/schedule/photo'), fd, pct => {
             setUploadProgress(pct)
-            setFeedback(pct < 100 ? `Enviando fotos… ${pct}%` : 'Registrando agendamento…')
+            setFeedback(pct < 100 ? `Enviando fotos… ${pct}%` : (immediate ? 'Publicando no TikTok…' : 'Registrando agendamento…'))
           })
 
           const label = form.scheduledFor
@@ -427,7 +518,7 @@ const xhrUpload = (endpoint, formData, onProgress) =>
         }
       }
 
-      // ── Fluxo de VÍDEO (TikTok Video + YouTube Video/Shorts) ───────
+      // ── Fluxo de VÍDEO (TikTok Vídeo, YouTube, Instagram Reel, Facebook Reel) ───
       const videoFile = form.media.find(m => m.type === 'video' && m.file)?.file
       let videoTitle = ''
       for (const n of videoNetworks) {
@@ -440,34 +531,145 @@ const xhrUpload = (endpoint, formData, onProgress) =>
 
       if (videoNetworks.length > 0 && videoFile) {
         try {
-          const accounts = await getSocialAccounts()
+          const accounts = await getSocialAccounts(companyId)
           const matchingIds = accounts
             .filter(a => videoNetworks.includes((a.platform || '').toLowerCase()))
             .map(a => a.id)
 
           if (matchingIds.length === 0) {
-            setFeedback('Nenhuma conta TikTok/YouTube conectada. Vá em Configurações > Redes.')
+            setFeedback('Nenhuma conta conectada para as redes de vídeo selecionadas. Vá em Configurações > Redes.')
             setLoading(false)
             return
           }
 
           const youtubeIsShort = form.networks.includes('youtube') && youtubeType === 'shorts'
+          const immediate = !form.scheduledFor
+          if (!(immediate ? canScheduleDirectly : canCreatePost)) {
+            setFeedback(`Você não tem permissão para ${immediate ? 'publicar' : 'agendar'} em ${activeContext.name}.`)
+            setLoading(false)
+            return
+          }
           const fd = new FormData()
           fd.append('video', videoFile)
           fd.append('title', videoTitle)
-          fd.append('scheduledAt', isoDate)
+          if (!immediate) fd.append('scheduledAt', isoDate)
           matchingIds.forEach(id => fd.append('socialAccountIds', id))
           if (youtubeIsShort) fd.append('youtubeIsShort', 'true')
 
           setFeedback('Enviando vídeo…')
-          await xhrUpload('/posts/schedule/video', fd, pct => {
+          await xhrUpload(withCompany(immediate ? '/posts/publish/video' : '/posts/schedule/video'), fd, pct => {
             setUploadProgress(pct)
-            setFeedback(pct < 100 ? `Enviando vídeo… ${pct}%` : 'Registrando agendamento…')
+            setFeedback(pct < 100 ? `Enviando vídeo… ${pct}%` : (immediate ? 'Publicando…' : 'Registrando agendamento…'))
           })
 
           const label = form.scheduledFor
             ? `Agendado para ${new Date(form.scheduledFor).toLocaleString('pt-BR')}`
             : 'Publicando agora…'
+          showToast({ type: 'success', title: 'Post enviado com sucesso', message: label })
+
+          // Se também há redes por URL (ex: Instagram Feed junto de TikTok Vídeo), continua; senão, sai
+          if (urlNetworks.length === 0) {
+            setTimeout(() => navigate('/dashboard/posts'), 700)
+            setLoading(false)
+            return
+          }
+        } catch (err) {
+          setFeedback(`Erro ao publicar: ${err.message}`)
+          setLoading(false)
+          return
+        }
+      }
+
+      // ── Fluxo por URL (Instagram/Facebook/LinkedIn) ────────────────
+      // Sem data → /posts/publish (imediato, sem gastar mensagem de fila).
+      // Com data → /posts/schedule (mesmo endpoint JSON usado pra qualquer agendamento).
+      // Instagram Carrossel manda todas as imagens (2-10) num Post à parte,
+      // já que ele usa mediaUrl com várias URLs separadas por vírgula — as
+      // demais redes (Facebook/LinkedIn) não entendem isso, então recebem
+      // só a primeira imagem, num Post separado.
+      if (urlNetworks.length > 0) {
+        try {
+          const accounts = await getSocialAccounts(companyId)
+          const immediate = !form.scheduledFor
+          if (!(immediate ? canScheduleDirectly : canCreatePost)) {
+            setFeedback(`Você não tem permissão para ${immediate ? 'publicar' : 'agendar'} em ${activeContext.name}.`)
+            setLoading(false)
+            return
+          }
+          const instagramIsCarousel = form.networks.includes('instagram') && form.typesByNetwork['instagram'] === 'carousel'
+          const imageItems = form.media.filter(m => m.type === 'image' && m.file)
+
+          if (instagramIsCarousel) {
+            if (imageItems.length < 2) throw new Error('Selecione pelo menos 2 imagens pra publicar um carrossel no Instagram.')
+            if (imageItems.length > 10) throw new Error('O Instagram aceita no máximo 10 imagens por carrossel.')
+          }
+
+          const urls = []
+          if (imageItems.length > 0) {
+            setFeedback(imageItems.length > 1 ? 'Enviando imagens…' : 'Enviando imagem…')
+            for (const item of imageItems) {
+              const fd = new FormData()
+              fd.append('file', item.file)
+              const uploadRes = await authFetch('/posts/media', { method: 'POST', body: fd })
+              if (!uploadRes.ok) throw new Error('Falha ao enviar imagem')
+              urls.push((await uploadRes.json()).mediaUrl)
+            }
+          }
+
+          const contentFor = (networks) => {
+            for (const n of networks) {
+              const c = form.contentByNetwork[n]
+              if (c?.content) return c.content
+            }
+            return ''
+          }
+
+          const publishBatch = async (networks, content, mediaUrl) => {
+            const matchingIds = accounts
+              .filter(a => networks.includes((a.platform || '').toLowerCase()))
+              .map(a => a.id)
+            if (matchingIds.length === 0) return false
+
+            const res = await authFetch(withCompany(immediate ? '/posts/publish' : '/posts/schedule'), {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                content,
+                mediaUrl,
+                ...(immediate ? {} : { scheduledAt: isoDate }),
+                socialAccountIds: matchingIds,
+              }),
+            })
+            if (!res.ok) {
+              const d = await res.json().catch(() => ({}))
+              throw new Error(d.message || d.detail || `Erro HTTP ${res.status}`)
+            }
+            return true
+          }
+
+          setFeedback(immediate ? 'Publicando agora…' : 'Registrando agendamento…')
+
+          let published
+          if (instagramIsCarousel) {
+            const otherNetworks = urlNetworks.filter(n => n !== 'instagram')
+            const igPublished = await publishBatch(['instagram'], contentFor(['instagram']), urls.join(','))
+            const otherPublished = otherNetworks.length > 0
+              ? await publishBatch(otherNetworks, contentFor(otherNetworks), urls[0] || null)
+              : false
+            published = igPublished || otherPublished
+          } else {
+            published = await publishBatch(urlNetworks, contentFor(urlNetworks), urls[0] || null)
+          }
+
+          if (!published) {
+            setFeedback('Nenhuma conta Instagram/Facebook/LinkedIn conectada. Vá em Configurações > Redes.')
+            setLoading(false)
+            return
+          }
+
+          const label = immediate
+            ? 'Publicado agora'
+            : `Agendado para ${new Date(form.scheduledFor).toLocaleString('pt-BR')}`
           showToast({ type: 'success', title: 'Post enviado com sucesso', message: label })
           setTimeout(() => navigate('/dashboard/posts'), 700)
           setLoading(false)
@@ -598,6 +800,9 @@ const xhrUpload = (endpoint, formData, onProgress) =>
           <LuArrowLeft size={16} /> Voltar
         </button>
         <h1>{isEditing ? 'Editar post' : 'Novo post'}</h1>
+        <span className="composer__context-badge" title="Trocar contexto no menu lateral">
+          Publicando como: <strong>{activeContext.personal ? 'Pessoal' : activeContext.name}</strong>
+        </span>
       </div>
 
       <div className="composer__layout">
@@ -831,7 +1036,17 @@ const xhrUpload = (endpoint, formData, onProgress) =>
                 onChange={(media) => setForm(f => ({ ...f, media }))}
                 allowedImageMimeTypes={allowedImageMimeTypes}
                 onRejected={allowedImageMimeTypes ? handleMediaRejected : null}
+                validateImage={validateImageAspect}
+                onAspectRejected={handleAspectRejected}
               />
+              {aspectRatioIssues.map((issue, idx) => (
+                <p key={idx} className="composer__type-warning">
+                  {issue.message}
+                </p>
+              ))}
+              {carouselIssue && (
+                <p className="composer__type-warning">{carouselIssue}</p>
+              )}
             </div>
           )}
 

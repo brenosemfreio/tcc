@@ -12,20 +12,89 @@ export const getSocialAccounts = async (companyId) => {
   } catch { return [] }
 }
 
-export const getTopPosts = () => Promise.resolve([
+const fmtCompact = (n) => {
+  const num = Number(n) || 0
+  if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(1)}M`
+  if (num >= 1_000) return `${(num / 1_000).toFixed(1)}K`
+  return `${num}`
+}
+
+const TOP_POSTS_MOCK = [
   { id: 1, title: '5 dicas para aumentar seu engajamento', date: '18 de maio de 2026', views: '12.4K', likes: '1.3K', comments: '2.6K' },
   { id: 2, title: 'Seus Reels alcançaram 2 do nada',       date: '15 de maio de 2026', views: '9.8K',  likes: '872',  comments: '1.9K' },
   { id: 3, title: 'Como criar conteúdo que conecta',       date: '12 de maio de 2026', views: '8.1K',  likes: '634',  comments: '1.3K' },
   { id: 4, title: 'Pensamentos que facilitam sua rotina',  date: '09 de maio de 2026', views: '7.2K',  likes: '512',  comments: '1.1K' },
   { id: 5, title: 'Checklist para posts de sucesso',       date: '05 de maio de 2026', views: '6.5K',  likes: '432',  comments: '980'  },
-])
+]
 
-export const getRecentPosts = () => Promise.resolve([
+// Ranking real por engajamento (views+likes+comments+shares) via métricas coletadas
+// das redes conectadas, respeitando os filtros de período/rede do dashboard —
+// cai pro mock só sem sessão ou se a chamada falhar. Vazio autenticado com
+// sucesso é real (sem posts nesse filtro) e não é mascarado com o mock.
+export const getTopPosts = async (period = '30d', network = 'all', companyId = null) => {
+  const token = localStorage.getItem('hs-token')
+  if (!token) return TOP_POSTS_MOCK
+  try {
+    let url = `/analytics/top-posts?limit=5&period=${period}&network=${network}`
+    if (companyId) url += `&companyId=${companyId}`
+    const res = await authFetch(url)
+    if (!res.ok) return TOP_POSTS_MOCK
+    const data = await res.json()
+    if (!Array.isArray(data)) return TOP_POSTS_MOCK
+    return data.map(p => ({
+      id: p.id,
+      title: p.title,
+      date: p.date,
+      views: fmtCompact(p.views),
+      likes: fmtCompact(p.likes),
+    }))
+  } catch {
+    return TOP_POSTS_MOCK
+  }
+}
+
+// Atualiza as métricas de todos os posts publicados da conta de uma vez
+// (o backend busca em lote por rede, em vez de 1 chamada por post).
+export const refreshAllMetrics = async (companyId = null) => {
+  const url = companyId ? `/posts/metrics/refresh?companyId=${companyId}` : '/posts/metrics/refresh'
+  const res = await authFetch(url, { method: 'POST' })
+  if (!res.ok) throw new Error('Falha ao atualizar métricas')
+}
+
+const RECENT_POSTS_MOCK = [
   { id: 1, title: '5 dicas para aumentar...',            date: '22/05/2026', time: '10:30', status: 'published', network: 'instagram' },
   { id: 2, title: 'Story: Como planejar meus conteúdos', date: '21/05/2026', time: '16:00', status: 'published', network: 'instagram' },
   { id: 3, title: 'Bests: Como planejar meus conteúdos', date: '20/05/2026', time: '09:00', status: 'published', network: 'instagram' },
   { id: 4, title: 'Rascunho: ideias para a semana',      date: '—',          time: '—',     status: 'draft',     network: 'instagram' },
-])
+]
+
+// Deriva de getAllPosts() (já real quando logado) em vez de manter uma lista à parte.
+export const getRecentPosts = async (companyId = null) => {
+  const token = localStorage.getItem('hs-token')
+  if (!token) return RECENT_POSTS_MOCK
+  try {
+    const posts = await getAllPosts(companyId)
+    if (!Array.isArray(posts) || posts.length === 0) return RECENT_POSTS_MOCK
+    return posts
+      .filter(p => p.publishedAt || p.createdAt)
+      .sort((a, b) => new Date(b.publishedAt || b.createdAt) - new Date(a.publishedAt || a.createdAt))
+      .slice(0, 5)
+      .map(p => {
+        const when = new Date(p.publishedAt || p.createdAt)
+        const valid = !isNaN(when.getTime())
+        return {
+          id: p.id,
+          title: p.title || (p.content ? p.content.slice(0, 60) : 'Sem título'),
+          date: valid ? when.toLocaleDateString('pt-BR') : '—',
+          time: valid ? when.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '—',
+          status: p.status,
+          network: p.networks?.[0] || 'instagram',
+        }
+      })
+  } catch {
+    return RECENT_POSTS_MOCK
+  }
+}
 
 const STATUS_TO_MARKER = {
   draft:           'draft',
@@ -37,8 +106,8 @@ const STATUS_TO_MARKER = {
 }
 const MARKER_PRIORITY = { published: 3, scheduled: 2, draft: 1 }
 
-export const getCalendarMarkers = async () => {
-  const posts = await getAllPosts()
+export const getCalendarMarkers = async (companyId = null) => {
+  const posts = await getAllPosts(companyId)
   const map = {}
   posts.forEach(post => {
     const dateStr = post.scheduledFor || post.publishedAt
@@ -63,8 +132,8 @@ export const getAiSuggestions = () => Promise.resolve([
 
 export const schedulePost = (data) => Promise.resolve({ id: Date.now(), ...data, status: 'scheduled' })
 
-export const getUpcomingPosts = async () => {
-  const posts = await getAllPosts()
+export const getUpcomingPosts = async (companyId = null) => {
+  const posts = await getAllPosts(companyId)
   const now = new Date()
   const scheduled = posts
     .filter(p => p.status === 'scheduled' && p.scheduledFor)
@@ -223,11 +292,12 @@ const ALL_POSTS = [
   },
 ]
 
-export const getAllPosts = async () => {
+export const getAllPosts = async (companyId) => {
   const token = localStorage.getItem('hs-token')
   if (!token) return ALL_POSTS
   try {
-    const res = await authFetch('/posts/schedule/all-posts')
+    const url = companyId ? `/posts/schedule/all-posts?companyId=${companyId}` : '/posts/schedule/all-posts'
+    const res = await authFetch(url)
     if (!res.ok) return ALL_POSTS
     return await res.json()
   } catch {

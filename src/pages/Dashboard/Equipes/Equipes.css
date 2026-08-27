@@ -68,7 +68,7 @@
 }
 
 .eq-empty__btn--primary {
-  background: var(--color-primary, #4F35E8);
+  background: var(--color-primary-solid);
   color: #fff;
 }
 

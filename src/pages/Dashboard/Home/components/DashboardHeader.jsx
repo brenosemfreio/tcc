@@ -14,11 +14,11 @@ const PERIOD_OPTIONS = [
 const NETWORK_OPTIONS = [
   { label: 'Todas as redes', shortLabel: 'Todas',     value: 'all',       icon: LuGlobe,      tone: '#4F35E8' },
   { label: 'Instagram',      shortLabel: 'Instagram', value: 'instagram', icon: FaInstagram,  tone: '#E1306C' },
-  { label: 'TikTok',         shortLabel: 'TikTok',    value: 'tiktok',    icon: FaTiktok,     tone: '#111827', darkTone: '#F5F5F7' },
+  { label: 'TikTok',         shortLabel: 'TikTok',    value: 'tiktok',    icon: FaTiktok,     tone: '#111827', darkTone: '#F5F5F7', mono: true },
   { label: 'YouTube',        shortLabel: 'YouTube',   value: 'youtube',   icon: FaYoutube,    tone: '#FF0033' },
   { label: 'Facebook',       shortLabel: 'Facebook',  value: 'facebook',  icon: FaFacebook,   tone: '#1877F2' },
   { label: 'LinkedIn',       shortLabel: 'LinkedIn',  value: 'linkedin',  icon: FaLinkedin,   tone: '#0A66C2' },
-  { label: 'X (Twitter)',    shortLabel: 'X',         value: 'twitter',   icon: FaXTwitter,   tone: '#0F172A', darkTone: '#F5F5F7' },
+  { label: 'X (Twitter)',    shortLabel: 'X',         value: 'twitter',   icon: FaXTwitter,   tone: '#0F172A', darkTone: '#F5F5F7', mono: true },
 ]
 
 function DashboardSelect({ id, label, value, options, onChange, variant, showIcons = true }) {
@@ -82,7 +82,7 @@ function DashboardSelect({ id, label, value, options, onChange, variant, showIco
       >
         <span className="dash-select__value">
           {SelectedIcon && (
-            <span className="dash-select__icon" style={{ '--select-tone': toneFor(selected) }}>
+            <span className={`dash-select__icon${selected.mono ? ' dash-select__icon--plain' : ''}`} style={{ '--select-tone': toneFor(selected) }}>
               <SelectedIcon size={16} aria-hidden="true" />
             </span>
           )}
@@ -108,7 +108,7 @@ function DashboardSelect({ id, label, value, options, onChange, variant, showIco
               onClick={() => selectOption(option)}
             >
               {showIcons && Icon && (
-                <span className="dash-select__option-icon">
+                <span className={`dash-select__option-icon${option.mono ? ' dash-select__option-icon--plain' : ''}`}>
                   <Icon size={17} aria-hidden="true" />
                 </span>
               )}

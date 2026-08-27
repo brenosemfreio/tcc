@@ -1883,6 +1883,14 @@
   color: color-mix(in srgb, var(--select-tone, var(--color-primary)) 88%, #fff);
 }
 
+/* Marcas monocromáticas (TikTok/X): sem box — só o ícone claro sobre a página */
+[data-theme='dark'] .dash-select__icon--plain,
+[data-theme='dark'] .dash-select__option-icon--plain {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
 [data-theme='dark'] .dash-select__option:hover,
 [data-theme='dark'] .dash-select__option:focus-visible {
   background: color-mix(in srgb, var(--select-tone, var(--color-primary)) 12%, var(--color-bg-tertiary));

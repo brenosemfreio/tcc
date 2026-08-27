@@ -299,6 +299,21 @@
   font-weight: 600;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
+
+/* Escuro: roxo puro (#4F35E8) fica escuro demais no fundo escuro — usa a
+   mesma "mistura de cores" dos ícones (roxo clareado com branco). */
+[data-theme='dark'] .sidebar__item--active {
+  background: color-mix(in srgb, var(--color-primary) 22%, transparent) !important;
+  color: color-mix(in srgb, var(--color-primary) 58%, #fff) !important;
+}
+[data-theme='dark'] .sidebar__item:hover {
+  background: color-mix(in srgb, var(--color-primary) 14%, transparent);
+  color: color-mix(in srgb, var(--color-primary) 58%, #fff);
+}
+[data-theme='dark'] .sidebar__theme-btn--active {
+  background: color-mix(in srgb, var(--color-primary) 18%, var(--color-card-bg));
+  color: color-mix(in srgb, var(--color-primary) 58%, #fff);
+}
 .sidebar__theme-icon { flex-shrink: 0; }
 .sidebar__theme-label {
   overflow: hidden;

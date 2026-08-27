@@ -1931,6 +1931,21 @@
 }
 [data-theme='dark'] .dash-select__check { color: var(--color-primary-bright); }
 
+/* Ícone "seguidores totais" — mesmo tratamento roxo-vivo dos filtros */
+[data-theme='dark'] .followers-total__icon {
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--color-primary-bright) 30%, transparent),
+    color-mix(in srgb, var(--color-primary-bright) 10%, transparent));
+  border: 1px solid color-mix(in srgb, var(--color-primary-bright) 38%, transparent);
+  color: var(--color-primary-bright);
+}
+
+/* CTA "pronto pra agendar" — ícone e título em roxo-vivo */
+[data-theme='dark'] .schedule-cta__icon,
+[data-theme='dark'] .schedule-cta strong {
+  color: var(--color-primary-bright);
+}
+
 [data-theme='dark'] .schedule-cta {
   background:
     linear-gradient(135deg,

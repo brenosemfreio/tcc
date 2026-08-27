@@ -1878,6 +1878,11 @@
   box-shadow: none;   /* remove o brilho branco no topo do chip */
 }
 
+/* Ícones das opções (redes) — glyph na cor da marca, mais vivo (menos lavado) */
+[data-theme='dark'] .dash-select__option-icon {
+  color: color-mix(in srgb, var(--select-tone, var(--color-primary)) 88%, #fff);
+}
+
 [data-theme='dark'] .dash-select__option:hover,
 [data-theme='dark'] .dash-select__option:focus-visible {
   background: color-mix(in srgb, var(--select-tone, var(--color-primary)) 12%, var(--color-bg-tertiary));

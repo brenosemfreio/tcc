@@ -111,7 +111,7 @@
   flex-shrink: 0;
   color: var(--select-tone, var(--color-primary));
   background: var(--color-card-bg);
-  border: 2px solid color-mix(in srgb, var(--select-tone, var(--color-primary)) 24%, transparent);
+  border: 1px solid var(--select-tone, var(--color-primary-solid));
 }
 
 .dash-select__icon {
@@ -391,7 +391,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border: 2px solid color-mix(in srgb, var(--color-primary-solid) 22%, transparent);
+  border: 1px solid var(--color-primary-solid);
 }
 
 .kpi-card__body {
@@ -1006,7 +1006,7 @@
   border-radius: 12px;
   /* mesmo fundo do cardzinho da sugestão — o ícone se funde com ele */
   background: var(--color-bg-secondary);
-  border: 1px solid color-mix(in srgb, var(--color-primary-solid) 22%, transparent);
+  border: 1px solid var(--color-primary-solid);
   color: var(--color-primary);
   display: flex;
   align-items: center;
@@ -1210,7 +1210,7 @@
   border-radius: 9px;
   color: var(--color-primary);
   background: var(--color-card-bg);
-  border: 2px solid color-mix(in srgb, var(--color-primary-solid) 22%, transparent);
+  border: 1px solid var(--color-primary-solid);
 }
 .followers-total__value {
   font-size: clamp(2.4rem, 4.5vw, 3.25rem);
@@ -2021,7 +2021,6 @@
   background: linear-gradient(135deg,
     color-mix(in srgb, var(--select-tone, var(--color-primary-bright)) 16%, transparent),
     color-mix(in srgb, var(--select-tone, var(--color-primary-bright)) 5%, transparent));
-  border-color: color-mix(in srgb, var(--select-tone, var(--color-primary-bright)) 40%, transparent);
   color: color-mix(in srgb, var(--select-tone, var(--color-primary-bright)) 58%, #fff);
   box-shadow: none;   /* remove o brilho branco no topo do chip */
 }
@@ -2056,7 +2055,6 @@
   background: linear-gradient(135deg,
     color-mix(in srgb, var(--color-primary-solid) 16%, transparent),
     color-mix(in srgb, var(--color-primary-solid) 5%, transparent));
-  border-color: color-mix(in srgb, var(--color-primary-solid) 40%, transparent);
   color: color-mix(in srgb, var(--color-primary-solid) 58%, #fff);
   box-shadow: none;
 }
@@ -2072,7 +2070,6 @@
   background: linear-gradient(135deg,
     color-mix(in srgb, var(--color-primary-solid) 16%, transparent),
     color-mix(in srgb, var(--color-primary-solid) 5%, transparent));
-  border: 1px solid color-mix(in srgb, var(--color-primary-solid) 40%, transparent);
   color: color-mix(in srgb, var(--color-primary-solid) 58%, #fff);
   box-shadow: none;
 }
@@ -2097,7 +2094,6 @@
   background: linear-gradient(135deg,
     color-mix(in srgb, var(--color-primary-solid) 16%, transparent),
     color-mix(in srgb, var(--color-primary-solid) 5%, transparent));
-  border: 2px solid color-mix(in srgb, var(--color-primary-solid) 40%, transparent);
   color: color-mix(in srgb, var(--color-primary-solid) 58%, #fff);
   box-shadow: none;
 }

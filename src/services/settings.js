@@ -1,6 +1,9 @@
-// MOCK — aguardando backend.
-// Arquivo inteiro (sessões ativas, faturas e uso do plano). Quando os endpoints
-// existirem, substituir só o corpo das funções — os contratos não mudam.
+// MOCK 100% — aguardando backend.
+// Arquivo inteiro (sessões ativas, faturas e uso do plano). Atenção: as
+// "sessões ativas" da aba Segurança são inventadas — não refletem dispositivos
+// reais e o botão de encerrar não desconecta nada.
+// Quando os endpoints existirem, substituir só o corpo das funções — os
+// contratos de retorno não mudam.
 
 // ─── Sessões ativas ───
 export const getSessions = () => Promise.resolve([

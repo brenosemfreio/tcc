@@ -84,6 +84,9 @@ export default function DashboardHome() {
   const [audience, setAudience] = useState(undefined)
   const [accountScore, setAccountScore] = useState(undefined)
   const [audienceTotal, setAudienceTotal] = useState(undefined)
+  // Crescimento de seguidores em 7d / 30d / total — preenche o card quando há
+  // uma única rede (sem detalhamento por rede pra mostrar).
+  const [followerGrowth, setFollowerGrowth] = useState(undefined)
   const [topPosts, setTopPosts] = useState(undefined)
   const [recentPosts, setRecentPosts] = useState(undefined)
   const [calendarMarkers, setCalendarMarkers] = useState({})
@@ -160,6 +163,20 @@ export default function DashboardHome() {
   useEffect(() => {
     getAudienceTotal(period, network, companyId).then(setAudienceTotal)
   }, [period, network, companyId])
+
+  // Não depende do filtro de período: são sempre os mesmos 3 recortes.
+  useEffect(() => {
+    let cancelled = false
+    Promise.all([
+      getAudienceTotal('7d', network, companyId),
+      getAudienceTotal('30d', network, companyId),
+      getAudienceTotal('all', network, companyId),
+    ]).then(([week, month, all]) => {
+      if (cancelled) return
+      setFollowerGrowth((week || month || all) ? { week, month, all } : null)
+    })
+    return () => { cancelled = true }
+  }, [network, companyId])
 
   useEffect(() => {
     getAiInsights(period, companyId).then(setAiInsights)
@@ -239,7 +256,7 @@ export default function DashboardHome() {
   //     como uma unidade arrastável (charts, audience, bottom). ───
   const LEFT_BLOCKS = {
     kpis: <KpiGrid stats={stats} />,
-    followersTotal: <FollowersCard data={audienceTotal} />,
+    followersTotal: <FollowersCard data={audienceTotal} growth={followerGrowth} />,
     insights: <AIInsightsBar insights={aiInsights} />,
     charts: (
       <div className="dash-home__charts">

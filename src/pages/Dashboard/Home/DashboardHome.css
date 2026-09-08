@@ -1246,6 +1246,46 @@
 .followers-total__change--up   { color: var(--color-success); background: var(--color-success-light); }
 .followers-total__change--down { color: var(--color-error);   background: var(--color-error-light); }
 
+/* Resumo de crescimento (quando há só uma rede) — mesmo desenho dos cards
+   de métrica do gráfico de engajamento */
+.followers-total__growth {
+  flex: 1;
+  min-width: 240px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  align-content: center;
+}
+.followers-total__growth-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+}
+.followers-total__growth-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+.followers-total__growth-value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--color-text);
+}
+.followers-total__growth-pct {
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.followers-total__growth-pct--up   { color: var(--color-success); }
+.followers-total__growth-pct--down { color: var(--color-error); }
+.followers-total__growth-pct--flat { color: var(--color-text-muted); }
+
 /* Participação por rede — com barras */
 .followers-total__nets {
   flex: 1;

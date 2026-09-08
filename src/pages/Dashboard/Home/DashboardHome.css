@@ -111,7 +111,7 @@
   flex-shrink: 0;
   color: var(--select-tone, var(--color-primary));
   background: var(--color-card-bg);
-  border: 1.5px solid color-mix(in srgb, var(--select-tone, var(--color-primary)) 24%, transparent);
+  border: 2px solid color-mix(in srgb, var(--select-tone, var(--color-primary)) 24%, transparent);
 }
 
 .dash-select__icon {
@@ -391,7 +391,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border: 1.5px solid color-mix(in srgb, var(--color-primary-solid) 22%, transparent);
+  border: 2px solid color-mix(in srgb, var(--color-primary-solid) 22%, transparent);
 }
 
 .kpi-card__body {
@@ -1210,7 +1210,7 @@
   border-radius: 9px;
   color: var(--color-primary);
   background: var(--color-card-bg);
-  border: 1.5px solid color-mix(in srgb, var(--color-primary-solid) 22%, transparent);
+  border: 2px solid color-mix(in srgb, var(--color-primary-solid) 22%, transparent);
 }
 .followers-total__value {
   font-size: clamp(2.4rem, 4.5vw, 3.25rem);
@@ -2097,7 +2097,7 @@
   background: linear-gradient(135deg,
     color-mix(in srgb, var(--color-primary-solid) 16%, transparent),
     color-mix(in srgb, var(--color-primary-solid) 5%, transparent));
-  border: 1px solid color-mix(in srgb, var(--color-primary-solid) 40%, transparent);
+  border: 2px solid color-mix(in srgb, var(--color-primary-solid) 40%, transparent);
   color: color-mix(in srgb, var(--color-primary-solid) 58%, #fff);
   box-shadow: none;
 }

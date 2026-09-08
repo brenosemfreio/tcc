@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { LuEye, LuHeart, LuMessageCircle, LuTrendingUp, LuTrendingDown } from 'react-icons/lu'
 import { dashFadeUp as fadeUp } from '../../../../styles/animations'
+import AnimatedNumber from '../../../../components/AnimatedNumber/AnimatedNumber'
 
 const STAT_ICONS = {
   views: LuEye, likes: LuHeart, comments: LuMessageCircle,
@@ -87,7 +88,7 @@ export default function KpiGrid({ stats }) {
               </div>
               <div className="kpi-card__body">
                 <span className="kpi-card__label">{STAT_LABELS[key]}</span>
-                <span className="kpi-card__value">{val.value}</span>
+                <span className="kpi-card__value"><AnimatedNumber value={val.value} /></span>
               </div>
             </motion.div>
           )

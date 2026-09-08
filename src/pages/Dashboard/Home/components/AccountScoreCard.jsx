@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { LuCircleCheck, LuTriangleAlert } from 'react-icons/lu'
 import { dashFadeUp as fadeUp } from '../../../../styles/animations'
 import { SkeletonLines } from './CardSkeleton'
+import AnimatedNumber from '../../../../components/AnimatedNumber/AnimatedNumber'
 
 const CIRCUMFERENCE = 2 * Math.PI * 42
 
@@ -69,7 +70,7 @@ export default function AccountScoreCard({ data }) {
           />
         </svg>
         <div className="account-score__center">
-          <strong className="account-score__value">{score}</strong>
+          <strong className="account-score__value"><AnimatedNumber value={String(score)} /></strong>
           <span className="account-score__max">/100</span>
         </div>
       </div>

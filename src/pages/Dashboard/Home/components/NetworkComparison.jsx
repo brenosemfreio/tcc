@@ -5,6 +5,7 @@ import { FaFacebook, FaInstagram, FaLinkedin, FaTiktok, FaYoutube } from 'react-
 import { FaXTwitter } from 'react-icons/fa6'
 import { dashFadeUp as fadeUp } from '../../../../styles/animations'
 import { SkeletonList } from './CardSkeleton'
+import AnimatedNumber from '../../../../components/AnimatedNumber/AnimatedNumber'
 import { networkColor } from '../../../../services/posts'
 import { useTheme } from '../../../../contexts/ThemeContext'
 
@@ -148,7 +149,7 @@ export default function NetworkComparison({ period = '30d', data }) {
               </div>
               <div className="net-compare__body">
                 <span className="net-compare__name">{name}</span>
-                <strong className="net-compare__value">{fmtCompact(engagement)}</strong>
+                <strong className="net-compare__value"><AnimatedNumber value={fmtCompact(engagement)} /></strong>
                 {change && (
                   <span className={`net-compare__growth net-compare__growth--${trend}`}>
                     <TrendIcon size={11} /> {change}

@@ -6,6 +6,7 @@ import { dashFadeUp as fadeUp } from '../../../../styles/animations'
 import { networkColor } from '../../../../services/posts'
 import { useTheme } from '../../../../contexts/ThemeContext'
 import { SkeletonLines } from './CardSkeleton'
+import AnimatedNumber from '../../../../components/AnimatedNumber/AnimatedNumber'
 
 const NETWORK_ICONS = { instagram: FaInstagram, tiktok: FaTiktok, youtube: FaYoutube }
 const EMPTY_NETS = ['instagram', 'tiktok', 'youtube']
@@ -143,7 +144,7 @@ export default function FollowersCard({ data, growth }) {
             <span className="followers-total__hero-icon"><LuUsers size={18} /></span>
             Seguidores totais
           </span>
-          <strong className="followers-total__value">{value}</strong>
+          <strong className="followers-total__value"><AnimatedNumber value={value} /></strong>
           {change && (
             <span className={`followers-total__change followers-total__change--${trend}`}>
               <TrendIcon size={13} /> {change}
@@ -159,7 +160,7 @@ export default function FollowersCard({ data, growth }) {
             {growthRows.map(row => (
               <div key={row.key} className="followers-total__growth-item">
                 <span className="followers-total__growth-label">{row.label}</span>
-                <strong className="followers-total__growth-value">{fmtGain(row.gain)}</strong>
+                <strong className="followers-total__growth-value"><AnimatedNumber value={fmtGain(row.gain)} /></strong>
                 <span
                   className={`followers-total__growth-pct followers-total__growth-pct--${row.dir}`}
                 >
@@ -184,7 +185,7 @@ export default function FollowersCard({ data, growth }) {
                   <div className="followers-total__net-main">
                     <div className="followers-total__net-line">
                       <span className="followers-total__net-label">{item.label}</span>
-                      <span className="followers-total__net-value">{item.formattedValue}</span>
+                      <span className="followers-total__net-value"><AnimatedNumber value={item.formattedValue} /></span>
                     </div>
                     <div className="followers-total__net-track">
                       <span

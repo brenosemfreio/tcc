@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { LuEye, LuHeart } from 'react-icons/lu'
 import { dashFadeUp as fadeUp } from '../../../../styles/animations'
 import { SkeletonList } from './CardSkeleton'
+import AnimatedNumber from '../../../../components/AnimatedNumber/AnimatedNumber'
 
 export default function TopPostsCard({ posts }) {
   return (
@@ -27,8 +28,8 @@ export default function TopPostsCard({ posts }) {
                 <span className="top-post__date">{date}</span>
               </div>
               <div className="top-post__stats">
-                <span><LuEye size={12} /> {views}</span>
-                <span><LuHeart size={12} /> {likes}</span>
+                <span><LuEye size={12} /> <AnimatedNumber value={views} /></span>
+                <span><LuHeart size={12} /> <AnimatedNumber value={likes} /></span>
               </div>
             </div>
           ))}

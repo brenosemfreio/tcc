@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { dashFadeUp as fadeUp } from '../../../../styles/animations'
 import { SkeletonLines } from './CardSkeleton'
+import AnimatedNumber from '../../../../components/AnimatedNumber/AnimatedNumber'
 
 export default function ContentReachCard({ data }) {
   return (
@@ -20,7 +21,7 @@ export default function ContentReachCard({ data }) {
             <div key={type} className="reach-bar">
               <div className="reach-bar__meta">
                 <span style={{ color }}>{type}</span>
-                <span>{value}%</span>
+                <span><AnimatedNumber value={`${value}%`} /></span>
               </div>
               <div className="reach-bar__track">
                 <motion.div

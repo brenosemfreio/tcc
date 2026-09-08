@@ -68,6 +68,23 @@ export default function NetworkComparison({ period = '30d', data = [] }) {
   }
   const onPointerUp = () => { drag.current.active = false }
 
+  // Sem redes conectadas / sem métrica coletada — evita renderizar um card vazio
+  if (!data || data.length === 0) {
+    return (
+      <motion.div
+        className="net-compare"
+        variants={fadeUp} initial="hidden" animate="visible" custom={5}
+      >
+        <div className="net-compare__header">
+          <h3>Comparação entre redes</h3>
+        </div>
+        <div className="chart-card__empty">
+          Conecte suas redes pra comparar o engajamento entre elas.
+        </div>
+      </motion.div>
+    )
+  }
+
   return (
     <motion.div
       className="net-compare"

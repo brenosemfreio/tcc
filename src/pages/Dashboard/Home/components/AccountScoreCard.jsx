@@ -5,7 +5,7 @@ import { dashFadeUp as fadeUp } from '../../../../styles/animations'
 const CIRCUMFERENCE = 2 * Math.PI * 42
 
 // `data` vem de getAccountScore() (services/analytics.js) — real quando há
-// pelo menos uma conta social conectada, mock caso contrário.
+// pelo menos uma conta social conectada; sem isso o card mostra estado vazio.
 export default function AccountScoreCard({ data }) {
   if (!data) {
     return (

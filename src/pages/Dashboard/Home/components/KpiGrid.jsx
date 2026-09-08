@@ -29,10 +29,37 @@ function Skeleton() {
 }
 
 export default function KpiGrid({ stats }) {
-  if (!stats) {
+  // undefined = ainda carregando · null = carregou e não há dado (não fica em
+  // skeleton pra sempre quando a API falha ou a conta não tem métrica)
+  if (stats === undefined) {
     return (
       <div className="dash-home__kpis">
         {[...Array(3)].map((_, i) => <Skeleton key={i} />)}
+      </div>
+    )
+  }
+
+  if (!stats) {
+    return (
+      <div className="dash-home__kpis">
+        {SHOWN_KEYS.map((key, i) => {
+          const Icon = STAT_ICONS[key]
+          return (
+            <motion.div
+              key={key}
+              className="kpi-card"
+              variants={fadeUp} initial="hidden" animate="visible" custom={i}
+            >
+              <div className="kpi-card__top">
+                <div className="kpi-card__icon"><Icon size={24} /></div>
+              </div>
+              <div className="kpi-card__body">
+                <span className="kpi-card__label">{STAT_LABELS[key]}</span>
+                <span className="kpi-card__value">—</span>
+              </div>
+            </motion.div>
+          )
+        })}
       </div>
     )
   }

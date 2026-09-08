@@ -682,7 +682,11 @@ const xhrUpload = (endpoint, formData, onProgress) =>
       }
     }
 
-    // Fallback mock (rascunho, aprovação, ou sem arquivo de vídeo)
+    // MOCK — aguardando backend.
+    // Só o fluxo "scheduled"/"publish" acima é real. Rascunho ('draft') e
+    // envio pra aprovação ('pending') NÃO persistem nada: o backend ainda não
+    // tem endpoint pra isso, então aqui só simulamos o tempo e mostramos a
+    // mensagem de sucesso. Quando existir (ex.: POST /posts/draft), trocar.
     await new Promise(r => setTimeout(r, 600))
     setLoading(false)
     const msg = {

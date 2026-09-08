@@ -2,8 +2,8 @@ import { LuArrowRight, LuTrendingUp } from 'react-icons/lu'
 
 // Substitui o heatmap. Foco em destacar O MELHOR horário + alternativas
 // próximas + ação direta de agendamento. `data` vem de getBestTimes()
-// (services/analytics.js) — real quando há posts com métrica coletada,
-// mock caso contrário.
+// (services/analytics.js) — sempre real; vazio quando ainda não há posts
+// com métrica coletada suficiente.
 export default function BestTimeCard({ data, onSchedule }) {
   const recommendations = data && data.length > 0 ? data : []
   if (recommendations.length === 0) {

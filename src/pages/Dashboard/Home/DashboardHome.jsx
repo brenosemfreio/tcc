@@ -62,7 +62,8 @@ export default function DashboardHome() {
   const navigate = useNavigate()
   const openComposer = (prefill) => navigate('/dashboard/posts/novo')
 
-  const [stats, setStats] = useState(null)
+  // undefined = ainda carregando (skeleton) · null = carregou sem dado (estado vazio)
+  const [stats, setStats] = useState(undefined)
   const [engagement, setEngagement] = useState([])
   const [networkComparison, setNetworkComparison] = useState([])
   const [contentReach, setContentReach] = useState([])

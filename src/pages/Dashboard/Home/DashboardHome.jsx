@@ -5,7 +5,7 @@ import { LuLayoutGrid, LuGripVertical, LuRotateCcw, LuCheck, LuRefreshCw } from 
 import { useAuth } from '../../../contexts/AuthContext'
 import { useTeam } from '../../../contexts/TeamContext'
 import {
-  getStats, getEngagementData, getSocialBreakdown, getNetworkComparison,
+  getStats, getEngagementData, getNetworkComparison,
   getContentReach, getBestTimes, getAudience, getAccountScore, getAudienceTotal, getAiInsights, getActivityFeed,
 } from '../../../services/analytics'
 import {
@@ -64,7 +64,6 @@ export default function DashboardHome() {
 
   const [stats, setStats] = useState(null)
   const [engagement, setEngagement] = useState([])
-  const [socialBreakdown, setSocialBreakdown] = useState([])
   const [networkComparison, setNetworkComparison] = useState([])
   const [contentReach, setContentReach] = useState([])
   const [bestTimes, setBestTimes] = useState([])
@@ -100,7 +99,6 @@ export default function DashboardHome() {
   // Dados estáticos (não dependem dos filtros de período/rede, mas dependem
   // do contexto ativo — Pessoal ou uma equipe).
   const loadStaticData = () => Promise.all([
-    getSocialBreakdown(),
     getAudience(companyId),
     getAccountScore(companyId),
     getRecentPosts(companyId),
@@ -109,11 +107,10 @@ export default function DashboardHome() {
     getUpcomingPosts(companyId),
     getActivityFeed(),
   ]).then(([
-    socialBreakdownRes, audienceRes, accountScoreRes,
+    audienceRes, accountScoreRes,
     recentPostsRes, markersRes, aiSuggestionsRes,
     upcomingRes, activityRes,
   ]) => {
-    setSocialBreakdown(socialBreakdownRes)
     setAudience(audienceRes)
     setAccountScore(accountScoreRes)
     setRecentPosts(recentPostsRes)

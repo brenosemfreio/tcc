@@ -117,7 +117,7 @@ export default function Composer() {
   // Carrega o post quando estamos em modo edição
   useEffect(() => {
     if (!id) return
-    getPostById(id).then(post => {
+    getPostById(id, companyId).then(post => {
       if (post) {
         const typesByNetwork = {}
         const contentByNetwork = {}
@@ -141,7 +141,7 @@ export default function Composer() {
         if (post.networks?.[0]) setActiveNetwork(post.networks[0])
       }
     })
-  }, [id])
+  }, [id, companyId])
 
   // Retorna a orientação do tipo selecionado de uma rede ('vertical' | 'horizontal' | 'square')
   const getTypeOrientation = (networkId, typeId) => {

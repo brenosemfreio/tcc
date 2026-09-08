@@ -9,7 +9,7 @@ const TYPE_META = {
 }
 
 export default function AIInsightsBar({ insights = [], onViewAll }) {
-  if (!insights.length) return null
+  if (!insights || !insights.length) return null
 
   return (
     <motion.div

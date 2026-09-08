@@ -1,10 +1,22 @@
 import { LuArrowRight, LuTrendingUp } from 'react-icons/lu'
+import { SkeletonLines } from './CardSkeleton'
 
 // Substitui o heatmap. Foco em destacar O MELHOR horário + alternativas
 // próximas + ação direta de agendamento. `data` vem de getBestTimes()
 // (services/analytics.js) — sempre real; vazio quando ainda não há posts
 // com métrica coletada suficiente.
 export default function BestTimeCard({ data, onSchedule }) {
+  if (data === undefined) {
+    return (
+      <div className="best-time">
+        <div className="best-time__header">
+          <h3>Melhor horário para postar</h3>
+        </div>
+        <SkeletonLines rows={4} height={18} />
+      </div>
+    )
+  }
+
   const recommendations = data && data.length > 0 ? data : []
   if (recommendations.length === 0) {
     return (

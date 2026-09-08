@@ -4,6 +4,7 @@ import { LuTrendingUp, LuTrendingDown, LuChevronLeft, LuChevronRight } from 'rea
 import { FaFacebook, FaInstagram, FaLinkedin, FaTiktok, FaYoutube } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
 import { dashFadeUp as fadeUp } from '../../../../styles/animations'
+import { SkeletonList } from './CardSkeleton'
 import { networkColor } from '../../../../services/posts'
 import { useTheme } from '../../../../contexts/ThemeContext'
 
@@ -34,7 +35,7 @@ const fmtCompact = (n) => {
 
 const SCROLL_STEP = 220
 
-export default function NetworkComparison({ period = '30d', data = [] }) {
+export default function NetworkComparison({ period = '30d', data }) {
   const { theme } = useTheme()
   const trackRef = useRef(null)
   const [canLeft,  setCanLeft]  = useState(false)
@@ -67,6 +68,20 @@ export default function NetworkComparison({ period = '30d', data = [] }) {
     updateArrows()
   }
   const onPointerUp = () => { drag.current.active = false }
+
+  if (data === undefined) {
+    return (
+      <motion.div
+        className="net-compare"
+        variants={fadeUp} initial="hidden" animate="visible" custom={5}
+      >
+        <div className="net-compare__header">
+          <h3>Comparação entre redes</h3>
+        </div>
+        <SkeletonList rows={3} />
+      </motion.div>
+    )
+  }
 
   // Sem redes conectadas / sem métrica coletada — evita renderizar um card vazio
   if (!data || data.length === 0) {

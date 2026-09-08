@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { LuEye, LuHeart } from 'react-icons/lu'
 import { dashFadeUp as fadeUp } from '../../../../styles/animations'
+import { SkeletonList } from './CardSkeleton'
 
 export default function TopPostsCard({ posts }) {
   return (
@@ -13,7 +14,9 @@ export default function TopPostsCard({ posts }) {
         <span className="chart-card__sub">Por engajamento</span>
       </div>
 
-      {(!posts || posts.length === 0) ? (
+      {posts === undefined ? (
+        <SkeletonList rows={4} />
+      ) : (!posts || posts.length === 0) ? (
         <div className="chart-card__empty">Nenhuma publicação ainda.</div>
       ) : (
         <div className="top-posts">

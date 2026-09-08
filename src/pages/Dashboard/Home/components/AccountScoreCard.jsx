@@ -1,13 +1,29 @@
 import { motion } from 'framer-motion'
 import { LuCircleCheck, LuTriangleAlert } from 'react-icons/lu'
 import { dashFadeUp as fadeUp } from '../../../../styles/animations'
+import { SkeletonLines } from './CardSkeleton'
 
 const CIRCUMFERENCE = 2 * Math.PI * 42
 
 // `data` vem de getAccountScore() (services/analytics.js) — real quando há
 // pelo menos uma conta social conectada; sem isso o card mostra estado vazio.
 export default function AccountScoreCard({ data }) {
-  if (!data) {
+  if (data === undefined) {
+    return (
+      <motion.div
+        className="chart-card account-score"
+        variants={fadeUp} initial="hidden" animate="visible" custom={1}
+      >
+        <h3>Score da conta</h3>
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '16px 0' }}>
+          <div className="skeleton" style={{ width: 104, height: 104, borderRadius: '50%' }} />
+        </div>
+        <SkeletonLines rows={3} height={12} />
+      </motion.div>
+    )
+  }
+
+  if (!data || !Array.isArray(data.items)) {
     return (
       <motion.div
         className="chart-card account-score"

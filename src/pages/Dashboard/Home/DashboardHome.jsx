@@ -62,22 +62,26 @@ export default function DashboardHome() {
   const navigate = useNavigate()
   const openComposer = (prefill) => navigate('/dashboard/posts/novo')
 
-  // undefined = ainda carregando (skeleton) · null = carregou sem dado (estado vazio)
+  // Convenção de carregamento em todo o dashboard:
+  //   undefined = ainda carregando  → o card mostra skeleton
+  //   null / []  = carregou sem dado → o card mostra o estado vazio
+  // Nada é resetado pra undefined depois do primeiro load: ao trocar de filtro
+  // os dados antigos ficam na tela até os novos chegarem (sem piscar).
   const [stats, setStats] = useState(undefined)
-  const [engagement, setEngagement] = useState([])
-  const [networkComparison, setNetworkComparison] = useState([])
-  const [contentReach, setContentReach] = useState([])
-  const [bestTimes, setBestTimes] = useState([])
-  const [audience, setAudience] = useState(null)
-  const [accountScore, setAccountScore] = useState(null)
-  const [audienceTotal, setAudienceTotal] = useState(null)
-  const [topPosts, setTopPosts] = useState([])
-  const [recentPosts, setRecentPosts] = useState([])
+  const [engagement, setEngagement] = useState(undefined)
+  const [networkComparison, setNetworkComparison] = useState(undefined)
+  const [contentReach, setContentReach] = useState(undefined)
+  const [bestTimes, setBestTimes] = useState(undefined)
+  const [audience, setAudience] = useState(undefined)
+  const [accountScore, setAccountScore] = useState(undefined)
+  const [audienceTotal, setAudienceTotal] = useState(undefined)
+  const [topPosts, setTopPosts] = useState(undefined)
+  const [recentPosts, setRecentPosts] = useState(undefined)
   const [calendarMarkers, setCalendarMarkers] = useState({})
   const [aiSuggestions, setAiSuggestions] = useState([])
   const [aiInsights, setAiInsights] = useState([])
-  const [upcomingPosts, setUpcomingPosts] = useState([])
-  const [activity, setActivity] = useState([])
+  const [upcomingPosts, setUpcomingPosts] = useState(undefined)
+  const [activity, setActivity] = useState(undefined)
 
   const [period, setPeriod] = useState('30d')
   const [network, setNetwork] = useState('all')

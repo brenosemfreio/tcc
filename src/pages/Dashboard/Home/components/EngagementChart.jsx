@@ -4,6 +4,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts'
 import { dashFadeUp as fadeUp } from '../../../../styles/animations'
+import { SkeletonBlock } from './CardSkeleton'
 
 const GRANULARITIES = [
   { label: 'Diário',  value: 'daily' },
@@ -39,6 +40,7 @@ function MetricTooltip({ active, payload, label, color, metricLabel }) {
 }
 
 export default function EngagementChart({ data, granularity, onGranularityChange }) {
+  const isLoading = data === undefined
   const [metricKey, setMetricKey] = useState('views')
   const isEmpty = !data || data.length === 0
 
@@ -105,7 +107,9 @@ export default function EngagementChart({ data, granularity, onGranularityChange
         ))}
       </div>
 
-      {isEmpty ? (
+      {isLoading ? (
+        <div style={{ paddingTop: 8 }}><SkeletonBlock height={232} /></div>
+      ) : isEmpty ? (
         <div className="chart-card__empty">Sem dados para o período selecionado.</div>
       ) : (
         <>

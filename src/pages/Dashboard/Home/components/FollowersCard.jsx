@@ -5,6 +5,7 @@ import { LuTrendingDown, LuTrendingUp, LuUsers, LuArrowRight } from 'react-icons
 import { dashFadeUp as fadeUp } from '../../../../styles/animations'
 import { networkColor } from '../../../../services/posts'
 import { useTheme } from '../../../../contexts/ThemeContext'
+import { SkeletonLines } from './CardSkeleton'
 
 const NETWORK_ICONS = { instagram: FaInstagram, tiktok: FaTiktok, youtube: FaYoutube }
 const EMPTY_NETS = ['instagram', 'tiktok', 'youtube']
@@ -16,6 +17,25 @@ const EMPTY_NETS = ['instagram', 'tiktok', 'youtube']
 export default function FollowersCard({ data }) {
   const navigate = useNavigate()
   const { theme } = useTheme()
+
+  // Carregando — reserva a mesma altura do conteúdo final (sem salto)
+  if (data === undefined) {
+    return (
+      <motion.div
+        className="chart-card followers-total"
+        variants={fadeUp} initial="hidden" animate="visible" custom={2}
+      >
+        <div className="chart-card__header"><h3>Seguidores</h3></div>
+        <div style={{ display: 'flex', gap: 28, alignItems: 'center', flexWrap: 'wrap' }}>
+          <div style={{ minWidth: 190, display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div className="skeleton" style={{ height: 12, width: 120, borderRadius: 6 }} />
+            <div className="skeleton" style={{ height: 44, width: 150, borderRadius: 10 }} />
+          </div>
+          <div style={{ flex: 1, minWidth: 240 }}><SkeletonLines rows={3} height={14} /></div>
+        </div>
+      </motion.div>
+    )
+  }
 
   // ── Estado vazio: convite desenhado (não um texto solto) ──
   if (!data) {

@@ -84,9 +84,9 @@ export const getAudience = async (companyId = null) => {
 export const getAiInsights = (period = '30d', companyId = null) =>
   getArray(`/analytics/ai-insights?period=${period}`, companyId)
 
-// ⚠️ MOCK — não existe endpoint de feed de atividade no backend ainda.
-// Único dado fabricado que restou neste arquivo. Assim que houver algo como
-// GET /analytics/activity-feed, trocar por: getArray('/analytics/activity-feed', companyId)
+// MOCK — aguardando backend.
+// Único dado fabricado que restou neste arquivo. Quando existir o endpoint,
+// trocar por: getArray('/analytics/activity-feed', companyId)
 export const getActivityFeed = () => Promise.resolve([
   { id: 1, type: 'publish',   text: 'Post "5 dicas para aumentar seu engajamento" foi publicado', time: 'há 2h' },
   { id: 2, type: 'milestone', text: 'Você ultrapassou 8.500 seguidores no Instagram',             time: 'há 5h' },

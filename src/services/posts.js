@@ -20,7 +20,7 @@ const fmtCompact = (n) => {
 }
 
 // Ranking real por engajamento (views+likes+comments+shares) via métricas coletadas
-// das redes conectadas, respeitando os filtros de período/rede do dashboard —
+// das redes conectadas, respeitando os filtros de período/rede do dashboard.
 // Sem sessão ou se a chamada falhar, devolve vazio — nunca dado fabricado.
 export const getTopPosts = async (period = '30d', network = 'all', companyId = null) => {
   const token = localStorage.getItem('hs-token')
@@ -109,9 +109,9 @@ export const getCalendarMarkers = async (companyId = null) => {
   return map
 }
 
-// ⚠️ MOCK — não há endpoint de sugestões da IA pro dashboard ainda.
-// (O Composer já usa IA real via POST /ai/generate-caption e /ai/suggest-hashtags;
-// falta um equivalente pro card do dashboard.)
+// MOCK — aguardando backend.
+// O Composer já usa IA real (POST /ai/generate-caption e /ai/suggest-hashtags);
+// falta o equivalente para o card de sugestões do dashboard.
 export const getAiSuggestions = () => Promise.resolve([
   { id: 1, icon: LuMessageSquare, label: 'Ideia de post', text: 'Faça um post sobre tendências do seu nicho este mês!', action: 'Gerar' },
   { id: 2, icon: LuChartBar,      label: 'Engajamento',   text: 'Clique para gerar legendas envolventes.',              action: 'Gerar' },
@@ -290,8 +290,8 @@ export const networkColor = (id, theme) => {
 }
 
 // ════════════════════════════════════════════════════════════════
-// Heurísticas do Composer (⚠️ ainda sem backend)
-// - getContentTypeInsight: números de uplift por formato são FIXOS/fabricados.
+// MOCK — aguardando backend.
+// - getContentTypeInsight: números de uplift por formato são fixos/fabricados.
 // - getBestTimeSlots: heurística local (dia útil vs fim de semana), não usa
 //   histórico real; o dashboard já tem /analytics/best-times de verdade.
 // Geração de legenda e hashtags já são reais (POST /ai/* direto no Composer).

@@ -1,7 +1,6 @@
-// ⚠️ ARQUIVO 100% MOCK — nenhum destes dados tem endpoint no backend ainda.
-// Sessões ativas, faturas e uso do plano são todos fabricados.
-// Quando o backend chegar, substituir o corpo das funções — os contratos de
-// retorno não mudam (padrão dos demais services).
+// MOCK — aguardando backend.
+// Arquivo inteiro (sessões ativas, faturas e uso do plano). Quando os endpoints
+// existirem, substituir só o corpo das funções — os contratos não mudam.
 
 // ─── Sessões ativas ───
 export const getSessions = () => Promise.resolve([

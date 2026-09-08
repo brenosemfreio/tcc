@@ -1,7 +1,7 @@
-// ⚠️ ARQUIVO 100% MOCK — não há endpoints de suporte no backend ainda.
-// Base de conhecimento, artigos, status do sistema, chamados e FAQ: tudo fabricado.
-// Mock de suporte. Quando o backend chegar, substituir o corpo das funções —
-// os contratos de retorno não mudam (mesmo padrão dos demais services).
+// MOCK — aguardando backend.
+// Arquivo inteiro (base de conhecimento, artigos, status do sistema, chamados
+// e FAQ). Quando os endpoints existirem, substituir só o corpo das funções —
+// os contratos de retorno não mudam.
 
 // ─── Base de conhecimento ───
 export const getKnowledgeCategories = () => Promise.resolve([

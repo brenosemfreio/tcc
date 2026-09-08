@@ -60,7 +60,16 @@ export default function DashboardHome() {
   const { activeContext } = useTeam()
   const companyId = activeContext.personal ? null : activeContext.id
   const navigate = useNavigate()
-  const openComposer = (prefill) => navigate('/dashboard/posts/novo')
+  // Abre o compositor já com uma intenção. `ai` dispara a ferramenta de IA
+  // correspondente lá dentro ('caption' | 'hashtags'); `date` pré-preenche o
+  // agendamento (usado pelo card de melhor horário).
+  const openComposer = (prefill) => {
+    const params = new URLSearchParams()
+    if (prefill?.ai) params.set('ai', prefill.ai)
+    if (prefill?.date) params.set('date', prefill.date)
+    const qs = params.toString()
+    navigate(`/dashboard/posts/novo${qs ? `?${qs}` : ''}`)
+  }
 
   // Convenção de carregamento em todo o dashboard:
   //   undefined = ainda carregando  → o card mostra skeleton
@@ -205,17 +214,10 @@ export default function DashboardHome() {
     }
   }
 
-  const handleAiAction = async (suggestion) => {
-    if (suggestion.action === 'Copiar') {
-      try {
-        await navigator.clipboard.writeText(suggestion.text)
-        flashFeedback(`ai-${suggestion.id}`, 'Copiado!')
-      } catch {
-        flashFeedback(`ai-${suggestion.id}`, 'Erro')
-      }
-      return
-    }
-    openComposer()
+  // Cada sugestão declara sua intenção (`ai`): abre o compositor já com a
+  // ferramenta de IA correspondente pronta, em vez de só navegar pra lista.
+  const handleAiAction = (suggestion) => {
+    openComposer({ ai: suggestion.ai || 'caption' })
   }
 
   const duplicatePost = (post) => {
@@ -238,7 +240,7 @@ export default function DashboardHome() {
   const LEFT_BLOCKS = {
     kpis: <KpiGrid stats={stats} />,
     followersTotal: <FollowersCard data={audienceTotal} />,
-    insights: <AIInsightsBar insights={aiInsights} onViewAll={() => {}} />,
+    insights: <AIInsightsBar insights={aiInsights} />,
     charts: (
       <div className="dash-home__charts">
         <EngagementChart

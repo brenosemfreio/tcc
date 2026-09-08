@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import {
   LuArrowLeft, LuSave, LuSend, LuCalendarClock, LuImage,
@@ -81,6 +81,8 @@ export default function Composer() {
   const isEditing = Boolean(id)
 
   const initialDate = searchParams.get('date') || ''
+  // Intenção vinda do dashboard (card "Sugestões da IA"): 'caption' | 'hashtags'
+  const aiIntent = searchParams.get('ai') || ''
 
   const [form, setForm] = useState({
     networks: [],
@@ -792,6 +794,43 @@ const xhrUpload = (endpoint, formData, onProgress) =>
       setTimeout(() => setFeedback(''), 2000)
     }
   }
+
+  // ── Intenção de IA vinda do dashboard (?ai=caption | ?ai=hashtags) ──
+  // As ferramentas de IA precisam de uma rede ativa pra saber formato e limite
+  // de caracteres. Se o usuário chegou aqui pelo card de sugestões e ainda não
+  // escolheu rede nenhuma, seleciona a primeira conta conectada (ou Instagram)
+  // pra que a ação aconteça de fato, em vez de abrir um compositor vazio.
+  const aiIntentDone = useRef(false)
+  useEffect(() => {
+    if (!aiIntent || isEditing || aiIntentDone.current) return
+    aiIntentDone.current = true
+
+    let cancelled = false
+    ;(async () => {
+      let target = activeNetwork
+      if (!target) {
+        let candidate = 'instagram'
+        try {
+          const accounts = await getSocialAccounts(companyId)
+          const connected = accounts?.find(a => NETWORK_IDS.includes(a.platform))
+          if (connected) candidate = connected.platform
+        } catch { /* sem contas: segue com o padrão */ }
+        if (cancelled) return
+        toggleNetwork(candidate)
+        target = candidate
+      }
+      if (cancelled || !target) return
+
+      if (aiIntent === 'caption') {
+        setCaptionModalOpen(true)
+      } else if (aiIntent === 'hashtags') {
+        setFeedback('Escreva ou gere sua legenda e toque em "Hashtags" pra IA sugerir as ideais.')
+        setTimeout(() => setFeedback(''), 6000)
+      }
+    })()
+
+    return () => { cancelled = true }
+  }, [aiIntent, isEditing]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="composer">

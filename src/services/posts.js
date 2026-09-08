@@ -112,10 +112,12 @@ export const getCalendarMarkers = async (companyId = null) => {
 // MOCK — aguardando backend.
 // O Composer já usa IA real (POST /ai/generate-caption e /ai/suggest-hashtags);
 // falta o equivalente para o card de sugestões do dashboard.
+// Os textos são fixos, mas as AÇÕES são reais: cada item abre o compositor já
+// com a ferramenta de IA correspondente (`ai`), que chama /ai/* no backend.
 export const getAiSuggestions = () => Promise.resolve([
-  { id: 1, icon: LuMessageSquare, label: 'Ideia de post', text: 'Faça um post sobre tendências do seu nicho este mês!', action: 'Gerar' },
-  { id: 2, icon: LuChartBar,      label: 'Engajamento',   text: 'Clique para gerar legendas envolventes.',              action: 'Gerar' },
-  { id: 3, icon: LuHash,          label: 'Hashtags',      text: '#marketingdigital #branding #redessociais',           action: 'Copiar' },
+  { id: 1, ai: 'caption',  icon: LuMessageSquare, label: 'Ideia de post', text: 'Sem ideia do que postar? Descreva o tema e a IA escreve pra você.', action: 'Gerar' },
+  { id: 2, ai: 'caption',  icon: LuChartBar,      label: 'Engajamento',   text: 'Gere uma legenda envolvente, no formato ideal de cada rede.',      action: 'Gerar' },
+  { id: 3, ai: 'hashtags', icon: LuHash,          label: 'Hashtags',      text: 'Descubra as hashtags certas pro seu conteúdo.',                    action: 'Sugerir' },
 ])
 
 
